@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: cgsWeb
+  ai:
+    google:
+      genai:
+        projectId: gen-lang-client-0947037559
+        api-key: ${GOOGLE_API_KEY:}
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true

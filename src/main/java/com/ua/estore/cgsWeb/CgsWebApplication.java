@@ -8,6 +8,4 @@ public class CgsWebApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CgsWebApplication.class, args);
-	}
-
-}
+	} }

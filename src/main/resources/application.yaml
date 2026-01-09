@@ -4,13 +4,8 @@ spring:
   ai:
     google:
       genai:
-        projectId: ${GOOGLE_PROJECT_ID:}
+        projectId: ${GOOGLE_PROJECT_ID_BKP:}
         api-key: ${GOOGLE_API_KEY:}
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/cgs_products

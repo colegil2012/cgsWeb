@@ -2,6 +2,8 @@ package templates;
 
 layout 'layout.tpl',
         title: 'CGS Web | Shop',
+        username: username,
+        cart: cartItems,
         content: {
             div(class: 'hero') {
                 h1('Shop')

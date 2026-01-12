@@ -1,14 +1,26 @@
 package com.ua.estore.cgsWeb.controllers;
 
-import jakarta.servlet.http.HttpSession;
+
+import com.ua.estore.cgsWeb.models.Product;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.SessionAttribute;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class GlobalModelAdvice {
 
-    @ModelAttribute("session")
-    public HttpSession addSessionToModel(HttpSession session) {
-        return session;
+    @ModelAttribute("username")
+    public String addUserToModel( @SessionAttribute(name = "username", required = false)
+                                      String username) {
+        return username;
+    }
+
+    @ModelAttribute("cartItems")
+    public List<Product> addCartToModel( @SessionAttribute(name = "cartItems", required = false)
+                                         List<Product> cart) {
+        return cart != null ? cart : new ArrayList<>();
     }
 }

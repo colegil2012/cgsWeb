@@ -2,6 +2,8 @@ package templates
 
 layout 'layout.tpl',
         title: 'CGS Web | Home',
+        username: username,
+        cart: cartItems,
         content: {
             div(class: 'hero') {
                 h1('Cole\'s General Store')
@@ -11,9 +13,9 @@ layout 'layout.tpl',
             div(class: 'container') {
                 section {
                     h2('Our Specialties')
-                    div(style: 'display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 2rem;') {
+                    div(class: 'specialties-grid') {
                         ['Fresh Herbs', 'Organic Vegetables', 'Hand-ground Spices'].each { item ->
-                            div(style: "background: var(--primary-green); padding: 2rem; border-radius: 10px; border-left: 5px solid var(--earth-brown);") {
+                            div(class: 'specialty-card') {
                                 h3(item)
                                 p("Quality ${item.toLowerCase()} grown with sustainable practices.")
                             }

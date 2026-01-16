@@ -18,7 +18,7 @@ layout 'layout.tpl',
                     }
                     div(class: 'form-control') {
                         label(for: 'password', 'Password')
-                        input(type: 'text', name: 'password', id: 'password', required: 'required')
+                        input(type: 'password', name: 'password', id: 'password', required: 'required')
                     }
                     button(type: 'submit', class: 'btn', style: 'border:none; cursor:pointer;', 'Sign In')
                 }

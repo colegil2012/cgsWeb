@@ -1,6 +1,7 @@
 package com.ua.estore.cgsWeb.controllers;
 
 
+import com.ua.estore.cgsWeb.models.CartItem;
 import com.ua.estore.cgsWeb.models.Product;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,8 +20,8 @@ public class GlobalModelAdvice {
     }
 
     @ModelAttribute("cartItems")
-    public List<Product> addCartToModel( @SessionAttribute(name = "cartItems", required = false)
-                                         List<Product> cart) {
+    public List<CartItem> addCartToModel( @SessionAttribute(name = "cartItems", required = false)
+                                         List<CartItem> cart) {
         return cart != null ? cart : new ArrayList<>();
     }
 }

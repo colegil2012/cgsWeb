@@ -18,7 +18,7 @@ html {
                     li { a(href: '/shop', 'Shop') }
                     li { a(href: '/about', 'About') }
                     if (username) {
-                        li { a(href: '/cart', "Cart(${cartItems?.size() ?: 0})") }
+                        li { a(href: '/cart', "Cart(${cartItems?.sum { it.quantity } ?: 0})") }
                         li { a(href: '/logout', class: 'logout-link', 'Logout') }
                     }
                 }

@@ -20,8 +20,11 @@ public class ProductService {
     public Product getProductById(String id) {
         return productRepository.findById(id).orElse(null);
     }
+    public List<Product> getProductsByFilter(String category, String search, boolean lowStock) {
+        String categoryQuery = (category == null) ? "" : category;
+        String searchQuery = (search == null) ? "" : search;
 
-    public List<Product> getProductsByCategory(String category) {
-        return productRepository.findByCategory(category);
+        return productRepository.findByFilter(categoryQuery, searchQuery, lowStock);
     }
+
 }

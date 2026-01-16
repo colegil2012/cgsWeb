@@ -1,5 +1,6 @@
 package com.ua.estore.cgsWeb.controllers;
 
+import com.ua.estore.cgsWeb.models.CartItem;
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.services.CredentialService;
 import jakarta.servlet.http.HttpSession;
@@ -30,10 +31,12 @@ public class AuthController {
     @PostMapping("/login")
     public String handleLogin(@RequestParam String username,
                               @RequestParam String password,
+                              HttpSession session,
                               Model model) {
+
         if (credentialService.isValidUser(username, password)) {
-            model.addAttribute("username", username);
-            model.addAttribute("cartItems", new ArrayList<Product>());
+            session.setAttribute("username", username);
+            session.setAttribute("cartItems", new ArrayList<CartItem>());
             return "redirect:/";
         } else {
             model.addAttribute("error", "Invalid username or password");

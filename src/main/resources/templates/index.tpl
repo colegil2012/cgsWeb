@@ -3,7 +3,7 @@ package templates
 layout 'layout.tpl',
         title: 'CGS Web | Home',
         username: username,
-        cart: cartItems,
+        cartItems: cartItems,
         content: {
             div(class: 'hero') {
                 h1('Cole\'s General Store')

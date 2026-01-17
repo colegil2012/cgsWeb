@@ -58,7 +58,7 @@ public class CartController {
                 .findFirst();
 
         if (existingItem.isPresent()) {
-            existingItem.get().setQuantity(existingItem.get().getQuantity() + 1);
+            existingItem.get().increaseQuantity();
         } else {
             Product product = productService.getProductById(id);
             if (product != null) {
@@ -77,6 +77,34 @@ public class CartController {
 
         session.setAttribute("cartItems", cart);
         int totalCount = cart.stream().mapToInt(ProductDTO::getQuantity).sum();
+
+        return Map.of("success", true, "cartCount", totalCount);
+    }
+
+    @GetMapping("/cart/remove/{id}")
+    @ResponseBody
+    public Object removeFromCart(@PathVariable String id, HttpSession session) {
+        List<ProductDTO> cart = (List<ProductDTO>) session.getAttribute("cartItems");
+
+        if (cart != null) {
+            Optional<ProductDTO> existingItem = cart.stream()
+                    .filter(item -> item.getId().equals(id))
+                    .findFirst();
+
+            if (existingItem.isPresent()) {
+                ProductDTO item = existingItem.get();
+                if (item.getQuantity() > 1) {
+                    item.decreaseQuantity();
+                } else {
+                    // If quantity is 1, remove the item from the list entirely
+                    cart.remove(item);
+                }
+            }
+            session.setAttribute("cartItems", cart);
+        }
+
+        // Calculate new total for the UI badge
+        int totalCount = (cart == null) ? 0 : cart.stream().mapToInt(ProductDTO::getQuantity).sum();
 
         return Map.of("success", true, "cartCount", totalCount);
     }

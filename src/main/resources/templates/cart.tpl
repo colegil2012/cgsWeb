@@ -33,8 +33,10 @@ layout 'layout.tpl',
                                     div(class: "cart-card-section") {
                                         p(class: 'cart-product-price', item.price)
                                     }
-                                    div(class: "cart-card-section") {
-                                        p(class: 'cart-product-qy', item.quantity)
+                                    div(class: "cart-card-section quantity-controls") {
+                                        a(href: "/cart/remove/${item.id}", class: 'btn-qty minus', '-')
+                                        span(class: 'cart-product-qy', item.quantity)
+                                        a(href: "/cart/add/${item.id}", class: 'btn-qty plus', '+')
                                     }
                                 }
                             }
@@ -70,5 +72,6 @@ layout 'layout.tpl',
                     button(class: 'btn-checkout', 'Proceed to Checkout')
                 }
             }
+            script(src: '/scripts/cart-update.js') {}
         }
 

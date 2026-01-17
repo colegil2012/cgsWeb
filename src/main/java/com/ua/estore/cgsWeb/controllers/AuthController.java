@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.controllers;
 
-import com.ua.estore.cgsWeb.models.CartItem;
-import com.ua.estore.cgsWeb.models.Product;
+import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.dto.ProductDTO;
 import com.ua.estore.cgsWeb.services.CredentialService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes("username")
+@SessionAttributes({"username", "role"})
 public class AuthController {
 
     private final CredentialService credentialService;
@@ -34,9 +34,13 @@ public class AuthController {
                               HttpSession session,
                               Model model) {
 
-        if (credentialService.isValidUser(username, password)) {
-            session.setAttribute("username", username);
-            session.setAttribute("cartItems", new ArrayList<CartItem>());
+        var userOpt = credentialService.authenticate(username, password);
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            session.setAttribute("username", user.getUsername());
+            session.setAttribute("role", user.getRole());
+            session.setAttribute("cartItems", new ArrayList<ProductDTO>());
             return "redirect:/";
         } else {
             model.addAttribute("error", "Invalid username or password");

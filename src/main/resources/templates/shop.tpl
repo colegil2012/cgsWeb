@@ -4,6 +4,7 @@ layout 'layout.tpl',
         title: 'CGS Web | Shop',
         username: username,
         cartItems: cartItems,
+        role: role,
         content: {
             div(class: 'hero') {
                 h1('Shop')
@@ -14,9 +15,9 @@ layout 'layout.tpl',
                     div(class: 'filter-group') {
                         label(for: 'categoryFilter', 'Filter by Category: ')
                         select(id: 'categoryFilter', name: 'category') {
-                            option(value: '', 'All Categories')
+                            option(value: '', selected: (lastCategory == null || lastCategory == ''), 'All Categories')
                             categories.each { cat ->
-                                option(value: cat.toLowerCase(), cat.toUpperCase())
+                                option(value: cat, cat)
                             }
                         }
                     }
@@ -28,7 +29,7 @@ layout 'layout.tpl',
 
                     div(class: 'filter-group checkbox-group') {
                         label(for: 'lowStock', 'Low Stock!')
-                        input(type: 'checkbox', id: 'lowStock', name: 'lowStock', value: 'true', checked: ( lastLowStock == false ) )
+                        input(type: 'checkbox', id: 'lowStock', name: 'lowStock', value: 'true')
                     }
 
                     a(href: '/shop', class: 'btn-clear') {
@@ -46,8 +47,13 @@ layout 'layout.tpl',
                         div(class: 'product-card') {
                             img(src: product.imageUrl ?: '/images/placeholder.jpg', alt: product.name)
                             div(class: 'product-info') {
-                                h3(product.name)
-                                p(class: 'category', product.category)
+                                div (class: 'product-title') {
+                                    span(class: 'title-name', product.name)
+                                    span(class: 'category', product.category)
+                                }
+                                div (class: 'product-meta') {
+                                    span(class: 'vendor-tag', "By: ${product.vendorName}")
+                                }
                                 p(class: 'description', product.description)
                                 div(class: 'product-footer') {
                                     span(class: 'price', "\$${product.price}")
@@ -58,4 +64,5 @@ layout 'layout.tpl',
                     }
                 }
             }
+            script(src: '/scripts/cart.js') {}
         }

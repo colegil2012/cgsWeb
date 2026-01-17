@@ -4,9 +4,10 @@ layout 'layout.tpl',
         title: 'CGS Web | Home',
         username: username,
         cartItems: cartItems,
+        role: role,
         content: {
             div(class: 'hero') {
-                h1('Cole\'s General Store')
+                h1('Celtech General Store')
                 p('Fresh organic produce, herbs, and seasonings delivered from our soil to your kitchen.')
                 a(href: '/shop', class: 'btn', 'Explore Shop')
             }

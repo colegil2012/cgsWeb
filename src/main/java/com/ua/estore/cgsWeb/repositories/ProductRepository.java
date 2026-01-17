@@ -13,8 +13,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     List<Product> findAll();
 
-    List<Product> findByCategory(String category);
-
     @Query("{ $and: [ " +
             "{ $or: [ { 'category': ?0 }, { $expr: { $eq: ['?0', ''] } } ] }, " +
             "{ $or: [ { 'name': { $regex: ?1, $options: 'i' } }, { 'description': { $regex: ?1, $options: 'i' } } ] }, " +

@@ -13,14 +13,17 @@ public class CredentialService {
 
     private final UserRepository userRepository;
 
-    public boolean isValidUser(String username, String password) {
+    public Optional<User> authenticate(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            return user.getPassword().equals(password);
+        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
+            return userOpt;
         }
-
-        return false;
+        return Optional.empty();
     }
+
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
 }

@@ -32,8 +32,8 @@ header {
     border-bottom: 2px solid var(--soft-brown);
     position: sticky;
     top: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 1000;
-    position: relative;
 }
 
 .logo {
@@ -228,6 +228,31 @@ nav a:hover {
     padding: 1.5rem;
 }
 
+.product-title {
+    width: 100%;
+    margin: 0.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-title .title-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.product-title .category {
+    font-size: 0.75rem;
+    border-radius: 4px;
+    background: var(--primary-green);
+    color: var(--accent-green);
+    padding: 0.2rem 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 .product-footer {
     display: flex;
     justify-content: space-between;
@@ -244,11 +269,16 @@ nav a:hover {
     margin-bottom: 1rem;
 }
 
-.category {
+.vendor-tag {
     font-size: 0.8rem;
-    color: var(--accent-green);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    color: #2e7d32;
+    font-style: italic;
+    margin: 0;
+    font-weight: bold;
+}
+
+.product-meta {
+    margin-bottom: 10px;
 }
 
 /* Specialty Cards (Home Page) */
@@ -397,7 +427,7 @@ h2 {
     color: var(--earth-brown);
     font-style: italic;
     position: absolute;
-    left: 50%;
+    left: 20%;
     transform: translateX(-50%);
     margin: 0;
     pointer-events: none;
@@ -414,8 +444,8 @@ button.btn {
 .cart-page-container {
     display: flex;
     gap: 2rem;
-    max-width: 1200px;
-    margin: 2rem auto;
+    max-width: 1400px;
+    margin: 1rem auto;
     padding: 0 1rem;
     align-items: flex-start;
 }
@@ -456,21 +486,42 @@ button.btn {
 }
 
 .cart-card {
-    display: grid;
-    grid-template-columns: 80px 2fr 1fr 1fr;
+    display: flex;
     align-items: center;
-    gap: 1.5rem;
+    justify-content: space-between;
+    gap: 1rem;
     padding: 1rem;
     background: var(--white);
     border: 1px solid var(--soft-brown);
     border-radius: 12px;
 }
 
+.cart-card > * {
+    flex: 1 1 25%;
+    max-width: 25%;
+    margin: 0;
+    text-align: center;
+}
+
+.cart-card-section img {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+
 .cart-product-name {
     font-weight: bold;
-    color: var(--dark-green);
+    color: var(--earth-brown);
     font-size: 1.1rem;
     margin: 0;
+}
+
+.cart-product-vendor {
+    font-weight: italic;
+    color: var(--dark-green);
+    font-size: 0.9rem;
 }
 
 .cart-product-price {
@@ -532,6 +583,96 @@ button.btn {
 
 .btn-checkout:hover {
     background-color: var(--dark-green);
+}
+
+/* Account Page Styles */
+.account-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+}
+
+.info-card {
+    background: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.info-group {
+    margin-bottom: 20px;
+}
+
+.info-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.readonly-box {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 15px;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace; /* Makes it look technical/immutable */
+    display: block;
+    width: 90%;
+    margin-left: 0.1rem;
+}
+
+/* Vendor Table Styles */
+.vendor-section {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+.vendor-header {
+    background: #2e7d32; /* Organic Green */
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vendor-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vendor-table th {
+    background: #f8f9fa;
+    text-align: left;
+    padding: 12px 25px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.vendor-table td {
+    padding: 12px 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.vendor-table tr:hover {
+    background-color: #f1f8e9;
+}
+
+.badge-vendor {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
 
 /* Animations */

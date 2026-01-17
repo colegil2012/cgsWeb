@@ -4,7 +4,14 @@ layout 'layout.tpl',
         title: 'CGS Web | Home',
         username: username,
         cartItems: cartItems,
+        role: role,
+        totalPrice: totalPrice,
         content: {
+            //Calculate total, subtotal and tax
+            def subtotal = cartItems.collect { it.price * it.quantity }.sum() ?: 0.00
+            def tax = subtotal * 0.07 // Example 7% tax
+            def total = subtotal + tax
+
             div(class: 'cart-page-container') {
 
                 div(class: 'cart-main') {
@@ -16,10 +23,19 @@ layout 'layout.tpl',
                         div(class: 'cart-grid') {
                             cartItems.each { item ->
                                 div(class: 'cart-card') {
-                                    img(src: item.product.imageUrl ?: '/images/placeholder.jpg', alt: item.product.name)
-                                    p(class: 'cart-product-name', item.product.name)
-                                    p(class: 'cart-product-price', item.product.price)
-                                    p(class: 'cart-product-qy', item.quantity)
+                                    div(class: "cart-card-section") {
+                                        img(src: item.imageUrl ?: '/images/placeholder.jpg', alt: item.name)
+                                    }
+                                    div(class: "cart-card-section") {
+                                        p(class: 'cart-product-name', item.name)
+                                        p(class: 'cart-product-vendor', "By: ${item.vendorName}")
+                                    }
+                                    div(class: "cart-card-section") {
+                                        p(class: 'cart-product-price', item.price)
+                                    }
+                                    div(class: "cart-card-section") {
+                                        p(class: 'cart-product-qy', item.quantity)
+                                    }
                                 }
                             }
                         }
@@ -31,16 +47,16 @@ layout 'layout.tpl',
                     div(class: 'summary-details') {
                         div(class: 'summary-row') {
                             span('Subtotal')
-                            span(class: 'summary-value', '$0.00') // Logic for calculation can be added later
+                            span(class: 'summary-value', "\$${String.format('%.2f', subtotal)}")
                         }
                         div(class: 'summary-row') {
                             span('Estimated Tax')
-                            span(class: 'summary-value', '$0.00')
+                            span(class: 'summary-value', "\$${String.format('%.2f', tax)}")
                         }
                         hr()
                         div(class: 'summary-row total') {
                             span('Total')
-                            span(class: 'summary-value', '$0.00')
+                            span(class: 'summary-value', "\$${String.format('%.2f', total)}")
                         }
                     }
                     div(class: 'payment-methods') {

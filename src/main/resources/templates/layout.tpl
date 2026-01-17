@@ -16,11 +16,20 @@ html {
                 ul {
                     li { a(href: '/', 'Home') }
                     li { a(href: '/shop', 'Shop') }
-                    li { a(href: '/about', 'About') }
                     if (username) {
-                        li { a(href: '/cart', "Cart(${cartItems?.sum { it.quantity } ?: 0})") }
+                        li { a(href: '/account', 'My Account')}
+                    }
+                    if (role == 'ADMIN') {
+                        li { a(href: '/admin', 'Admin Portal')}
+                    }
+                    if (role == 'VENDOR') {
+                        li { a(href: '/vendor', 'Vendor Portal')}
+                    }
+                    if (username) {
+                        li(id: 'cart-link-container') { a(href: '/cart', "Cart(${cartItems?.sum { it.quantity } ?: 0})") }
                         li { a(href: '/logout', class: 'logout-link', 'Logout') }
                     }
+                    li { a(href: '/about', 'About') }
                 }
             }
         }

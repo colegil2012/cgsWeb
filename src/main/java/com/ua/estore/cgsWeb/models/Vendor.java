@@ -7,14 +7,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "users")
-public class User {
+@NoArgsConstructor
+@Document(collection = "vendors")
+public class Vendor {
     @Id
     private String id;
-    private String username;
-    private String password;
-    private String role;
-    private String vendorId;
+    private String name;
 }

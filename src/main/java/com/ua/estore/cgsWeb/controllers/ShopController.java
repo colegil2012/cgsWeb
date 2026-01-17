@@ -1,7 +1,12 @@
 package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.Product;
+import com.ua.estore.cgsWeb.models.Vendor;
+import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.repositories.VendorRepository;
 import com.ua.estore.cgsWeb.services.ProductService;
+import com.ua.estore.cgsWeb.services.VendorService;
+import com.ua.estore.cgsWeb.util.dataUtil;
 import com.ua.estore.cgsWeb.util.searchUtil;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class ShopController {
 
     private final ProductService productService;
+    private final VendorService vendorService;
 
     @GetMapping("/shop")
     public String shop(HttpSession session, Model model) {
@@ -26,7 +34,7 @@ public class ShopController {
         List<Product> products = productService.getAllProducts();
         List<String> categories = searchUtil.getCategories(products);
 
-        model.addAttribute("products", products);
+        model.addAttribute("products", dataUtil.convertToProductDto(products, vendorService));
         model.addAttribute("categories", categories);
 
         return "shop";
@@ -46,16 +54,19 @@ public class ShopController {
         return executeFiltering(category, search, lowStock, model);
     }
 
-    /*
+
+
+    /********************************************************************************
        Helper Methods
-     */
+     *******************************************************************************/
+
 
     private String executeFiltering(String category, String search, boolean lowStock, Model model) {
         List<Product> allProducts = productService.getAllProducts();
         List<String> categories = searchUtil.getCategories(allProducts);
         List<Product> filteredProducts = productService.getProductsByFilter(category, search, lowStock);
 
-        model.addAttribute("products", filteredProducts);
+        model.addAttribute("products", dataUtil.convertToProductDto(filteredProducts, vendorService));
         model.addAttribute("categories", categories);
         model.addAttribute("lastCategory", category);
         model.addAttribute("lastSearch", search);

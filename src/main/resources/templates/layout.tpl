@@ -9,23 +9,23 @@ html {
     body {
         header {
             div(class: 'logo', 'CGS Organic')
-            if (username) {
-                span(class: 'welcome-message', "Welcome, ${username}")
+            if (user) {
+                span(class: 'welcome-message', "Welcome, ${user.username}!")
             }
             nav {
                 ul {
                     li { a(href: '/', 'Home') }
-                    li { a(href: '/shop', 'Shop') }
-                    if (username) {
+                    if (user) {
+                        li { a(href: '/shop', 'Shop') }
                         li { a(href: '/account', 'My Account')}
                     }
-                    if (role == 'ADMIN') {
+                    if (user?.role == 'ADMIN') {
                         li { a(href: '/admin', 'Admin Portal')}
                     }
-                    if (role == 'VENDOR') {
+                    if (user?.role == 'VENDOR') {
                         li { a(href: '/vendor', 'Vendor Portal')}
                     }
-                    if (username) {
+                    if (user) {
                         li(id: 'cart-link-container') { a(href: '/cart', "Cart(${cartItems?.sum { it.quantity } ?: 0})") }
                         li { a(href: '/logout', class: 'logout-link', 'Logout') }
                     }

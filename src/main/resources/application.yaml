@@ -4,3 +4,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/cgs_products
+
+app:
+  upload:
+    path: ${IMAGE_UPLOAD_PATH:external-images/}

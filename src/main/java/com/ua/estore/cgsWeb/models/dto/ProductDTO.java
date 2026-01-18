@@ -16,6 +16,7 @@ public class ProductDTO implements Serializable {
     private String category;
     private String imageUrl;
     private String vendorName;
+    private int stock;
     private int quantity;
 
     public void increaseQuantity() {

@@ -2,13 +2,12 @@ package templates
 
 layout 'layout.tpl',
         title: 'CGS Web | Home',
-        username: username,
+        user: user,
         cartItems: cartItems,
-        role: role,
         content: {
             div(class: 'hero') {
                 h1('Celtech General Store')
-                p('Fresh organic produce, herbs, and seasonings delivered from our soil to your kitchen.')
+                p('Helping to foster better relationships between Kentucy Citizens, Farmers and Crafters.')
                 a(href: '/shop', class: 'btn', 'Explore Shop')
             }
             div(class: 'container') {

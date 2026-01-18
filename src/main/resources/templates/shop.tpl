@@ -2,9 +2,8 @@ package templates;
 
 layout 'layout.tpl',
         title: 'CGS Web | Shop',
-        username: username,
+        user: user,
         cartItems: cartItems,
-        role: role,
         content: {
             div(class: 'hero') {
                 h1('Shop')
@@ -12,10 +11,16 @@ layout 'layout.tpl',
             }
             div(class: 'filter-container') {
                 form(action: '/shop/filter', method: 'get', class: 'filter-form') {
+
+                    div(class: 'filter-group') {
+                        label(for: 'searchInput', 'Search')
+                        input(type: 'text', id: 'searchInput', name: 'search', placeholder: 'Find a product...')
+                    }
+
                     div(class: 'filter-group') {
                         label(for: 'categoryFilter', 'Filter by Category: ')
                         select(id: 'categoryFilter', name: 'category') {
-                            option(value: '', selected: (lastCategory == null || lastCategory == ''), 'All Categories')
+                            option(value: '', 'All Categories')
                             categories.each { cat ->
                                 option(value: cat, cat)
                             }
@@ -23,17 +28,18 @@ layout 'layout.tpl',
                     }
 
                     div(class: 'filter-group') {
-                        label(for: 'searchInput', 'Search')
-                        input(type: 'text', id: 'searchInput', name: 'search', value: lastSearch ?: '', placeholder: 'Find a product...')
+                        label(for: 'vendorFilter', 'Filter by Vendor: ')
+                        select(id: 'vendorFilter', name: 'vendor') {
+                            option(value: '', 'All Vendors')
+                            vendors.each { vendor ->
+                                option(value: vendor.id, vendor.name)
+                            }
+                        }
                     }
 
                     div(class: 'filter-group checkbox-group') {
                         label(for: 'lowStock', 'Low Stock!')
                         input(type: 'checkbox', id: 'lowStock', name: 'lowStock', value: 'true')
-                    }
-
-                    a(href: '/shop', class: 'btn-clear') {
-                        span('Clear Filters')
                     }
 
                     button(type: 'submit', class: 'btn-search') {
@@ -45,21 +51,42 @@ layout 'layout.tpl',
                 div(class: 'product-grid') {
                     products.each { product ->
                         div(class: 'product-card') {
-                            img(src: product.imageUrl ?: '/images/placeholder.jpg', alt: product.name)
+                            a(href: "/shop/view/${product.id}", 'class: product-image-link') {
+                                img(src: product.imageUrl ?: '/images/placeholder.jpg', alt: product.name)
+                            }
                             div(class: 'product-info') {
-                                div (class: 'product-title') {
+                                div(class: 'product-title') {
                                     span(class: 'title-name', product.name)
                                     span(class: 'category', product.category)
                                 }
-                                div (class: 'product-meta') {
+                                div(class: 'product-meta') {
                                     span(class: 'vendor-tag', "By: ${product.vendorName}")
                                 }
                                 p(class: 'description', product.description)
-                                div(class: 'product-footer') {
-                                    span(class: 'price', "\$${product.price}")
-                                    a(href: "/cart/add/${product.id}", class: 'btn-small', 'Add to Cart')
+
+                                if(product.stock < 25) {
+                                    div(class: 'warning-wrapper') {
+                                        span(class: 'low-stock-warn', "Low Stock! Only ${product.stock} left!")
+                                    }
+                                } else {
+                                    div(class: 'spacing-wrapper') {
+
+                                    }
                                 }
                             }
+
+                            div(class: 'product-footer') {
+                                span(class: 'price', "\$${product.price}")
+                                a(href: "/cart/add/${product.id}", class: 'btn-small', 'Add to Cart')
+                            }
+                        }
+                    }
+                }
+                if (totalPages > 1) {
+                    div(class: 'pagination-container') {
+                        (0..<totalPages).each { p ->
+                            a(href: "/shop/filter?page=${p}&search=${search ?: ''}&category=${category ?: ''}&vendor=${vendor ?: ''}&lowStock=${lowStock}",
+                                    class: "page-link ${p == currentPage ? 'active' : ''}", p + 1)
                         }
                     }
                 }

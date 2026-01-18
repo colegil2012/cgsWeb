@@ -1,6 +1,7 @@
 package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.Product;
+import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.services.CredentialService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
@@ -24,15 +25,20 @@ public class AccountController  {
     private final ProductService productService;
     private final VendorService vendorService;
 
+
+    /**********************************************************************************
+     * Controller methods for handling account-related operations
+     *********************************************************************************/
+
     @GetMapping("/account")
     public String accountPage(HttpSession session, Model model) {
-        String username = (String) session.getAttribute("username");
-        log.info("Accessing account page for user: {}", username);
+        User user = (User) session.getAttribute("user");
+        log.info("Accessing account page for user: {}", user.getUsername());
 
-        if (username == null) return "redirect:/login";
+        if (user.getUsername() == null) return "redirect:/login";
 
-        credentialService.getUserByUsername(username).ifPresent(user -> {
-            model.addAttribute("user", user);
+        credentialService.getUserByUsername(user.getUsername()).ifPresent(vUser -> {
+            model.addAttribute("user", vUser);
 
             if ("VENDOR".equalsIgnoreCase(user.getRole()) && user.getVendorId() != null) {
                 try {

@@ -1,5 +1,6 @@
 package com.ua.estore.cgsWeb.config;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -10,11 +11,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) throws Exception {
+                             @Nonnull HttpServletResponse response,
+                             @Nonnull Object handler) throws Exception {
         HttpSession session = request.getSession();
 
-        if(session.getAttribute("username") == null) {
+        if(session.getAttribute("user") == null) {
             response.sendRedirect("/login");
             return false;
         }

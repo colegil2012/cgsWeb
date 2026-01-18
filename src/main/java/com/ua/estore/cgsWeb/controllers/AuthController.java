@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes({"username", "role"})
+@SessionAttributes({"user"})
 public class AuthController {
 
     private final CredentialService credentialService;
@@ -38,6 +38,8 @@ public class AuthController {
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+            user.setPassword(null);
+            session.setAttribute("user", user);
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRole());
             session.setAttribute("cartItems", new ArrayList<ProductDTO>());

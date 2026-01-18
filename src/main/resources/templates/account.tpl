@@ -2,10 +2,8 @@ package templates
 
 layout 'layout.tpl',
         title: 'CGS Web | My Account',
-        username: username,
-        cartItems: cartItems,
-        role: role,
         user: user,
+        cartItems: cartItems,
         vendorInfo: vendorInfo,
         vendorProducts: vendorProducts,
         content: {

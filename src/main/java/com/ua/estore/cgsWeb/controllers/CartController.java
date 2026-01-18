@@ -27,6 +27,10 @@ public class CartController {
     private final VendorService vendorService;
 
 
+    /**********************************************************************************
+     * Controller methods for handling cart-related operations
+     *********************************************************************************/
+
     @GetMapping("/cart")
     public String viewCart(HttpSession session, Model model) {
         BigDecimal totalPrice = new BigDecimal(0);
@@ -49,9 +53,7 @@ public class CartController {
     public Object addToCart(@PathVariable String id, HttpSession session) {
         List<ProductDTO> cart = (List<ProductDTO>) session.getAttribute("cartItems");
 
-        if (cart == null) {
-            cart = new ArrayList<>();
-        }
+        if (cart == null) { cart = new ArrayList<>(); }
 
         Optional<ProductDTO> existingItem = cart.stream()
                 .filter(item -> item.getId().equals(id))
@@ -69,7 +71,7 @@ public class CartController {
                 ProductDTO dto = new ProductDTO(
                         product.getId(), product.getName(), product.getDescription(),
                         product.getPrice(), product.getCategory(), product.getImageUrl(),
-                        vendorName, 1
+                        vendorName, product.getStock(), 1
                 );
                 cart.add(dto);
             }
@@ -96,7 +98,6 @@ public class CartController {
                 if (item.getQuantity() > 1) {
                     item.decreaseQuantity();
                 } else {
-                    // If quantity is 1, remove the item from the list entirely
                     cart.remove(item);
                 }
             }

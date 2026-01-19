@@ -1,4 +1,4 @@
-package templates
+package templates.shop
 
 layout 'layout.tpl',
         title: 'CGS Web | Home',

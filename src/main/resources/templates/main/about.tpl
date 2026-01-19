@@ -1,4 +1,4 @@
-package templates
+package templates.main
 
 layout 'layout.tpl',
         title: 'CGS Web | About Our Mission',

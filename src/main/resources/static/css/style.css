@@ -232,6 +232,8 @@ nav a:hover {
 .product-info {
     padding: 1.5rem;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-title {
@@ -271,9 +273,17 @@ nav a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 5px;
-    padding: 1rem 1.5rem;
+    margin-top: auto;
+    padding: 1rem 0 0 0;
     border-top: 1px solid var(--primary-green);
+}
+
+.product-footer .btn-small {
+    margin: 0.5rem;
+}
+
+.product-footer .price {
+    margin: 0.5rem;
 }
 
 .description {
@@ -410,6 +420,10 @@ nav a:hover {
     width: 33%;
 }
 
+.product-footer .warning-wrapper {
+    width: 33%;
+}
+
 .product-actions .btn-small {
     padding: 0.8rem 2rem;
     font-size: 1rem;
@@ -527,6 +541,7 @@ h2 {
 .btn-small {
     background-color: var(--accent-green);
     color: var(--white);
+    border: none;
     padding: 0.5rem 1rem;
     text-decoration: none;
     border-radius: 4px;
@@ -534,6 +549,11 @@ h2 {
     font-weight: 500;
     display: inline-block;
     transition: background-color 0.3s;
+}
+
+.btn-search, .btn-small {
+    cursor: pointer;
+    user-select: none;
 }
 
 .btn-small:hover {
@@ -582,6 +602,11 @@ button.btn {
     margin: 1rem auto;
     padding: 0 1rem;
     align-items: flex-start;
+}
+
+.cart-count {
+    display: inline-block;
+    font-weight: bold;
 }
 
 .cart-main {
@@ -826,12 +851,14 @@ button.btn {
     background: #f4f4f4;
     border: 1px solid #ddd;
     border-radius: 4px;
-    padding: 10px 15px;
+    padding: 4px 10px;
     color: #333;
-    font-family: 'Courier New', Courier, monospace; /* Makes it look technical/immutable */
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 0.8rem;
     display: block;
-    width: 90%;
-    margin-left: 0.1rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 0rem;
 }
 
 /* Vendor Table Styles */
@@ -842,6 +869,69 @@ button.btn {
     overflow: hidden;
 }
 
+.vendor-products-section {
+    background: var(--white);
+    border-radius: 0 0 20px 20px;
+    padding-top: 1rem;
+}
+
+.product-header-container {
+    max-width: fit-content;
+    margin: -25px auto 2rem;
+    padding: 0.5rem 3rem;
+    background: var(--soft-brown);
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1px solid var(--earth-brown);
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.vendor-products-section .product-grid {
+    margin: 1.8rem;
+}
+
+.vendor-products-section h2 {
+    margin: 0.7rem 7rem;
+    padding: 0.5rem 0;
+    border-bottom: none;
+    color: var(--earth-brown);
+    font-size: 1.7rem;
+    font-style: italic;
+}
+
+.vendor-profile-container {
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+}
+
+.vendor-header-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: var(--primary-green);
+    color: var(--earth-brown);
+    padding: 3rem 2rem;
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 0;
+}
+
+.vendor-header-logo {
+   margin-bottom: 1.5rem;
+}
+
+.vendor-header-logo img {
+    max-width: 180px;
+    height: auto;
+    border-radius: 70%
+    border: 4px solid var(--white);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    mix-blend-mode: multiply;
+    filter: contrast(1.4);
+}
+
 .vendor-header {
     background: #2e7d32; /* Organic Green */
     color: white;
@@ -849,6 +939,43 @@ button.btn {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.vendor-name {
+    font-size: 2.5rem;
+    color: var(--dark-green);
+    margin-bottom: 0.5rem;
+}
+
+.vendor-bio {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--earth-brown);
+    max-width: 700px;
+    margin 0 auto 1.5rem auto;
+    line-height: 1.6;
+}
+
+.vendor-location {
+    background: rgba(255,255,255,0.5);
+    padding: 1rem;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.location-label {
+    display: block;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--accent-green);
+    margin-bottom: 0.5rem;
+}
+
+.address-line {
+    margin: 0.2rem 0;
+    font-size: 0.95rem;
+    color: var(--text-color);
 }
 
 .vendor-table {
@@ -882,6 +1009,99 @@ button.btn {
 }
 
 /* Vendor Management UI */
+.vendor-profile-card {
+    margin-bottom: 2rem;
+    border-top: 5px solid var(--accent-green);
+}
+
+.vendor-profile-card h2 {
+    margin-bottom: 1.5rem;
+    border: none;
+    padding: 0;
+}
+
+.wide-container {
+    max-width: 1400px;
+    margin: 1rem auto;
+    padding: 0 2rem;
+}
+
+.vendor-profile-card .vendor-item-row {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+    margin-bottom: 0;
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr 1fr;
+    gap: 0.8rem 1.5rem;
+    align-items: end;
+}
+
+.vendor-profile-card .vendor-item-row:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.vendor-profile-card .vendor-item-row .info-group.full-width {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+.vendor-profile-card .vendor-item-row .full-width .readonly-box {
+    width: 100%;
+}
+
+.vendor-profile-logo-group {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    align-self: center;
+    gap: 5px;
+}
+
+.vendor-profile-card .full-width {
+    grid-column: 1/ -1;
+    margin-top: 0.5rem;
+}
+
+.vendor-profile-logo-group img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 0.5rem;
+}
+
+/* Helper classes for the custom row widths */
+.span-1-5 { grid-column: span 1.5; } /* Not standard, we'll use fractional logic below */
+
+/* Specific Row spans for the 2-column rows */
+.row-2-col {
+    grid-column: span 1.5; /* Handled by specific placement below */
+}
+
+/* Resetting full width for description */
+.vendor-profile-card .full-width {
+    grid-column: 1 / -1; /* Stretch across all 4 columns */
+    margin-top: 1rem;
+}
+
+.upload-link {
+    font-size: 0.8rem;
+    color: var(--accent-green);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.readonly-description {
+    height: auto;
+    min-height: 3em;
+    line-height: 1.6;
+}
+
 .add-item-container {
     background: #fdfdfd;
     border: 1px solid var(--soft-brown);
@@ -1006,6 +1226,75 @@ button.btn {
     margin-bottom: 0;
 }
 
+/* View Vendors Styles */
+.vendor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Force 3 vendors per row */
+    gap: 25px;
+    padding: 20px 15px;
+}
+
+.vendor-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.vendor-card:hover {
+    transform: translateY(-5px);
+}
+
+.vendor-logo-container {
+    height: 150px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #eee;
+}
+
+.vendor-logo-img {
+    max-height: 120px;
+    max-width: 80%;
+}
+
+.vendor-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.vendor-address {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 10px;
+    flex-grow: 1;
+}
+
+.vendor-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 15px;
+    margin-top: auto;
+}
+
+.btn-view-vendor {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
 /* About Page Styles */
 .about-hero {
     background: linear-gradient(rgba(29, 79, 30, 0.8), rgba(29, 79, 30, 0.8)), url('/images/about-hero-bg.jpg');
@@ -1089,6 +1378,16 @@ button.btn {
 }
 
 /* Animations */
+
+.flying-item {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.42, 0, 0.58, 1);
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
 
 @keyframes subtle-glow {
     0%, 100% {

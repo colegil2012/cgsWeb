@@ -52,9 +52,15 @@ public class dataUtil {
         Map<String, String> vendorMap = vendorService.getVendorNameMap();
 
         return products.stream().map(p -> {
-            // Clean the vendorId from the product using your utility
-            String cleanVendorId = p.getVendorId() != null ?
-                    dataUtil.parseToObjectId(p.getVendorId()).toHexString() : null;
+            String cleanVendorId = null;
+            try {
+                if (p.getVendorId() != null) {
+                    // Normalize the vendor ID string
+                    cleanVendorId = dataUtil.parseToObjectId(p.getVendorId()).toHexString();
+                }
+            } catch (Exception e) {
+                // Handle malformed IDs gracefully
+            }
 
             String vName = vendorMap.getOrDefault(cleanVendorId, "Unknown Vendor");
 

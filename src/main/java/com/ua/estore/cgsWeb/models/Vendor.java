@@ -14,4 +14,12 @@ public class Vendor {
     @Id
     private String id;
     private String name;
+    private String description;
+    private String address_1;
+    private String address_2;
+    private String city;
+    private String state;
+    private String zip;
+    private String country;
+    private String logo_url;
 }

@@ -8,7 +8,7 @@ html {
     }
     body {
         header {
-            div(class: 'logo', 'CGS Organic')
+            div(class: 'logo', 'Celtech GS')
             if (user) {
                 span(class: 'welcome-message', "Welcome, ${user.username}!")
             }
@@ -17,19 +17,26 @@ html {
                     li { a(href: '/', 'Home') }
                     if (user) {
                         li { a(href: '/shop', 'Shop') }
+                        li { a(href: '/vendors', 'Vendors') }
                         li { a(href: '/account', 'My Account')}
                     }
                     if (user?.role == 'ADMIN') {
                         li { a(href: '/admin', 'Admin Portal')}
                     }
                     if (user?.role == 'VENDOR') {
-                        li { a(href: '/vendor', 'Vendor Portal')}
-                    }
-                    if (user) {
-                        li(id: 'cart-link-container') { a(href: '/cart', "Cart(${cartItems?.sum { it.quantity } ?: 0})") }
-                        li { a(href: '/logout', class: 'logout-link', 'Logout') }
+                        li { a(href: '/vendor/portal', 'Vendor Portal')}
                     }
                     li { a(href: '/about', 'About') }
+                    if (user) {
+                        li(id: 'cart-link-container') {
+                            a(href: '/cart', class: 'cart-link') {
+                                yield "Cart("
+                                span(class: 'cart-count', cartItems?.sum { it.quantity } ?: 0)
+                                yield ")"
+                            }
+                        }
+                        li { a(href: '/logout', class: 'logout-link', 'Logout') }
+                    }
                 }
             }
         }

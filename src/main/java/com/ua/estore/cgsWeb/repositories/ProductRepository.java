@@ -1,7 +1,6 @@
 package com.ua.estore.cgsWeb.repositories;
 
 import com.ua.estore.cgsWeb.models.Product;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +22,11 @@ public interface ProductRepository extends MongoRepository<Product, String> {
             "{ $or: [ { $expr: { $eq: [ { $literal: ?3 }, false ] } }, { 'stock': { $lte: 25 } } ] }" +
             "] }")
     Page<Product> findByFilter(String category, String search, Object vendorId, boolean lowStock, Pageable pageable);
+
+    @Query("{ 'vendorId': ?0 }")
+    Page<Product> findByVendorId(String vendorId, Pageable pageable);
+
+    Page<Product> getProductsByVendorId(ObjectId vendorId, Pageable pageable);
 
 }
 

@@ -62,7 +62,7 @@ public class ShopController {
         ProductDTO productDto = dtos.getFirst();
 
         model.addAttribute("selected_product", productDto);
-        return "product";
+        return "shop/product";
     }
 
 
@@ -86,7 +86,7 @@ public class ShopController {
 
         model.addAttribute("categories", searchUtil.getCategories(productService.getAllProducts()));
         model.addAttribute("vendors", vendorService.getAllVendors());
-        return "shop";
+        return "shop/shop";
     }
 
 }

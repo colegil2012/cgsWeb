@@ -3,7 +3,7 @@ spring:
     name: cgsWeb
   data:
     mongodb:
-      uri: mongodb://localhost:27017/cgs_products
+      uri: ${MONGODB_URI:mongodb://localhost:27017/cgs_products}
 
 app:
   upload:

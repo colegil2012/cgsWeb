@@ -8,9 +8,9 @@ public class HomeController {
 
     @GetMapping("/")
     public String index() {
-        return "index";
+        return "main/index";
     }
 
     @GetMapping("/about")
-    public String about() { return "about"; }
+    public String about() { return "main/about"; }
 }

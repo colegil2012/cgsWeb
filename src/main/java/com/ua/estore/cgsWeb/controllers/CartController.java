@@ -44,7 +44,7 @@ public class CartController {
 
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("cartItems", cart);
-        return "cart";
+        return "shop/cart";
     }
 
 

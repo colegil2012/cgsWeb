@@ -46,7 +46,7 @@ public class AccountController  {
                     ObjectId vendorObjectId = dataUtil.parseToObjectId(user.getVendorId());
                     log.info("Converted VendorID to ObjectId: {}", vendorObjectId);
 
-                    vendorService.getVendorById(vendorObjectId).ifPresent(vendor -> {
+                    vendorService.getVendorById(user.getVendorId()).ifPresent(vendor -> {
                         model.addAttribute("vendorInfo", vendor);
                     });
 
@@ -70,6 +70,6 @@ public class AccountController  {
             }
         });
 
-        return "account";
+        return "main/account";
     }
 }

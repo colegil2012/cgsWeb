@@ -1,4 +1,4 @@
-package templates;
+package templates.shop;
 
 layout 'layout.tpl',
         title: 'CGS Web | Shop',
@@ -77,7 +77,7 @@ layout 'layout.tpl',
 
                             div(class: 'product-footer') {
                                 span(class: 'price', "\$${product.price}")
-                                a(href: "/cart/add/${product.id}", class: 'btn-small', 'Add to Cart')
+                                button(class: 'btn-small', onclick: "addToCart('${product.id}')", 'Add to Cart')
                             }
                         }
                     }

@@ -29,8 +29,17 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**")
                 .addResourceLocations("classpath:/static/css/");
+
+        String absolutePath = new File(uploadPath).getAbsolutePath();
+        if (!absolutePath.endsWith(File.separator)) {
+            absolutePath += File.separator;
+        }
+
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("classpath:/static/images/")
-                .addResourceLocations("file:" + new File(uploadPath).getAbsolutePath() + "/");
+                .addResourceLocations("file:" + absolutePath + "/")
+                .addResourceLocations("file:" + absolutePath + "site-images/")
+                .addResourceLocations("file:" + absolutePath + "vendors/")
+                .addResourceLocations("file:" + absolutePath + "products/");
     }
 }

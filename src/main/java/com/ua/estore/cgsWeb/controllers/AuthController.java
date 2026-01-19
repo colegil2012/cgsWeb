@@ -25,7 +25,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "main/login";
     }
 
     @PostMapping("/login")
@@ -46,7 +46,7 @@ public class AuthController {
             return "redirect:/";
         } else {
             model.addAttribute("error", "Invalid username or password");
-            return "login";
+            return "main/login";
         }
     }
 

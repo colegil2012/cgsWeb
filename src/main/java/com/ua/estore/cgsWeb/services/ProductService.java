@@ -54,4 +54,11 @@ public class ProductService {
         return productRepository.findByFilter(categoryQuery, searchQuery, vendorQuery, lowStock, pageable);
     }
 
+    public Page<Product> getProductsByVendorId(String vendorId, int page) {
+        var pageable = PageRequest.of(page, 15);
+
+        if (vendorId == null || vendorId.isEmpty()) return Page.empty(pageable);
+
+        return productRepository.findByVendorId(vendorId, pageable);
+    }
 }

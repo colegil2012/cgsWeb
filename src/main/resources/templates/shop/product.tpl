@@ -1,4 +1,4 @@
-package templates
+package templates.shop
 
 import com.ua.estore.cgsWeb.models.dto.ProductDTO;
 
@@ -34,15 +34,15 @@ layout 'layout.tpl',
 
                         p(class: 'product-description', selected_product.description)
 
-                        div(class: 'product-actions') {
+                        div(class: 'product-footer') {
                             span(class: 'price-large', "\$${selected_product.price}")
                             if(selected_product.stock != null && selected_product.stock < 25) {
                                 div(class: 'warning-wrapper') {
                                     span(class: 'low-stock-warn', "Low Stock! Only ${selected_product.stock} left!")
                                 }
                             }
-                            // Same class and href structure as shop.tpl to trigger cart.js
-                            a(href: "/cart/add/${selected_product.id}", class: 'btn-small', 'Add to Cart')
+
+                            button(class: 'btn-small', onclick: "addToCart('${selected_product.id}')", 'Add to Cart')
                         }
                     }
                 }

@@ -1,6 +1,8 @@
 package com.ua.estore.cgsWeb.config;
 
 
+import org.springframework.context.annotation.Bean;
+
 //@Configuration
 //@EnableWebSecurity
 public class SecurityConfig {

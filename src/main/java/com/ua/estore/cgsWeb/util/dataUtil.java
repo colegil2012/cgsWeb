@@ -47,27 +47,26 @@ public class dataUtil {
      * @return a list of {@link ProductDTO} objects containing the mapped data
      */
 
-    public List<ProductDTO> convertToProductDto(List<Product> products, VendorService vendorService) {
-        // Fetch all vendors and create a Map for quick lookup: ID -> Name
+    public List<ProductDTO> convertToProductDto(List<Product> products, VendorService vendorService, Map<String, String> categoryMap) {
         Map<String, String> vendorMap = vendorService.getVendorNameMap();
 
         return products.stream().map(p -> {
-            String cleanVendorId = null;
-            try {
-                if (p.getVendorId() != null) {
-                    // Normalize the vendor ID string
-                    cleanVendorId = dataUtil.parseToObjectId(p.getVendorId()).toHexString();
-                }
-            } catch (Exception e) {
-                // Handle malformed IDs gracefully
-            }
-
-            String vName = vendorMap.getOrDefault(cleanVendorId, "Unknown Vendor");
+            String vName = vendorMap.getOrDefault(p.getVendorId(), "Unknown Vendor");
+            String cName = categoryMap.getOrDefault(p.getCategoryId(), "Uncategorized");
 
             return new ProductDTO(
-                    p.getId(), p.getName(), p.getDescription(),
-                    p.getPrice(), p.getCategory(), p.getImageUrl(),
-                    vName, p.getStock(), 0
+                    p.getId(),
+                    p.getName(),
+                    p.getSlug(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    p.getSalePrice(),
+                    cName,
+                    p.getImageUrl(),
+                    vName,
+                    p.getStock(),
+                    p.getLowStockThreshold(),
+                    0
             );
         }).toList();
     }

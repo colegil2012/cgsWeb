@@ -32,20 +32,20 @@ layout 'layout.tpl',
 
                             // Address Block
                             div(class: 'vendor-address') {
-                                strong 'Location:'
-                                p {
-                                    yield vendor.address_1
-                                    if (vendor.address_2) {
+                                // The fix: Use [0] instead of .first() to avoid exceptions on empty lists
+                                def defaultAddress = vendor.addresses?.find { it.isDefault } ?: vendor.addresses?.getAt(0)
+
+                                if (defaultAddress) {
+                                    strong "${defaultAddress.type ?: 'Location'}:"
+                                    p {
+                                        yield "${defaultAddress.street ?: ''}"
                                         br()
-                                        yield vendor.address_2
+                                        yield "${defaultAddress.city ?: ''}, ${defaultAddress.state ?: ''} ${defaultAddress.zip ?: ''}"
                                     }
-                                    br()
-                                    yield "${vendor.city}, ${vendor.state} ${vendor.zip}"
-                                    br()
-                                    yield vendor.country
+                                } else {
+                                    p 'No address listed.'
                                 }
                             }
-
                             div(class: 'vendor-footer') {
                                 a(href: "/vendor/${vendor.id}", class: 'btn-view-vendor', 'View Store Page')
                             }

@@ -5,6 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,23 +20,30 @@ public class User { //implements UserDetails {
     private String id;
     private String username;
     private String password;
+    private String email;
     private String role;
+
+    @Field(targetType = FieldType.OBJECT_ID)
     private String vendorId;
 
-    /*@Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+    private UserProfile profile;
+    private List<Address> addresses = new ArrayList<>();
+
+    @Data
+    public static class UserProfile {
+        private String firstName;
+        private String lastName;
+        private String phoneNumber;
     }
 
-    @Override
-    public boolean isAccountNonExpired() { return true; }
+    @Data
+    public static class Address {
+        private String type;  //SHIPPING, BILLING
+        private String street;
+        private String city;
+        private String state;
+        private String zip;
+        private boolean isDefault;
+    }
 
-    @Override
-    public boolean isAccountNonLocked() { return true; }
-
-    @Override
-    public boolean isCredentialsNonExpired() { return true; }
-
-    @Override
-    public boolean isEnabled() { return true; }*/
 }

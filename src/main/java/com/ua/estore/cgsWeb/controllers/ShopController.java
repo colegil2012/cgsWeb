@@ -3,10 +3,10 @@ package com.ua.estore.cgsWeb.controllers;
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.Vendor;
 import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
 import com.ua.estore.cgsWeb.util.dataUtil;
-import com.ua.estore.cgsWeb.util.searchUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class ShopController {
 
     private final ProductService productService;
     private final VendorService vendorService;
+    private final CategoryService categoryService;
 
     /**********************************************************************************
      * Controller methods for handling shop-related operations
@@ -30,14 +32,14 @@ public class ShopController {
     @GetMapping("/shop")
     public String shop(@RequestParam(defaultValue = "0") int page, Model model) {
         List<Product> products = productService.getAllProducts();
-        List<String> categories = searchUtil.getCategories(products);
         List<Vendor> vendors = vendorService.getAllVendors();
+        Map<String, String> categories = categoryService.getCategoryNameMap();
 
         model.addAttribute("vendors", vendors);
-        model.addAttribute("products", dataUtil.convertToProductDto(products, vendorService));
+        model.addAttribute("products", dataUtil.convertToProductDto(products, vendorService, categories));
         model.addAttribute("categories", categories);
 
-        return executeFiltering("", "", "", false, page, model);
+        return executeFiltering("", "", "", false, page, categories, model);
     }
 
     @GetMapping("/shop/filter")
@@ -48,15 +50,16 @@ public class ShopController {
                                  @RequestParam(defaultValue = "0") int page,
                                  Model model) {
 
-        return executeFiltering(search, category, vendor, lowStock, page, model);
+        return executeFiltering(search, category, vendor, lowStock, page, categoryService.getCategoryNameMap(), model);
     }
 
     @GetMapping("/shop/view/{id}")
     public String viewProduct(@PathVariable String id, Model model) {
         Product product = productService.getProductById(id);
+        Map<String, String> categories = categoryService.getCategoryNameMap();
         if( product == null ) return "redirect:/shop";
 
-        List<ProductDTO> dtos = dataUtil.convertToProductDto(List.of(product), vendorService);
+        List<ProductDTO> dtos = dataUtil.convertToProductDto(List.of(product), vendorService, categories);
         if (dtos.isEmpty()) return "redirect:/shop";
 
         ProductDTO productDto = dtos.getFirst();
@@ -72,10 +75,10 @@ public class ShopController {
      *******************************************************************************/
 
 
-    private String executeFiltering(String search, String category, String vendor, boolean lowStock, int page, Model model) {
+    private String executeFiltering(String search, String category, String vendor, boolean lowStock, int page, Map<String, String> catMap, Model model) {
         Page<Product> productPage = productService.getProductsByFilter(search, category, vendor, lowStock, page);
 
-        model.addAttribute("products", dataUtil.convertToProductDto(productPage.getContent(), vendorService));
+        model.addAttribute("products", dataUtil.convertToProductDto(productPage.getContent(), vendorService, catMap));
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());
 
@@ -84,7 +87,7 @@ public class ShopController {
         model.addAttribute("vendor", vendor);
         model.addAttribute("lowStock", lowStock);
 
-        model.addAttribute("categories", searchUtil.getCategories(productService.getAllProducts()));
+        model.addAttribute("categories", catMap);
         model.addAttribute("vendors", vendorService.getAllVendors());
         return "shop/shop";
     }

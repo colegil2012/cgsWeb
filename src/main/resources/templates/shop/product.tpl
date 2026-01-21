@@ -23,7 +23,7 @@ layout 'layout.tpl',
                     }
 
                     div(class: 'product-view-details') {
-                        span(class: 'category-tag', selected_product.category)
+                        span(class: 'category-tag', selected_product.categoryName)
                         span(class: 'name-tag', selected_product.name)
                         p(class: 'vendor-text') {
                             yield "Supplied by "
@@ -36,7 +36,7 @@ layout 'layout.tpl',
 
                         div(class: 'product-footer') {
                             span(class: 'price-large', "\$${selected_product.price}")
-                            if(selected_product.stock != null && selected_product.stock < 25) {
+                            if(selected_product.stock != null && selected_product.stock < selected_product.lowStockThreshold) {
                                 div(class: 'warning-wrapper') {
                                     span(class: 'low-stock-warn', "Low Stock! Only ${selected_product.stock} left!")
                                 }

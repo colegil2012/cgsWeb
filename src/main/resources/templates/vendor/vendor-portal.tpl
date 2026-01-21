@@ -31,7 +31,6 @@ layout 'layout.tpl',
                     }
                 }
 
-                // Vendor Profile Read-Only Section
                 if (vendorDetail) {
                     div(class: 'info-card vendor-profile-card') {
                         h2 'Your Vendor Profile'
@@ -44,6 +43,9 @@ layout 'layout.tpl',
                                 input(type: 'file', id: 'vendorLogoUpload', name: 'vendorLogo', style: 'display:none;', accept: 'image/*')
                             }
 
+                            // Get default address for display
+                            def addr = vendorDetail.addresses?.find { it.isDefault } ?: (vendorDetail.addresses?.isEmpty() ? null : vendorDetail.addresses[0])
+
                             // Row 1: 2 Columns
                             div(class: 'info-group', style: 'grid-column: 2 / span 1;') {
                                 label('Business Name')
@@ -51,37 +53,31 @@ layout 'layout.tpl',
                             }
                             div(class: 'info-group', style: 'grid-column: 3 / span 2;') {
                                 label('Street Address')
-                                span(class: 'readonly-box', vendorDetail.address_1)
+                                span(class: 'readonly-box', addr?.street ?: 'No Address Set')
                             }
 
                             // Row 2: 2 Columns
                             div(class: 'info-group', style: 'grid-column: 2 / span 1;') {
-                                label('Suite / Unit')
-                                span(class: 'readonly-box', vendorDetail.address_2 ?: 'None Listed')
+                                label('Address Type')
+                                span(class: 'readonly-box', addr?.type ?: 'N/A')
                             }
                             div(class: 'info-group', style: 'grid-column: 3 / span 2;') {
                                 label('City')
-                                span(class: 'readonly-box', vendorDetail.city)
+                                span(class: 'readonly-box', addr?.city ?: '-')
                             }
 
                             // Row 3: 3 Columns
                             div(class: 'info-group', style: 'grid-column: 2 / span 1;') {
                                 label('State')
-                                span(class: 'readonly-box', vendorDetail.state)
+                                span(class: 'readonly-box', addr?.state ?: '-')
                             }
                             div(class: 'info-group', style: 'grid-column: 3 / span 1;') {
                                 label('Zip')
-                                span(class: 'readonly-box', vendorDetail.zip)
+                                span(class: 'readonly-box', addr?.zip ?: '-')
                             }
                             div(class: 'info-group', style: 'grid-column: 4 / span 1;') {
-                                label('Country')
-                                span(class: 'readonly-box', vendorDetail.country)
-                            }
-
-                            // Row 4: Full Width Description
-                            div(class: 'info-group full-width') {
-                                label('Business Description')
-                                div(class: 'readonly-box readonly-description', vendorDetail.description)
+                                label('Status')
+                                span(class: 'readonly-box', vendorDetail.active ? 'Active' : 'Inactive')
                             }
                         }
                     }
@@ -109,7 +105,8 @@ layout 'layout.tpl',
                             div(class: 'info-group') {
                                 label('Category')
                                 select(name: 'products[0].category') {
-                                    categories.each { cat -> option(value: cat, cat) }
+                                    categories.each { name, id ->
+                                        option(value: name, id) }
                                 }
                             }
                             div(class: 'info-group') {
@@ -117,10 +114,36 @@ layout 'layout.tpl',
                                 input(type: 'number', name: 'products[0].price', step: '0.01', min: '0.01', required: 'required')
                             }
                             div(class: 'info-group') {
+                                label('Sale Price ($)')
+                                input(type: 'number', name: 'products[0].salePrice', step: '0.01', min: '0.01', required: 'required')
+                            }
+                            div(class: 'info-group') {
                                 label('Stock')
                                 input(type: 'number', name: 'products[0].stock', min: '1', required: 'required')
                             }
-                            div(class: 'info-group two-thirds') {
+                            div(class: 'info-group') {
+                                label('Low Stock Threshold')
+                                input(type: 'number', name: 'products[0].lowStockThreshold', min: '1', required: 'required')
+                            }
+                            div(class: 'info-group full-width attributes-container') {
+                                div(class: 'info-group') {
+                                    label('Weight (lb)')
+                                    input(type: 'text', name: 'products[0].attributes.weight', placeholder: 'e.g. 1.5kg')
+                                }
+                                div(class: 'info-group') {
+                                    label('L (in)')
+                                    input(type: 'number', name: 'products[0].attributes.length', step: '0.1')
+                                }
+                                div(class: 'info-group') {
+                                    label('W (in)')
+                                    input(type: 'number', name: 'products[0].attributes.width', step: '0.1')
+                                }
+                                div(class: 'info-group') {
+                                    label('H (in)')
+                                    input(type: 'number', name: 'products[0].attributes.height', step: '0.1')
+                                }
+                            }
+                            div(class: 'info-group full-width') {
                                 label('Upload Image')
                                 input(type: 'file', name: 'productImages[0]', accept: 'image/*')
                             }

@@ -28,6 +28,12 @@ public class ProductService {
         ObjectId cleanVendorId = dataUtil.parseToObjectId(vendorId);
         product.setVendorId(cleanVendorId.toHexString());
 
+        // B2C logic: Ensure active and generate a simple slug if missing
+        product.setActive(true);
+        if (product.getSlug() == null || product.getSlug().isEmpty()) {
+            product.setSlug(product.getName().toLowerCase().replace(" ", "-") + "-" + System.currentTimeMillis() % 1000);
+        }
+
         return productRepository.save(product).getId();
     }
 
@@ -45,7 +51,9 @@ public class ProductService {
 
     public Page<Product> getProductsByFilter(String search, String category, String vendor, boolean lowStock, int page) {
         String searchQuery = (search == null) ? "" : search;
-        String categoryQuery = (category == null) ? "" : category;
+
+        // Convert category and vendor to ObjectIds for the Mongo query
+        Object categoryQuery = (category == null || category.isEmpty()) ? "" : dataUtil.parseToObjectId(category);
         Object vendorQuery = (vendor == null || vendor.isEmpty()) ? "" : dataUtil.parseToObjectId(vendor);
 
         // Create page request (page is 0-indexed in Spring Data)

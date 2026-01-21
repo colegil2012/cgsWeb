@@ -10,7 +10,7 @@ html {
         header {
             div(class: 'logo', 'Celtech GS')
             if (user) {
-                span(class: 'welcome-message', "Welcome, ${user.username}!")
+                span(class: 'welcome-message', "Welcome, ${user.profile.firstName}!")
             }
             nav {
                 ul {

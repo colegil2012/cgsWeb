@@ -21,8 +21,8 @@ layout 'layout.tpl',
                         label(for: 'categoryFilter', 'Filter by Category: ')
                         select(id: 'categoryFilter', name: 'category') {
                             option(value: '', 'All Categories')
-                            categories.each { cat ->
-                                option(value: cat, cat)
+                            categories.each { id, name ->
+                                option(value: id, name)
                             }
                         }
                     }
@@ -57,14 +57,14 @@ layout 'layout.tpl',
                             div(class: 'product-info') {
                                 div(class: 'product-title') {
                                     span(class: 'title-name', product.name)
-                                    span(class: 'category', product.category)
+                                    span(class: 'category', product.categoryName)
                                 }
                                 div(class: 'product-meta') {
                                     span(class: 'vendor-tag', "By: ${product.vendorName}")
                                 }
                                 p(class: 'description', product.description)
 
-                                if(product.stock < 25) {
+                                if(product.stock < product.lowStockThreshold) {
                                     div(class: 'warning-wrapper') {
                                         span(class: 'low-stock-warn', "Low Stock! Only ${product.stock} left!")
                                     }

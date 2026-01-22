@@ -4,12 +4,12 @@ layout 'layout.tpl',
         title: 'CGS Web | Home',
         user: user,
         cartItems: cartItems,
-        totalPrice: totalPrice,
         content: {
             //Calculate total, subtotal and tax
             def subtotal = cartItems.collect { it.price * it.quantity }.sum() ?: 0.00
-            def tax = subtotal * 0.07 // Example 7% tax
-            def total = subtotal + tax
+            def shipping = totalShipping ?: 0.00
+            def tax = ( subtotal + shipping ) * 0.07 // Example 7% tax
+            def finalTotal = subtotal + shipping + tax
 
             if(cartItems == null || cartItems.isEmpty()) {
                 div(class: 'empty-cart-message') {
@@ -57,6 +57,15 @@ layout 'layout.tpl',
                                 span('Subtotal')
                                 span(class: 'summary-value', "\$${String.format('%.2f', subtotal)}")
                             }
+
+                            if(shippingEstimates) {
+                                shippingEstimates.each { estimate ->
+                                    div(class: 'summary-row shipping-detail') {
+                                        span("Shipping (${estimate.vendor})")
+                                        span(class: 'summary-value', "\$${String.format('%.2f', estimate.cost)}")
+                                    }
+                                }
+                            }
                             div(class: 'summary-row') {
                                 span('Estimated Tax')
                                 span(class: 'summary-value', "\$${String.format('%.2f', tax)}")
@@ -64,7 +73,7 @@ layout 'layout.tpl',
                             hr()
                             div(class: 'summary-row total') {
                                 span('Total')
-                                span(class: 'summary-value', "\$${String.format('%.2f', total)}")
+                                span(class: 'summary-value', "\$${String.format('%.2f', finalTotal)}")
                             }
                         }
                         div(class: 'payment-methods') {

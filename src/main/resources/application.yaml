@@ -8,3 +8,9 @@ spring:
 app:
   upload:
     path: ${IMAGE_UPLOAD_PATH:external-images/}
+
+roadie:
+  url: ${ROADIE_DEV_API:https://connect-sandbox.roadie.com}
+  api:
+    key: ${ROADIE_API_KEY:b5161813f1d6d54fccb187782e08d6d1014c6121}
+    version: ${ROADIE_API_VERSION:v1}

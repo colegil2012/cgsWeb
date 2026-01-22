@@ -4,9 +4,10 @@ import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.Vendor;
 import com.ua.estore.cgsWeb.models.wrappers.ProductFormWrapper;
+import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
-import com.ua.estore.cgsWeb.util.searchUtil;
+import com.ua.estore.cgsWeb.util.dataUtil;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -31,6 +33,7 @@ public class VendorController {
 
     private final ProductService productService;
     private final VendorService vendorService;
+    private final CategoryService categoryService;
 
     @Value("${app.upload.path}")
     private String uploadPath;
@@ -58,9 +61,10 @@ public class VendorController {
 
         if (selectVendor.isPresent()) {
             Page<Product> productPage = productService.getProductsByVendorId(id, page);
+            Map<String, String> categories = categoryService.getCategoryNameMap();
 
             model.addAttribute("vendor", selectVendor.get());
-            model.addAttribute("products", productPage.getContent());
+            model.addAttribute("products", dataUtil.convertToProductDto(productPage.getContent(), vendorService, categories));
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", productPage.getTotalPages());
             return "shop/view-vendor";
@@ -84,15 +88,13 @@ public class VendorController {
             return "redirect:/login";
         }
 
-        List<String> categories = searchUtil.getCategories(productService.getAllProducts());
-
         if(user.getVendorId() != null) {
             vendorService.getVendorById(user.getVendorId()).ifPresent(vendor -> {
                 model.addAttribute("vendorDetail", vendor);
             });
         }
 
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categoryService.getCategoryNameMap());
 
         return "vendor/vendor-portal";
     }

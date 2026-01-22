@@ -11,12 +11,15 @@ import java.math.BigDecimal;
 public class ProductDTO implements Serializable {
     private String id;
     private String name;
+    private String slug;
     private String description;
     private BigDecimal price;
-    private String category;
+    private BigDecimal salePrice;
+    private String categoryName;
     private String imageUrl;
     private String vendorName;
     private int stock;
+    private int lowStockThreshold;
     private int quantity;
 
     public void increaseQuantity() {

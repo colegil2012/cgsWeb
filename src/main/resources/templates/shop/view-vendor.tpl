@@ -16,8 +16,13 @@ layout 'layout.tpl',
                         p(class: 'vendor-bio', vendor?.description)
                         div(class: 'vendor-location') {
                             span(class: 'location-label', 'Find us at:')
-                            p(class: 'address-line', "${vendor?.address_1}${vendor?.address_2 ? ', ' + vendor.address_2 : ''}")
-                            p(class: 'address-line', "${vendor?.city}, ${vendor?.state} ${vendor?.zip}")
+                            def displayAddr = vendor?.addresses?.find { it.isDefault } ?: vendor?.addresses?.getAt(0)
+                            if (displayAddr) {
+                                p(class: 'address-line', "${displayAddr.street ?: ''}")
+                                p(class: 'address-line', "${displayAddr.city ?: ''}, ${displayAddr.state ?: ''} ${displayAddr.zip ?: ''}")
+                            } else {
+                                p(class: 'address-line', 'No address listed.')
+                            }
                         }
                     }
                 }
@@ -37,7 +42,7 @@ layout 'layout.tpl',
                                     div(class: 'product-info') {
                                         div(class: 'product-title') {
                                             p(class: 'title-name', product.name)
-                                            span(class: 'category', product.category)
+                                            span(class: 'category', product.categoryName)
                                         }
                                         p(class: 'description', product.description)
 

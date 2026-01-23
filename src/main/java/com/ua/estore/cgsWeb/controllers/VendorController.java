@@ -8,6 +8,8 @@ import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
 import com.ua.estore.cgsWeb.util.dataUtil;
+import com.ua.estore.cgsWeb.util.requestUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +46,11 @@ public class VendorController {
 
     @GetMapping("/vendors")
     public String allVendors(@RequestParam(defaultValue = "0") int page,
-                             Model model) {
+                             Model model, HttpSession session, HttpServletRequest request) {
+
+        session.setAttribute("backLinkText", "← Back to Vendors");
+        session.setAttribute("backLinkHref", requestUtil.buildFullUrl(request));
+
         Page<Vendor> vendorPage = vendorService.getAllVendors(page);
 
         model.addAttribute("vendors", vendorPage.getContent());
@@ -56,10 +62,12 @@ public class VendorController {
     @GetMapping("/vendor/{id}")
     public String viewVendor(@RequestParam(defaultValue = "0") int page,
                              @PathVariable String id,
-                             Model model) {
+                             Model model, HttpSession session, HttpServletRequest request) {
         Optional<Vendor> selectVendor = vendorService.getVendorById(id);
 
         if (selectVendor.isPresent()) {
+            session.setAttribute("backLinkText", "← Back to " + selectVendor.get().getName());
+            session.setAttribute("backLinkHref", requestUtil.buildFullUrl(request));
             Page<Product> productPage = productService.getProductsByVendorId(id, page);
             Map<String, String> categories = categoryService.getCategoryNameMap();
 
@@ -125,7 +133,8 @@ public class VendorController {
                         }
                     }
 
-                    productService.saveProduct(product, vendorId);
+                    String insertedId = productService.saveProduct(product, vendorId);
+                    log.info("Product with id {} successfully added to vendor {}", insertedId, vendorId);
                     successes.add("Successfully listed: " + product.getName());
                 } catch (Exception e) {
                     errors.add("Failed to list " + product.getName() + ": " + e.getMessage());

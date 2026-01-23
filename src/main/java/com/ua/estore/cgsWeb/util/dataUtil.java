@@ -63,6 +63,7 @@ public class dataUtil {
                     p.getSalePrice(),
                     cName,
                     p.getImageUrl(),
+                    p.getVendorId(),
                     vName,
                     p.getStock(),
                     p.getLowStockThreshold(),

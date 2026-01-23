@@ -7,6 +7,9 @@ import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
 import com.ua.estore.cgsWeb.util.dataUtil;
+import com.ua.estore.cgsWeb.util.requestUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -30,7 +33,12 @@ public class ShopController {
      *********************************************************************************/
 
     @GetMapping("/shop")
-    public String shop(@RequestParam(defaultValue = "0") int page, Model model) {
+    public String shop(@RequestParam(defaultValue = "0") int page,
+                       Model model, HttpSession session, HttpServletRequest request) {
+
+        session.setAttribute("backLinkText", "← Back to Shop");
+        session.setAttribute("backLinkUrl", requestUtil.buildFullUrl(request));
+
         List<Product> products = productService.getAllProducts();
         List<Vendor> vendors = vendorService.getAllVendors();
         Map<String, String> categories = categoryService.getCategoryNameMap();
@@ -48,13 +56,16 @@ public class ShopController {
                                  @RequestParam(name = "vendor", required = false) String vendor,
                                  @RequestParam(name = "lowStock", defaultValue = "false") boolean lowStock,
                                  @RequestParam(defaultValue = "0") int page,
-                                 Model model) {
+                                 Model model, HttpSession session, HttpServletRequest request) {
+
+        session.setAttribute("backLinkText", "← Back to Shop");
+        session.setAttribute("backLinkUrl", requestUtil.buildFullUrl(request));
 
         return executeFiltering(search, category, vendor, lowStock, page, categoryService.getCategoryNameMap(), model);
     }
 
     @GetMapping("/shop/view/{id}")
-    public String viewProduct(@PathVariable String id, Model model) {
+    public String viewProduct(@PathVariable String id, Model model, HttpSession session) {
         Product product = productService.getProductById(id);
         Map<String, String> categories = categoryService.getCategoryNameMap();
         if( product == null ) return "redirect:/shop";
@@ -64,7 +75,13 @@ public class ShopController {
 
         ProductDTO productDto = dtos.getFirst();
 
+        String backHref = (String) session.getAttribute("backLinkHref");
+        String backText = (String) session.getAttribute("backLinkText");
+
         model.addAttribute("selected_product", productDto);
+        model.addAttribute("backLinkHref", backHref != null ? backHref : "/shop");
+        model.addAttribute("backLinkText", backText != null ? backText : "← Back to Shop");
+
         return "shop/product";
     }
 

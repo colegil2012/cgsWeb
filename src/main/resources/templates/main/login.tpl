@@ -20,7 +20,10 @@ layout 'layout.tpl',
                         label(for: 'password', 'Password')
                         input(type: 'password', name: 'password', id: 'password', required: 'required')
                     }
-                    button(type: 'submit', class: 'btn', style: 'border:none; cursor:pointer;', 'Sign In')
+                    div(class: 'auth-actions-grid') {
+                        a(href: '/signup', class: 'signup-btn', 'Sign Up')
+                        button(type: 'submit', class: 'btn', 'Sign In')
+                    }
                 }
             }
         }

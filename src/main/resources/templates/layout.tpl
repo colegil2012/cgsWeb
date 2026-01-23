@@ -15,17 +15,30 @@ html {
             nav {
                 ul {
                     li { a(href: '/', 'Home') }
+
                     if (user) {
-                        li { a(href: '/shop', 'Shop') }
-                        li { a(href: '/vendors', 'Vendors') }
-                        li { a(href: '/account', 'My Account')}
+                        li(class: 'nav-dropdown') {
+                            a(href: '#', class: 'nav-dropdown-toggle', 'Shop')
+                            ul(class: 'nav-dropdown-menu') {
+                                li { a(href: '/shop', 'Shop') }
+                                li { a(href: '/vendors', 'Vendors') }
+                            }
+                        }
+
+                        li(class: 'nav-dropdown') {
+                            a(href: '#', class: 'nav-dropdown-toggle', 'Manage')
+                            ul(class: 'nav-dropdown-menu') {
+                                li { a(href: '/account', 'My Account') }
+                                if ( user?.role == 'ADMIN') {
+                                    li { a(href: '/admin', 'Admin Portal') }
+                                }
+                                if ( user?.role == 'VENDOR') {
+                                    li { a(href: '/vendor/portal', 'Vendor Portal') }
+                                }
+                            }
+                        }
                     }
-                    if (user?.role == 'ADMIN') {
-                        li { a(href: '/admin', 'Admin Portal')}
-                    }
-                    if (user?.role == 'VENDOR') {
-                        li { a(href: '/vendor/portal', 'Vendor Portal')}
-                    }
+
                     li { a(href: '/about', 'About') }
                     if (user) {
                         li(id: 'cart-link-container') {

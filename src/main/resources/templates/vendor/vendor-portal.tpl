@@ -104,7 +104,7 @@ layout 'layout.tpl',
                             }
                             div(class: 'info-group') {
                                 label('Category')
-                                select(name: 'products[0].category') {
+                                select(name: 'products[0].categoryId') {
                                     categories.each { name, id ->
                                         option(value: name, id) }
                                 }
@@ -128,7 +128,7 @@ layout 'layout.tpl',
                             div(class: 'info-group full-width attributes-container') {
                                 div(class: 'info-group') {
                                     label('Weight (lb)')
-                                    input(type: 'text', name: 'products[0].attributes.weight', placeholder: 'e.g. 1.5kg')
+                                    input(type: 'text', name: 'products[0].attributes.weight', placeholder: 'e.g. 1.5')
                                 }
                                 div(class: 'info-group') {
                                     label('L (in)')

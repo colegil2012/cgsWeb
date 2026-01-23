@@ -13,9 +13,11 @@ layout 'layout.tpl',
         selected_product: selected_product,
         content: {
             div(class: 'container') {
-                div(style: 'margin-bottom: 20px;') {
-                    a(href: '/shop', class: 'btn-small', '← Back to Shop')
-                }
+                a(
+                        href: (backLinkHref ?: '/shop'),
+                        class: 'btn-small',
+                        (backLinkText ?: '← Back to Shop')
+                )
 
                 div(class: 'product-view-container') {
                     div(class: 'product-view-image') {
@@ -27,7 +29,7 @@ layout 'layout.tpl',
                         span(class: 'name-tag', selected_product.name)
                         p(class: 'vendor-text') {
                             yield "Supplied by "
-                            strong(selected_product.vendorName)
+                            a(href: "/vendor/${selected_product.vendorId}") { strong(selected_product.vendorName) }
                         }
 
                         hr()

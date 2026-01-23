@@ -32,7 +32,7 @@ public class RoadieService {
         String url = String.format("%s/%s/estimates", baseUrl, apiVersion);
 
         try {
-            // Log the outgoing request
+            // Log the outgoing request for testing
             System.out.println("--- ROADIE API REQUEST ---");
             System.out.println("URL: " + url);
             System.out.println("Payload: " + objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(request));

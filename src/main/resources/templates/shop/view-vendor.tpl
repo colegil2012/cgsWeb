@@ -11,7 +11,7 @@ layout 'layout.tpl',
                 // Vendor Header Section
                 div(class: 'vendor-header-card') {
                     div(class: 'vendor-header-logo') {
-                        img(src: ImageUrlUtil.resolve(vendor?.logo_url, imagesBasePath) ?: '/images/site-images/default-vendor.png', alt: vendor?.name)
+                        img(src: ImageUrlUtil.resolve(vendor?.logo_url, imagesBaseUrl) ?: '/images/site-images/default-vendor.png', alt: vendor?.name)
                     }
                     div(class: 'vendor-header-info') {
                         h1(class: 'vendor-name', vendor?.name)
@@ -39,7 +39,7 @@ layout 'layout.tpl',
                             products.each { product ->
                                 div(class: 'product-card') {
                                     a(href: "/shop/view/${product.id}", class: 'product-image-link') {
-                                        img(src: ImageUrlUtil.resolve(product.imageUrl, imagesBasePath) ?: '/images/products/default.png', alt: product.name)
+                                        img(src: ImageUrlUtil.resolve(product.imageUrl, imagesBaseUrl) ?: '/images/products/default.png', alt: product.name)
                                     }
                                     div(class: 'product-info') {
                                         div(class: 'product-title') {

@@ -40,7 +40,7 @@ layout 'layout.tpl',
                         div(class: 'vendor-item-row') {
                             // Column 1: Sidebar Logo
                             div(class: 'info-group vendor-profile-logo-group') {
-                                img(src: ImageUrlUtil.resolve(vendorDetail.logo_url, imagesBasePath) ?: '/images/site-images/default-vendor.png', alt: 'Logo Preview')
+                                img(src: ImageUrlUtil.resolve(vendorDetail.logo_url, imagesBaseUrl) ?: '/images/site-images/default-vendor.png', alt: 'Logo Preview')
                                 label(for: 'vendorLogoUpload', class: 'upload-link', 'Change Logo')
                                 input(type: 'file', id: 'vendorLogoUpload', name: 'vendorLogo', style: 'display:none;', accept: 'image/*')
                             }

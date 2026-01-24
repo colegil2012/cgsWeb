@@ -32,7 +32,7 @@ layout 'layout.tpl',
                                 cartItems.each { item ->
                                     div(class: 'cart-card') {
                                         div(class: "cart-card-section") {
-                                            img(src: ImageUrlUtil(item.imageUrl, imagesBasePath) ?: '/images/placeholder.jpg', alt: item.name)
+                                            img(src: ImageUrlUtil(item.imageUrl, imagesBaseUrl) ?: '/images/placeholder.jpg', alt: item.name)
                                         }
                                         div(class: "cart-card-section") {
                                             p(class: 'cart-product-name', item.name)

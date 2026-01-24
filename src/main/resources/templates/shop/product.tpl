@@ -1,6 +1,7 @@
 package templates.shop
 
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.models.dto.ProductDTO
+import com.ua.estore.cgsWeb.util.ImageUrlUtil;
 
 modelTypes = [
         selected_product: ProductDTO
@@ -21,7 +22,7 @@ layout 'layout.tpl',
 
                 div(class: 'product-view-container') {
                     div(class: 'product-view-image') {
-                        img(src: selected_product.imageUrl ?: '/images/placeholder.jpg', alt: selected_product.name, style: 'width: 100%; border-radius: 8px;')
+                        img(src: ImageUrlUtil.resolve(selected_product.imageUrl, imagesBaseUrl) ?: '/images/placeholder.jpg', alt: selected_product.name, style: 'width: 100%; border-radius: 8px;')
                     }
 
                     div(class: 'product-view-details') {

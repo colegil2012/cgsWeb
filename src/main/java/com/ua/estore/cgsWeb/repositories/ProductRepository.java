@@ -20,6 +20,9 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     Optional<Product> findBySlug(String slug);
 
+    @Query("{ 'vendorId': ?0 }")
+    Page<Product> findByVendorId(String vendorId, Pageable pageable);
+
     @Query("{ $and: [ " +
             "{ $or: [ { 'categoryId': ?0 }, { $expr: { $eq: ['?0', ''] } } ] }, " +
             "{ $or: [ { 'name': { $regex: ?1, $options: 'i' } }, { 'description': { $regex: ?1, $options: 'i' } } ] }, " +
@@ -27,9 +30,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
             "{ $or: [ { $expr: { $eq: [ { $literal: ?3 }, false ] } }, { $expr: { $lte: ['$stock', '$lowStockThreshold'] } } ] }" +
             "] }")
     Page<Product> findByFilter(Object categoryId, String search, Object vendorId, boolean lowStock, Pageable pageable);
-
-    @Query("{ 'vendorId': ?0 }")
-    Page<Product> findByVendorId(String vendorId, Pageable pageable);
 
     Page<Product> getProductsByVendorId(ObjectId vendorId, Pageable pageable);
 

@@ -156,6 +156,8 @@ public class CartController {
         return "shop/cart";
     }
 
+    /******* Add to cart ********************/
+
     @GetMapping("/cart/add/{id}")
     @ResponseBody
     public Object addToCart(@PathVariable String id, HttpSession session) {
@@ -185,7 +187,7 @@ public class CartController {
                 ProductDTO dto = new ProductDTO(
                         product.getId(), product.getName(), product.getSlug(),
                         product.getDescription(), product.getPrice(), product.getSalePrice(),
-                        categoryName, product.getImageUrl(), vendorName,
+                        categoryName, product.getImageUrl(), product.getVendorId(), vendorName,
                         product.getStock(), product.getLowStockThreshold(), 1
                 );
                 cart.add(dto);
@@ -196,6 +198,8 @@ public class CartController {
         int totalCount = cart.stream().mapToInt(ProductDTO::getQuantity).sum();
         return Map.of("success", true, "cartCount", totalCount);
     }
+
+    /******* Remove from cart ********************/
 
     @GetMapping("/cart/remove/{id}")
     @ResponseBody

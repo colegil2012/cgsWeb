@@ -60,7 +60,7 @@ layout 'layout.tpl',
                                     span(class: 'category', product.categoryName)
                                 }
                                 div(class: 'product-meta') {
-                                    span(class: 'vendor-tag', "By: ${product.vendorName}")
+                                    a(href: "/vendor/${product.vendorId}", class: 'vendor-tag', "By: ${product.vendorName}")
                                 }
                                 p(class: 'description', product.description)
 

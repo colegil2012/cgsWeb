@@ -1,8 +1,3 @@
-FROM ubuntu:latest
-LABEL authors="coleg"
-
-ENTRYPOINT ["top", "-b"]
-
 # Stage 1: Build stage
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app

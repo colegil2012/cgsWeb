@@ -25,8 +25,28 @@ public class ProductService {
      *******************************************/
 
     public String saveProduct(Product product, String vendorId) {
+        if (product == null) {
+            throw new IllegalArgumentException("Product payload is missing.");
+        }
+        if (vendorId == null || vendorId.isBlank()) {
+            throw new IllegalArgumentException("Vendor id is required.");
+        }
+        if (product.getCategoryId() == null || product.getCategoryId().isBlank()) {
+            throw new IllegalArgumentException("Category is required.");
+        }
+
         ObjectId cleanVendorId = dataUtil.parseToObjectId(vendorId);
+        ObjectId cleanCatId = dataUtil.parseToObjectId(product.getCategoryId());
+
+        if (cleanVendorId == null) {
+            throw new IllegalArgumentException("Invalid vendor id.");
+        }
+        if (cleanCatId == null) {
+            throw new IllegalArgumentException("Invalid category id.");
+        }
+
         product.setVendorId(cleanVendorId.toHexString());
+        product.setCategoryId(cleanCatId.toHexString());
 
         // B2C logic: Ensure active and generate a simple slug if missing
         product.setActive(true);

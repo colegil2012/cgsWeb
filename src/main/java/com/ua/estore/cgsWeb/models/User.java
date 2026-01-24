@@ -32,6 +32,7 @@ public class User { //implements UserDetails {
     @Data
     public static class UserProfile {
         private String firstName;
+        private String middleInit;
         private String lastName;
         private String phoneNumber;
     }

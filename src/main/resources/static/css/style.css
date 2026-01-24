@@ -72,6 +72,55 @@ nav a:hover {
     color: var(--accent-green);
 }
 
+/* Dropdown navigation */
+nav ul li.nav-dropdown {
+    position: relative;
+}
+
+nav ul li.nav-dropdown > a.nav-dropdown-toggle {
+    display: inline-block;
+}
+
+/* the menu */
+nav ul li.nav-dropdown .nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    min-width: 200px;
+    padding: 0.5rem 0;
+    margin: 0;
+
+    list-style: none;
+    background: var(--white);
+    border: 1px solid var(--soft-brown);
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    z-index: 2000;
+}
+
+/* show on hover (desktop) */
+nav ul li.nav-dropdown:hover .nav-dropdown-menu {
+    display: block;
+}
+
+/* dropdown items */
+nav ul li.nav-dropdown .nav-dropdown-menu li {
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li.nav-dropdown .nav-dropdown-menu a {
+    display: block;
+    padding: 0.6rem 1rem;
+    white-space: nowrap;
+}
+
+nav ul li.nav-dropdown .nav-dropdown-menu a:hover {
+    background: var(--primary-green);
+}
+
 /* Hero Section */
 .hero {
     background-color: var(--primary-green);
@@ -194,6 +243,18 @@ nav a:hover {
     flex-direction: column;
     height: 100%;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
 .product-image-link {
@@ -212,21 +273,6 @@ nav a:hover {
 .product-image-link:hover img {
     transform: scale(1.05); /* Slight zoom on hover to show it's a link */
     cursor: pointer;
-}
-
-.product-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-}
-
-.product-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
 }
 
 .product-info {
@@ -301,8 +347,43 @@ nav a:hover {
     font-weight: bold;
 }
 
+/* Vendor links: look like a clickable tag (not a blue underlined link) */
+a.vendor-tag,
+.vendor-text a {
+    text-decoration: none;
+    color: var(--accent-green);
+    font-weight: 700;
+    display: inline-block;
+
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(104, 159, 56, 0.35);
+    background: rgba(232, 245, 233, 0.6);
+
+    transition: box-shadow 0.25s ease, transform 0.15s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Hover/focus glow to signify clickability */
+a.vendor-tag:hover,
+a.vendor-tag:focus-visible,
+.vendor-text a:hover,
+.vendor-text a:focus-visible {
+    color: var(--dark-green);
+    background: rgba(232, 245, 233, 0.95);
+    box-shadow: 0 0 0 3px rgba(157, 250, 120, 0.35), 0 10px 20px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+/* If the product page wraps the link text in <strong>, don't change its weight/color separately */
+.vendor-text a strong {
+    font-weight: inherit;
+    color: inherit;
+}
+
 .product-meta {
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 /* Specialty Cards (Home Page) */
@@ -446,6 +527,43 @@ nav a:hover {
     margin-bottom: 1rem;
 }
 
+.auth-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.auth-actions-grid > * {
+    line-height: 1;
+}
+
+.signup-container {
+    max-width: 520px;
+    margin: 2.5rem auto;
+    padding: 2.25rem 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--soft-brown);
+    background: var(--white);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.signup-container .alert {
+    margin-bottom: 1rem;
+}
+
+.signup-container .form-control input {
+    background: var(--white);
+}
+
+.signup-conainer .btn {
+    margin-top: 0.25rem;
+}
+
+.hero + .signup-container {
+    margin-top: -1.5rem;
+}
+
 .form-control label {
     display: block;
     margin-bottom: 0.5rem;
@@ -466,6 +584,38 @@ nav a:hover {
     border-color: var(--accent-green);
     box-shadow: 0 0 0 2px var(--primary-green);
 }
+
+.field-feedback {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--error-red);
+    min-height: 1em; /* prevents layout jump when message appears */
+}
+
+.form-control input.invalid {
+    border-color: var(--error-red);
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.12);
+}
+
+.signup-btn {
+    background-color: var(--accent-green);
+    font-size: 1rem;
+    color: var(--white);
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.signup-btn:hover {
+    background-color: var(--dark-green);
+}
+
 
 /* Alerts & Messages */
 .alert {
@@ -877,12 +1027,12 @@ button.btn {
 
 .product-header-container {
     max-width: fit-content;
-    margin: -25px auto 2rem;
+    margin: -40px auto 2rem;
     padding: 0.5rem 3rem;
-    background: var(--soft-brown);
+    background: var(--white);
     border-radius: 50px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    border: 1px solid var(--earth-brown);
+    border: 1.5px solid var(--dark-green);
     position: relative;
     z-index: 10;
     text-align: center;
@@ -896,7 +1046,6 @@ button.btn {
     margin: 0.7rem 7rem;
     padding: 0.5rem 0;
     border-bottom: none;
-    color: var(--earth-brown);
     font-size: 1.7rem;
     font-style: italic;
 }

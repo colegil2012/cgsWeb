@@ -26,4 +26,27 @@ public class CredentialService {
         return userRepository.findByUsername(username);
     }
 
+
+    /********** Save User ***************/
+
+    public String saveUser(User user) {
+        if (user == null || user.getUsername() == null || user.getUsername().isBlank()) {
+            throw new IllegalArgumentException("Username is required.");
+        }
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password is required.");
+        }
+
+        String normalizedUsername = user.getUsername().trim();
+        user.setUsername(normalizedUsername);
+
+        // Check if username exists in db
+        if (getUserByUsername(normalizedUsername).isPresent()) {
+            throw new IllegalArgumentException("Username already exists.");
+        }
+
+        userRepository.save(user);
+        return "User saved successfully";
+    }
+
 }

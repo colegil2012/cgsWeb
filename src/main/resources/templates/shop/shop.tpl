@@ -9,7 +9,7 @@ layout 'layout.tpl',
                 if (!path) return '/images/placeholder.jpg'
                 if (path.startsWith('http://') || path.startsWith('https://')) return path
 
-                def base = imagesBaseUrl ?: ''00
+                def base = imagesBaseUrl ?: ''
                 if (!base) return path
 
                 // Convert "/images/<folder>/<file>" -> "<base>/<folder>/<file>"

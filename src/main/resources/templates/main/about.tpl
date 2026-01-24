@@ -1,5 +1,7 @@
 package templates.main
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 layout 'layout.tpl',
         title: 'CGS Web | About Our Mission',
         user: user,
@@ -18,7 +20,7 @@ layout 'layout.tpl',
                         p('By focusing on low-distance shipping and local consolidation, we reduce our carbon footprint while keeping more money in our community.')
                     }
                     div(class: 'about-image') {
-                        img(src: '/images/site-images/about-market.jpg', alt: 'Local Louisville Market', class: 'floating-img')
+                        img(src: ImageUrlUtil.resolve('/images/site-images/about-market.jpg', imagesBasePath), alt: 'Local Louisville Market', class: 'floating-img')
                     }
                 }
 
@@ -29,7 +31,7 @@ layout 'layout.tpl',
                         p('We want to remove the obfuscation between seller and consumer, you will know and trust where all of our products are sourced, your friends and neighbors.')
                     }
                     div(class: 'about-image') {
-                        img(src: '/images/site-images/about-produce.jpg', alt: 'Fresh Organic Produce', class: 'floating-img')
+                        img(src: ImageUrlUtil.resolve('/images/site-images/about-produce.jpg', imagesBasePath), alt: 'Fresh Organic Produce', class: 'floating-img')
                     }
                 }
 

@@ -1,5 +1,7 @@
 package templates.vendor
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 layout 'layout.tpl',
         title: 'CGS Web | Vendor',
         user: user,
@@ -38,7 +40,7 @@ layout 'layout.tpl',
                         div(class: 'vendor-item-row') {
                             // Column 1: Sidebar Logo
                             div(class: 'info-group vendor-profile-logo-group') {
-                                img(src: vendorDetail.logo_url ?: '/images/site-images/default-vendor.png', alt: 'Logo Preview')
+                                img(src: ImageUrlUtil.resolve(vendorDetail.logo_url, imagesBasePath) ?: '/images/site-images/default-vendor.png', alt: 'Logo Preview')
                                 label(for: 'vendorLogoUpload', class: 'upload-link', 'Change Logo')
                                 input(type: 'file', id: 'vendorLogoUpload', name: 'vendorLogo', style: 'display:none;', accept: 'image/*')
                             }

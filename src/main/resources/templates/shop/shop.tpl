@@ -5,6 +5,19 @@ layout 'layout.tpl',
         user: user,
         cartItems: cartItems,
         content: {
+            def resolveImageUrl = { String path ->
+                if (!path) return '/images/placeholder.jpg'
+                if (path.startsWith('http://') || path.startsWith('https://')) return path
+
+                def base = imagesBaseUrl ?: ''00
+                if (!base) return path
+
+                // Convert "/images/<folder>/<file>" -> "<base>/<folder>/<file>"
+                if (path.startsWith('/images/')) return base + '/' + path.substring('/images/'.length())
+                if (path.startsWith('/')) return base + path
+                return base + '/' + path
+            }
+
             div(class: 'hero') {
                 h1('Shop')
                 p('\'Fresh organic produce, herbs, and seasonings delivered from our soil to your kitchen.\'')
@@ -52,7 +65,7 @@ layout 'layout.tpl',
                     products.each { product ->
                         div(class: 'product-card') {
                             a(href: "/shop/view/${product.id}", 'class: product-image-link') {
-                                img(src: product.imageUrl ?: '/images/placeholder.jpg', alt: product.name)
+                                img(src: resolveImageUrl(product.imageUrl), alt: product.name)
                             }
                             div(class: 'product-info') {
                                 div(class: 'product-title') {

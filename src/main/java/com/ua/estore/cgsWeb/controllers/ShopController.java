@@ -11,6 +11,7 @@ import com.ua.estore.cgsWeb.util.requestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,9 @@ public class ShopController {
     private final ProductService productService;
     private final VendorService vendorService;
     private final CategoryService categoryService;
+
+    @Value("${app.images.base-url:}")
+    private String imagesBaseUrl;
 
     /**********************************************************************************
      * Controller methods for handling shop-related operations
@@ -78,6 +82,7 @@ public class ShopController {
         String backHref = (String) session.getAttribute("backLinkHref");
         String backText = (String) session.getAttribute("backLinkText");
 
+        model.addAttribute("imagesBaseUrl", imagesBaseUrl);
         model.addAttribute("selected_product", productDto);
         model.addAttribute("backLinkHref", backHref != null ? backHref : "/shop");
         model.addAttribute("backLinkText", backText != null ? backText : "← Back to Shop");
@@ -95,6 +100,7 @@ public class ShopController {
     private String executeFiltering(String search, String category, String vendor, boolean lowStock, int page, Map<String, String> catMap, Model model) {
         Page<Product> productPage = productService.getProductsByFilter(search, category, vendor, lowStock, page);
 
+        model.addAttribute("imagesBaseUrl", imagesBaseUrl);
         model.addAttribute("products", dataUtil.convertToProductDto(productPage.getContent(), vendorService, catMap));
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());

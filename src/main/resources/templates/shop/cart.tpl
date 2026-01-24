@@ -1,5 +1,7 @@
 package templates.shop
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 layout 'layout.tpl',
         title: 'CGS Web | Home',
         user: user,
@@ -30,7 +32,7 @@ layout 'layout.tpl',
                                 cartItems.each { item ->
                                     div(class: 'cart-card') {
                                         div(class: "cart-card-section") {
-                                            img(src: item.imageUrl ?: '/images/placeholder.jpg', alt: item.name)
+                                            img(src: ImageUrlUtil(item.imageUrl, imagesBasePath) ?: '/images/placeholder.jpg', alt: item.name)
                                         }
                                         div(class: "cart-card-section") {
                                             p(class: 'cart-product-name', item.name)

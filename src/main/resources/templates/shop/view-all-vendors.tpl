@@ -1,5 +1,7 @@
 package templates.shop
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 layout 'layout.tpl',
     title: 'Our Local Vendors',
     user: user,
@@ -17,7 +19,7 @@ layout 'layout.tpl',
                         // Clickable Logo
                         a(href: "/vendor/${vendor.id}") {
                             div(class: 'vendor-logo-container') {
-                                img(src: vendor.logo_url ?: '/images/site-images/default-vendor.png',
+                                img(src: ImageUrlUtil.resolve(vendor.logo_url, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
                                         alt: "${vendor.name} logo",
                                         class: 'vendor-logo-img')
                             }

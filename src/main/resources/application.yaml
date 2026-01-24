@@ -8,6 +8,9 @@ spring:
 app:
   upload:
     path: ${IMAGE_UPLOAD_PATH:external-images/}
+  images:
+    base-url: ${IMAGE_BASE_URL:}
+    local-url-prefix: ${IMAGE_LOCAL_URL_PREFIX:/images}
 
 roadie:
   url: ${ROADIE_DEV_API:https://connect-sandbox.roadie.com}

@@ -3,6 +3,7 @@ package com.ua.estore.cgsWeb.services;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,11 +13,12 @@ import java.util.Optional;
 public class CredentialService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Optional<User> authenticate(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
+        if (userOpt.isPresent() && passwordEncoder.matches(password, userOpt.get().getPassword())) {
             return userOpt;
         }
         return Optional.empty();
@@ -44,6 +46,8 @@ public class CredentialService {
         if (getUserByUsername(normalizedUsername).isPresent()) {
             throw new IllegalArgumentException("Username already exists.");
         }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
         return "User saved successfully";

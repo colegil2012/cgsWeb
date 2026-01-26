@@ -3,7 +3,7 @@ spring:
     name: cgsWeb
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/cgs_products}
+      uri: ${MONGODB_URI:mongodb://localhost:27017/cgsweb}
 
 app:
   upload:
@@ -11,6 +11,10 @@ app:
   images:
     base-url: ${IMAGE_BASE_URL:}
     local-url-prefix: ${IMAGE_LOCAL_URL_PREFIX:/images}
+
+  security:
+    bcrypt:
+      strength: ${BCRYPT_STRENGTH:12}
 
 roadie:
   url: ${ROADIE_DEV_API:https://connect-sandbox.roadie.com}

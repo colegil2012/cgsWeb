@@ -1,4 +1,4 @@
-const dbName = 'cgs_products';
+const dbName = 'cgsweb';
 const db = db.getSiblingDB(dbName);
 
 print(`--- Refreshing B2C E-commerce database for: ${dbName} ---`);
@@ -423,7 +423,7 @@ db.products.insertMany([
 db.users.insertMany([
     {
         username: "cole",
-        password: "cole", // In production, never store plain text
+        password: "$2a$10$kZRhUYzWt3mFwrM1G23yb.RTZg8V7.6nfGgJwTmRpYAhLNEsT8GSm",
 		email: "colegil2012@gmail.com",
         role: "VENDOR",
 		vendorId: celtechId,
@@ -446,7 +446,7 @@ db.users.insertMany([
     },
     {
         username: "daria",
-        password: "daria", // In production, never store plain text
+        password: "$2a$10$E0FbX/so9PA6HV6GtUtuMuqenNSVeWAyxNqOne6uG8mBOr1PcYxVa",
 		email: "dariaerin@yahoo.com",
         role: "VENDOR",
 		vendorId: newAgeId,
@@ -469,7 +469,7 @@ db.users.insertMany([
     },
     {
         username: "carter",
-        password: "carter", // In production, never store plain text
+        password: "$2a$10$sDZZipX8t3zxt3UgU5mfv.2e0dPUgb0Bdhfu7.zN4YAOVLM8XPKTW",
 		email: "carterlee@gmail.com",
         role: "VENDOR",
 		vendorId: nattyId,
@@ -492,7 +492,7 @@ db.users.insertMany([
     },
     {
         username: "brynlee",
-        password: "brynlee", // In production, never store plain text
+        password: "$2a$10$BPqLTQ36zuBpjLn6cLD.1./tjJOE7wa3uUGAf9SDYhDgOxjE6K6Wm",
 		email: "brynleeliz@gmail.com",
         role: "VENDOR",
 		vendorId: organicId,
@@ -515,7 +515,7 @@ db.users.insertMany([
     },
     {
         username: "test_user",
-        password: "test", // In production, never store plain text
+        password: "$2a$10$Jsgmn6I2iZwM5TvR9L4ShO3Btu6J7mw2.QoblXR91JTZW3S72xU56",
 		email: "test@gmail.com",
         role: "USER",
         profile: {

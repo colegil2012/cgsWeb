@@ -488,26 +488,8 @@ a.vendor-tag:focus-visible,
     margin-right: 0;
 }
 
-.product-actions {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid var(--primary-green);
-    padding-top: 20px;
-}
-
-.product-actions .warning-wrapper {
-    width: 33%;
-}
-
 .product-footer .warning-wrapper {
     width: 33%;
-}
-
-.product-actions .btn-small {
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
 }
 
 /* Forms & Login */
@@ -967,15 +949,6 @@ button.btn {
 }
 
 /* Account Page Styles */
-.account-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 30px;
-}
-
 .info-card {
     background: #fdfdfd;
     border: 1px solid #e0e0e0;
@@ -1009,6 +982,344 @@ button.btn {
     width: 100%;
     box-sizing: border-box;
     margin-left: 0rem;
+}
+
+/* Account Tabs Layout */
+.account-tabs-layout {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.account-tabs-nav {
+    background: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 110px; /* keeps it visible under your sticky header */
+}
+
+.account-tabs-nav h2 {
+    margin-top: 0;
+    border-bottom: none;
+}
+
+.tabs-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tab-item a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--earth-brown);
+    border: 1px solid transparent;
+}
+
+.tab-item a:hover {
+    background: var(--primary-green);
+    border-color: var(--soft-brown);
+}
+
+.tab-item.active a {
+    background: var(--primary-green);
+    border-color: var(--accent-green);
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+.account-tabs-panel {
+    min-width: 0;
+}
+
+.order-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 14px;
+    background: var(--white);
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--primary-green);
+    margin-bottom: 10px;
+}
+
+.order-meta {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+}
+
+.order-status {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--primary-green);
+    color: var(--dark-green);
+    border: 1px solid rgba(104, 159, 56, 0.35);
+}
+
+.order-date {
+    font-size: 0.85rem;
+    color: #666;
+    white-space: nowrap;
+}
+
+.order-totals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 14px;
+    margin: 10px 0;
+}
+
+.order-totals .label {
+    color: #666;
+    font-weight: 600;
+}
+
+.order-total-line {
+    grid-column: 1 / -1;
+    padding-top: 6px;
+    border-top: 1px dashed #ddd;
+}
+
+.order-items h4 {
+    margin: 12px 0 8px 0;
+    border: none;
+    color: var(--dark-green);
+}
+
+.order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-items-table th,
+.order-items-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.order-items-table th {
+    background: #f8f9fa;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    z-index: 5000;
+}
+
+.modal {
+    width: 100%;
+    max-width: 520px;
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--soft-brown);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+    padding: 18px 18px 14px;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--dark-green);
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--earth-brown);
+}
+
+/* Address modal: compact + scrollable */
+#updateAddressOverlay .modal {
+    max-width: 860px;              /* wider so 2-column fields fit */
+    width: 100%;
+    max-height: 85vh;              /* keep on screen */
+    overflow: hidden;              /* header stays, body scrolls */
+    padding: 14px;
+}
+
+/* Make the form content scroll, not the entire page */
+#updateAddressOverlay form.form-group {
+    max-height: calc(85vh - 72px); /* subtract header area */
+    overflow: auto;
+    padding-right: 6px;            /* room for scrollbar */
+}
+
+/* Tighter heading inside modal */
+#updateAddressOverlay h4 {
+    margin: 10px 0 8px 0;
+    border: none;
+    color: var(--dark-green);
+    font-size: 1.05rem;
+}
+
+/* Address card: clear separation */
+#updateAddressOverlay .address-edit-card {
+    border: 1px solid rgba(93, 64, 55, 0.20);
+    border-radius: 12px;
+    background: rgba(232, 245, 233, 0.35);
+    padding: 10px 10px 8px;
+    margin: 10px 0;
+}
+
+/* Header row inside each card */
+#updateAddressOverlay .address-edit-card > div:first-child {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px dashed rgba(93, 64, 55, 0.20);
+}
+
+/* Compact inputs inside the modal (don’t affect the rest of the site) */
+#updateAddressOverlay .form-control {
+    margin-bottom: 10px;
+}
+
+#updateAddressOverlay .form-control label {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+#updateAddressOverlay .form-control input[type="text"],
+#updateAddressOverlay .form-control input[type="password"],
+#updateAddressOverlay .form-control input[type="email"],
+#updateAddressOverlay .form-control input[type="tel"] {
+    padding: 0.55rem 0.65rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+/* 2-column compact layout per address card */
+#updateAddressOverlay .address-edit-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+}
+
+/* Force the header row to span full width */
+#updateAddressOverlay .address-edit-card > div:first-child {
+    grid-column: 1 / -1;
+}
+
+/* Make checkbox row span full width (better alignment) */
+#updateAddressOverlay .address-edit-card .form-control:last-child {
+    grid-column: 1 / -1;
+}
+
+/* Buttons row: keep visible and tidy */
+#updateAddressOverlay .modal .btn,
+#updateAddressOverlay .modal .btn-small {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.9rem;
+}
+
+/* Optional: slightly smaller close button */
+#updateAddressOverlay .modal-close {
+    font-size: 24px;
+}
+
+/* Address modal footer row (Make default) */
+#updateAddressOverlay .update-address-footer {
+    grid-column: 1 / -1;          /* spans full width of the address-edit-card grid */
+    display: flex;
+    justify-content: flex-end;     /* right align */
+    align-items: center;
+    padding-top: 4px;
+    margin-top: 2px;
+    border-top: 1px dashed rgba(93, 64, 55, 0.18);
+}
+
+/* Tight row with checkbox + label */
+#updateAddressOverlay .update-address-footer .form-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: 0;                    /* override default .form-control spacing */
+    white-space: nowrap;          /* prevent wrapping */
+}
+
+/* Make label smaller and non-wrapping */
+#updateAddressOverlay .update-address-footer label {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: none;         /* your modal labels are uppercase; this reads better */
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
+/* Make checkbox a bit smaller and aligned */
+#updateAddressOverlay .update-address-footer input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+/* Address card styling inside the panel */
+.address-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 14px;
+    background: var(--white);
+    margin-bottom: 12px;
+}
+
+.address-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
 /* Vendor Table Styles */
@@ -1221,14 +1532,6 @@ button.btn {
     width: 100px;
     height: 100px;
     margin-bottom: 0.5rem;
-}
-
-/* Helper classes for the custom row widths */
-.span-1-5 { grid-column: span 1.5; } /* Not standard, we'll use fractional logic below */
-
-/* Specific Row spans for the 2-column rows */
-.row-2-col {
-    grid-column: span 1.5; /* Handled by specific placement below */
 }
 
 /* Resetting full width for description */
@@ -1585,5 +1888,25 @@ button.btn {
     .about-section.split, .about-section.split.reverse {
         flex-direction: column;
         text-align: center;
+    }
+}
+
+@media (max-width: 900px) {
+    .account-tabs-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .account-tabs-nav {
+        position: static;
+        top: auto;
+    }
+
+    .cart-page-container {
+        flex-direction: column;
+    }
+    .cart-summary {
+        width: 100%;
+        position: static;
+        box-sizing: border-box;
     }
 }

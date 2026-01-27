@@ -572,4 +572,32 @@ db.orders.insertOne({
     createdAt: new Date()
 });
 
+db.orders.insertOne({
+    orderNumber: "ORD-2023-1001",
+    userId: coleId,
+    status: "PENDING", // PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
+    items: [
+        {
+            productId: db.products.findOne({name: "Grapes"})._id,
+            name: "Grapes",
+            priceAtPurchase: 10.99,
+            quantity: 2
+        }
+    ],
+    totals: {
+        subtotal: 21.98,
+        tax: 1.32,
+        shipping: 5.00,
+        total: 28.30
+    },
+    shippingAddress: {
+        street: "123 Main St",
+        city: "Louisville",
+        state: "KY",
+        zip: "40202"
+    },
+    paymentStatus: "UNPAID",
+    createdAt: new Date()
+});
+
 print('--- B2C Seed Complete! ---');

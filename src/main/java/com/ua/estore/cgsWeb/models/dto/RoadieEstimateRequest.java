@@ -1,7 +1,6 @@
 package com.ua.estore.cgsWeb.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ua.estore.cgsWeb.models.User;
 import lombok.Builder;
 import lombok.Data;
 

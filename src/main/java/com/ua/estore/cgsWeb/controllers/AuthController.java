@@ -88,9 +88,9 @@ public class AuthController {
 
         User user = new User();
         user.setUsername(username == null ? null : username.trim());
-        user.setPassword(password); // todo add encryption
+        user.setPassword(password); //Encoded in service
         user.setEmail((email == null || email.isBlank()) ? null : email.trim());
-        user.setRole("USER"); //Default Role, Vendors will be assigned after signup
+        user.setRole("USER");
 
         User.UserProfile profile = new User.UserProfile();
         profile.setFirstName(( firstName == null ? null : firstName.trim()));

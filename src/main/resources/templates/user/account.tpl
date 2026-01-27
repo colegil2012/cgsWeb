@@ -69,6 +69,10 @@ layout 'layout.tpl',
 
                     if (activeTab == 'addresses') {
                         div(class: 'info-card') {
+
+                            if(addrErr) div(class: 'alert alert-error', addrErr)
+                            if(addrMsg) div(class: 'alert alert-success', addrMsg)
+
                             h2('Addresses')
                             hr()
 

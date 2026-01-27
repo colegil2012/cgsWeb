@@ -92,10 +92,12 @@ public class AccountController  {
 
         try {
             credentialService.updatePassword(user.getId(), oldPassword, newPassword, confirmNewPassword);
+            log.info("Password updated successfully for user={}", user.getUsername());
             redirectAttributes.addFlashAttribute("pwMsg", "Password updated successfully");
             return "redirect:/account?tab=security";
 
         } catch (IllegalArgumentException ex) {
+            log.error("Invalid password data provided for user={}", user.getUsername(), ex);
             redirectAttributes.addFlashAttribute("pwErr", ex.getMessage());
             return "redirect:/account?tab=security";
 
@@ -122,11 +124,14 @@ public class AccountController  {
         }
 
         try {
+            log.info("Form Submission data={}", form.getNewAddresses());
             credentialService.updateAddresses(user.getId(), form);
+            log.info("Addresses updated successfully for user={}", user.getUsername());
             redirectAttributes.addFlashAttribute("addrMsg", "Addresses updated successfully.");
             return "redirect:/account?tab=addresses";
 
         } catch (IllegalArgumentException ex) {
+            log.error("Invalid address data provided for user={}", user.getUsername(), ex);
             redirectAttributes.addFlashAttribute("addrErr", ex.getMessage());
             return "redirect:/account?tab=addresses";
 

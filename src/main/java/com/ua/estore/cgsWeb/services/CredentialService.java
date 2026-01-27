@@ -165,9 +165,31 @@ public class CredentialService {
             if (isBlank(a.getState())) throw new IllegalArgumentException("State is required for each address.");
             if (isBlank(a.getZip())) throw new IllegalArgumentException("Zip is required for each address.");
 
+            // Stronger, local validation before calling Google (clearer errors, fewer API calls)
+            if (!a.getStreet().matches(".*\\d+.*")) {
+                throw new IllegalArgumentException(
+                        a.getType() + " address street must include a street number (e.g., \"123 Main St\")."
+                );
+            }
+            if (!a.getState().matches("(?i)^[a-z]{2}$")) {
+                throw new IllegalArgumentException(
+                        a.getType() + " address state must be a 2-letter code (e.g., \"CA\")."
+                );
+            }
+            if (!a.getZip().matches("^\\d{5}(-\\d{4})?$")) {
+                throw new IllegalArgumentException(
+                        a.getType() + " address ZIP must be 5 digits (or ZIP+4 like 12345-6789)."
+                );
+            }
+
             AddressDTO input = new AddressDTO(a.getStreet(), a.getCity(), a.getState(), a.getZip());
-            ValidatedAddress validated = googleAddressValidationService.validateUsHighCertainty(input);
-            serviceAreaValidationService.enforceWithinRadiusOrThrow(validated);
+            try {
+                ValidatedAddress validated = googleAddressValidationService.validateUsHighCertainty(input);
+                serviceAreaValidationService.enforceWithinRadiusOrThrow(validated);
+            } catch (IllegalArgumentException ex) {
+                // Add useful context so the UI can point the user to the problematic row
+                throw new IllegalArgumentException(a.getType() + " address error: " + ex.getMessage(), ex);
+            }
         }
 
         // Enforce single default (if multiple checked, keep the last checked as default)

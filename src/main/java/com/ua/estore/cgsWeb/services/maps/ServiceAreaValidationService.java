@@ -16,7 +16,15 @@ public class ServiceAreaValidationService {
 
     public void enforceWithinRadiusOrThrow(ValidatedAddress validated) {
         if (validated == null || !validated.valid()) {
-            throw new IllegalArgumentException(validated != null ? validated.message() : "Address validation failed.");
+            String msg = validated != null ? validated.message() : "Address validation failed.";
+
+            // Make the common Google “inferred components” failure actionable for humans
+            if (msg != null && msg.toLowerCase().contains("inferred components")) {
+                msg = "Please enter the full street address exactly (include street number, city, state, and ZIP). "
+                        + "Example: \"123 Main St, Springfield, IL 62704\".";
+            }
+
+            throw new IllegalArgumentException(msg);
         }
 
         double miles = GeoDistance.haversineMiles(

@@ -106,6 +106,8 @@ public class VendorController {
         return "vendor/vendor-portal";
     }
 
+    /***************** List Products *****************************/
+
     @PostMapping("/vendor/portal/add-products")
     public String addProduct(@ModelAttribute ProductFormWrapper form,
                              @RequestParam String vendorId,
@@ -137,6 +139,7 @@ public class VendorController {
                     log.info("Product with id {} successfully added to vendor {}", insertedId, vendorId);
                     successes.add("Successfully listed: " + product.getName());
                 } catch (Exception e) {
+                    log.error("Product with id {} failed to add to vendor {}", product.getId(), vendorId, e);
                     errors.add("Failed to list " + product.getName() + ": " + e.getMessage());
                 }
             }

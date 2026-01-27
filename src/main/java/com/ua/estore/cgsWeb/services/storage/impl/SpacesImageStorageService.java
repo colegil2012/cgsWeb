@@ -18,7 +18,7 @@ public class SpacesImageStorageService implements ImageStorageService {
 
     private final S3Client s3Client;
 
-    @Value("${app.images.bucket}")
+    @Value("${app.spaces.bucket}")
     private String bucket;
 
     @Override

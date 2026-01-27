@@ -10,27 +10,27 @@
     if (!openBtn || !overlay) return null;
 
     const open = () => {
-      overlay.style.display = 'flex';
+      overlay.style.display = "flex";
       const focusEl = focusInputId ? document.getElementById(focusInputId) : null;
       if (focusEl) focusEl.focus();
     };
 
     const close = () => {
-      overlay.style.display = 'none';
-      const form = overlay.querySelector('form');
+      overlay.style.display = "none";
+      const form = overlay.querySelector("form");
       if (form) form.reset();
     };
 
-    openBtn.addEventListener('click', open);
-    if (closeBtn) closeBtn.addEventListener('click', close);
-    if (cancelBtn) cancelBtn.addEventListener('click', close);
+    openBtn.addEventListener("click", open);
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    if (cancelBtn) cancelBtn.addEventListener("click", close);
 
-    overlay.addEventListener('click', (e) => {
+    overlay.addEventListener("click", (e) => {
       if (e.target === overlay) close();
     });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && overlay.style.display !== 'none') close();
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.style.display !== "none") close();
     });
 
     return { open, close, overlay };
@@ -38,26 +38,29 @@
 
   // Password modal (Security tab)
   initModal({
-    openBtnId: 'openChangePassword',
-    overlayId: 'changePasswordOverlay',
-    closeBtnId: 'closeChangePassword',
-    cancelBtnId: 'cancelChangePassword',
-    focusInputId: 'oldPassword',
+    openBtnId: "openChangePassword",
+    overlayId: "changePasswordOverlay",
+    closeBtnId: "closeChangePassword",
+    cancelBtnId: "cancelChangePassword",
+    focusInputId: "oldPassword",
   });
 
   // Address modal (Addresses tab)
   const addrModal = initModal({
-    openBtnId: 'openUpdateAddress',
-    overlayId: 'updateAddressOverlay',
-    closeBtnId: 'closeUpdateAddress',
-    cancelBtnId: 'cancelUpdateAddress',
+    openBtnId: "openUpdateAddress",
+    overlayId: "updateAddressOverlay",
+    closeBtnId: "closeUpdateAddress",
+    cancelBtnId: "cancelUpdateAddress",
     focusInputId: null,
   });
 
-  // Dynamic address blocks inside address modal
+  // Dynamic address blocks + autocomplete inside address modal
   if (addrModal) {
-    const addBtn = document.getElementById('addAddressBlockBtn');
-    const container = document.getElementById('newAddressesContainer');
+    const API_SUGGEST = "/api/address/suggest";
+    const API_RESOLVE = "/api/address/resolve";
+
+    const addBtn = document.getElementById("addAddressBlockBtn");
+    const container = document.getElementById("newAddressesContainer");
 
     const renderTypeOptions = (selectedValue) => {
       const normalized = (selectedValue || "SHIPPING").toString().trim().toUpperCase();
@@ -68,8 +71,8 @@
     };
 
     const buildAddressBlock = (index) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'address-edit-card';
+      const wrapper = document.createElement("div");
+      wrapper.className = "address-edit-card";
       wrapper.dataset.index = String(index);
 
       wrapper.innerHTML = `
@@ -87,7 +90,7 @@
 
         <div class="form-control">
           <label>Street</label>
-          <input type="text" name="newAddresses[${index}].street" />
+          <input type="text" name="newAddresses[${index}].street" autocomplete="off" />
         </div>
 
         <div class="form-control">
@@ -113,7 +116,7 @@
 
       const removeBtn = wrapper.querySelector('[data-remove="1"]');
       if (removeBtn) {
-        removeBtn.addEventListener('click', () => {
+        removeBtn.addEventListener("click", () => {
           wrapper.remove();
         });
       }
@@ -123,17 +126,194 @@
 
     const nextIndex = () => {
       if (!container) return 0;
-      const indices = [...container.querySelectorAll('.address-edit-card')]
+      const indices = [...container.querySelectorAll(".address-edit-card")]
         .map((el) => Number(el.dataset.index))
         .filter((n) => Number.isFinite(n));
       return indices.length ? Math.max(...indices) + 1 : 0;
     };
 
     if (addBtn && container) {
-      addBtn.addEventListener('click', () => {
+      addBtn.addEventListener("click", () => {
         const index = nextIndex();
         container.appendChild(buildAddressBlock(index));
       });
     }
+
+    // -----------------------------
+    // Autocomplete: UI helpers
+    // -----------------------------
+    const isStreetInput = (el) =>
+      el &&
+      el.tagName === "INPUT" &&
+      el.type === "text" &&
+      typeof el.name === "string" &&
+      el.name.endsWith(".street");
+
+    const prefixFromStreetName = (streetName) => {
+      // "addresses[0].street" -> "addresses[0]."
+      // "newAddresses[2].street" -> "newAddresses[2]."
+      if (!streetName || !streetName.endsWith(".street")) return null;
+      return streetName.slice(0, -".street".length) + ".";
+    };
+
+    const setByName = (root, name, value) => {
+      const sel = `[name="${CSS.escape(name)}"]`;
+      const el = root.querySelector(sel);
+      if (el) el.value = value ?? "";
+    };
+
+    const ensureSuggestBox = (streetInputEl) => {
+      const parent = streetInputEl.closest(".form-control") || streetInputEl.parentElement;
+      if (!parent) return null;
+
+      parent.style.position = parent.style.position || "relative";
+
+      let box = parent.querySelector(".addr-suggest-box");
+      if (box) return box;
+
+      box = document.createElement("div");
+      box.className = "addr-suggest-box";
+      box.style.position = "absolute";
+      box.style.left = "0";
+      box.style.right = "0";
+      box.style.top = "100%";
+      box.style.marginTop = "6px";
+      box.style.background = "#fff";
+      box.style.border = "1px solid rgba(0,0,0,0.15)";
+      box.style.borderRadius = "8px";
+      box.style.boxShadow = "0 10px 30px rgba(0,0,0,0.12)";
+      box.style.zIndex = "9999";
+      box.style.display = "none";
+      box.style.maxHeight = "220px";
+      box.style.overflowY = "auto";
+
+      parent.appendChild(box);
+      return box;
+    };
+
+    const hideSuggestBox = (streetInputEl) => {
+      const parent = streetInputEl.closest(".form-control") || streetInputEl.parentElement;
+      const box = parent ? parent.querySelector(".addr-suggest-box") : null;
+      if (box) {
+        box.style.display = "none";
+        box.innerHTML = "";
+      }
+    };
+
+    const escapeHtml = (s) =>
+      String(s ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+
+    const fetchSuggestions = async (q) => {
+      const res = await fetch(`${API_SUGGEST}?q=${encodeURIComponent(q)}`, {
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    };
+
+    const resolvePlaceId = async (placeId) => {
+      const res = await fetch(`${API_RESOLVE}?placeId=${encodeURIComponent(placeId)}`, {
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) return null;
+      return await res.json(); // AddressDTO {street, city, state, zip}
+    };
+
+    const renderSuggestions = (streetInputEl, suggestions) => {
+      const box = ensureSuggestBox(streetInputEl);
+      if (!box) return;
+
+      if (!suggestions || !suggestions.length) {
+        box.style.display = "none";
+        box.innerHTML = "";
+        return;
+      }
+
+      box.innerHTML = suggestions
+        .map((s) => {
+          const label = escapeHtml(s.label);
+          const placeId = escapeHtml(s.placeId);
+          return `<div class="addr-suggest-item" data-place-id="${placeId}" style="padding:10px 12px; cursor:pointer;">${label}</div>`;
+        })
+        .join("");
+
+      box.style.display = "block";
+
+      // Bind selection to this specific input (so we fill the correct address block)
+      [...box.querySelectorAll(".addr-suggest-item")].forEach((item) => {
+        item.addEventListener("mousedown", async (e) => {
+          // mousedown so selection works before blur hides box
+          e.preventDefault();
+
+          const placeId = item.getAttribute("data-place-id");
+          const label = (item.textContent || "").trim();
+
+          // Immediately show selection in street box
+          streetInputEl.value = label;
+          hideSuggestBox(streetInputEl);
+
+          if (!placeId) return;
+
+          const resolved = await resolvePlaceId(placeId);
+          if (!resolved) return;
+
+          const prefix = prefixFromStreetName(streetInputEl.name);
+          if (!prefix) return;
+
+          const scope = addrModal.overlay;
+
+          // Fill sibling fields in the SAME address block
+          if (resolved.street) setByName(scope, `${prefix}street`, resolved.street);
+          if (resolved.city) setByName(scope, `${prefix}city`, resolved.city);
+          if (resolved.state) setByName(scope, `${prefix}state`, resolved.state);
+          if (resolved.zip) setByName(scope, `${prefix}zip`, resolved.zip);
+        });
+      });
+    };
+
+    // Debounce per input
+    const timers = new WeakMap();
+
+    const wireAutocomplete = (streetInputEl) => {
+      if (!streetInputEl || streetInputEl.dataset.addrAutocompleteWired === "1") return;
+      streetInputEl.dataset.addrAutocompleteWired = "1";
+      streetInputEl.setAttribute("autocomplete", "off");
+
+      streetInputEl.addEventListener("input", () => {
+        const q = (streetInputEl.value || "").trim();
+        if (q.length < 3) {
+          hideSuggestBox(streetInputEl);
+          return;
+        }
+
+        if (timers.has(streetInputEl)) clearTimeout(timers.get(streetInputEl));
+
+        const t = setTimeout(async () => {
+          const suggestions = await fetchSuggestions(q);
+          renderSuggestions(streetInputEl, suggestions);
+        }, 250);
+
+        timers.set(streetInputEl, t);
+      });
+
+      streetInputEl.addEventListener("blur", () => {
+        // small delay so mousedown selection wins
+        setTimeout(() => hideSuggestBox(streetInputEl), 150);
+      });
+    };
+
+    // Wire existing street inputs (existing addresses) when modal exists
+    const existingStreetInputs = addrModal.overlay.querySelectorAll('input[type="text"][name$=".street"]');
+    existingStreetInputs.forEach(wireAutocomplete);
+
+    // Wire dynamically added street inputs on focus
+    addrModal.overlay.addEventListener("focusin", (e) => {
+      const el = e.target;
+      if (isStreetInput(el)) wireAutocomplete(el);
+    });
   }
 })();

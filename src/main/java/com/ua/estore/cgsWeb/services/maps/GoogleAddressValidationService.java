@@ -6,6 +6,7 @@ import com.ua.estore.cgsWeb.config.props.GoogleMapsProperties;
 import com.ua.estore.cgsWeb.models.dto.AddressDTO;
 import com.ua.estore.cgsWeb.models.dto.GoogleAddressValidationStrictMapper;
 import com.ua.estore.cgsWeb.models.dto.ValidatedAddress;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestClientResponseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class GoogleAddressValidationService {
 
@@ -52,8 +54,20 @@ public class GoogleAddressValidationService {
         });
 
         Map<String, Object> body = Map.of("address", address);
+        // Never log API keys; log a "safe" URL without key
+        final String safeUrl = "/v1:validateAddress?key=<redacted>";
 
+        long startNanos = System.nanoTime();
         try {
+            if (log.isDebugEnabled()) {
+                log.debug("Google Address Validation request -> url={}, body={}",
+                        safeUrl, toJsonSafe(body, 1200));
+            } else {
+                // Keep INFO concise; you can flip to DEBUG when troubleshooting.
+                log.info("Google Address Validation request -> url={}, street='{}', city='{}', state='{}', zip='{}'",
+                        safeUrl, input.street(), input.city(), input.state(), input.zip());
+            }
+
             Object raw = restClient.post()
                     .uri(uriBuilder -> uriBuilder
                             .path("/v1:validateAddress")
@@ -64,12 +78,29 @@ public class GoogleAddressValidationService {
                     .retrieve()
                     .body(Object.class);
 
+            long tookMs = (System.nanoTime() - startNanos) / 1_000_000;
+
+            if (log.isDebugEnabled()) {
+                log.debug("Google Address Validation response <- url={}, tookMs={}, body={}",
+                        safeUrl, tookMs, toJsonSafe(raw, 2000));
+            } else {
+                log.info("Google Address Validation response <- url={}, tookMs={}", safeUrl, tookMs);
+            }
+
             JsonNode root = objectMapper.valueToTree(raw);
             return GoogleAddressValidationStrictMapper.mapHighCertainty(root);
 
         } catch (RestClientResponseException ex) {
-            // Handles 4xx/5xx from Google (including your 403 SERVICE_DISABLED)
+            long tookMs = (System.nanoTime() - startNanos) / 1_000_000;
+
             String responseBody = ex.getResponseBodyAsString();
+            log.warn("Google Address Validation failed <- url={}, tookMs={}, status={} {}, responseBody={}",
+                    safeUrl,
+                    tookMs,
+                    ex.getRawStatusCode(),
+                    ex.getStatusText(),
+                    truncate(responseBody, 2000));
+
             String msg = "Google Address Validation failed (" + ex.getRawStatusCode() + " " + ex.getStatusText() + ").";
 
             if (responseBody != null && !responseBody.isBlank()) {
@@ -81,7 +112,11 @@ public class GoogleAddressValidationService {
             return new ValidatedAddress(false, 0, 0, null, msg);
 
         } catch (Exception ex) {
-            // Network/DNS/timeouts/serialization, etc.
+            long tookMs = (System.nanoTime() - startNanos) / 1_000_000;
+
+            log.error("Google Address Validation request error <- url={}, tookMs={}, errorType={}, message={}",
+                    safeUrl, tookMs, ex.getClass().getSimpleName(), ex.getMessage(), ex);
+
             return new ValidatedAddress(false, 0, 0, null,
                     "Google Address Validation request failed: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
         }
@@ -89,6 +124,15 @@ public class GoogleAddressValidationService {
 
     private static boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
+    }
+
+    private String toJsonSafe(Object value, int maxLen) {
+        try {
+            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value);
+            return truncate(json, maxLen);
+        } catch (Exception e) {
+            return "<unserializable:" + e.getClass().getSimpleName() + ">";
+        }
     }
 
     private static String truncate(String s, int maxLen) {

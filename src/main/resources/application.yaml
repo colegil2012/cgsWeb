@@ -16,7 +16,7 @@ app:
   spaces:
     bucket: ${SPACES_BUCKET:cgsweb-img}
     region: ${SPACES_REGION:nyc3}
-    endpoint: ${SPACES_ENDPOINT:https://cgsweb-img.nyc3.digitaloceanspaces.com}
+    endpoint: ${SPACES_ENDPOINT:https://nyc3.digitaloceanspaces.com}
     access-key: ${SPACES_ACCESS_KEY:}
     secret-key: ${SPACES_SECRET_KEY:}
 roadie:
@@ -28,6 +28,6 @@ google:
   maps:
     api-key: ${GOOGLE_MAPS_API_KEY:}
 service-area:
-  origin-lat: 38.00317456212482
-  origin-long: -85.71534984109215
-  radius-miles: 50
+  origin-lat: ${SVC_AREA_LAT:38.00317456212482}
+  origin-lng: ${SVC_AREA_LONG:-85.71534984109215}
+  radius-miles: ${SVC_AREA_RADIUS:50}

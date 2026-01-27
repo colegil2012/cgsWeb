@@ -7,6 +7,7 @@ import com.ua.estore.cgsWeb.models.wrappers.ProductFormWrapper;
 import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
+import com.ua.estore.cgsWeb.services.storage.ImageStorageService;
 import com.ua.estore.cgsWeb.util.dataUtil;
 import com.ua.estore.cgsWeb.util.requestUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,9 +37,7 @@ public class VendorController {
     private final ProductService productService;
     private final VendorService vendorService;
     private final CategoryService categoryService;
-
-    @Value("${app.upload.path}")
-    private String uploadPath;
+    private final ImageStorageService imageStorageService;
 
     /*********************************************************************************
      * View Vendor endpoints
@@ -125,10 +124,11 @@ public class VendorController {
                         if (!imageFile.isEmpty()) {
                             String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
 
-                            Path path = Paths.get(uploadPath, "products", fileName);
-                            Files.createDirectories(path.getParent());
-                            Files.write(path, imageFile.getBytes());
+                            // Store bytes (LocalImageStorageService in dev, SpacesImageStorageService in prod)
+                            imageStorageService.storeProductImage(fileName, imageFile);
 
+                            // Store the same logical path in Mongo;
+                            // prod base-url can resolve this to Spaces.
                             product.setImageUrl("/images/products/" + fileName);
                         }
                     }

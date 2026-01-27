@@ -3,6 +3,8 @@ package com.ua.estore.cgsWeb.models;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +17,8 @@ public class Order {
     @Id
     private String id;
     private String orderNumber;
+
+    @Field(targetType = FieldType.OBJECT_ID)
     private String userId;
     private String status; // PENDING, PAID, SHIPPED, DELIVERED
     private List<OrderItem> items = new ArrayList<>();
@@ -33,7 +37,7 @@ public class Order {
     public static class OrderItem {
         private String productId;
         private String name;
-        private BigDecimal purchasePrice;
+        private BigDecimal priceAtPurchase;
         private Integer quantity;
     }
 }

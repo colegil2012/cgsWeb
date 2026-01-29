@@ -22,7 +22,6 @@ layout 'layout.tpl',
             } else {
 
                 div(class: 'cart-page-container') {
-
                     div(class: 'cart-main') {
                         div(class: 'cart-header') {
                             span(class: 'cart-header-text', "${user.username.toUpperCase()}'s Cart:")
@@ -86,10 +85,42 @@ layout 'layout.tpl',
                                 span(class: 'payment-badge', 'PayPal')
                             }
                         }
-                        button(class: 'btn-checkout', 'Proceed to Checkout')
+
+                        div(class: 'cart-actions-block') {
+                            div(class: 'filter-group ship-to-row') {
+                                label(for: 'shipping-dropdown', 'Ship To...')
+
+                                div(class: 'ship-to-controls') {
+                                    def addresses = user?.addresses ?: []
+                                    if (addresses.isEmpty()) {
+                                        select(id: 'shipping-dropdown', name: 'shippingAddressIndex', disabled: 'disabled') {
+                                            option(value: '', 'No saved addresses (add one in your account)')
+                                        }
+                                    } else {
+                                        select(id: 'shipping-dropdown', name: 'shippingAddressId') {
+                                            addresses.each { a ->
+                                                def labelText = "${a.street}, ${a.city}, ${a.state} ${a.zip}"
+                                                def addrId = a?.addressId ?: ''
+                                                if (a.isDefault()) {
+                                                    option(value: addrId, selected: 'selected', labelText)
+                                                } else {
+                                                    option(value: addrId, labelText)
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    button(type: 'button', class: 'btn-small', id: 'openUpdateAddress', 'Edit')
+                                }
+                            }
+
+                            button(class: 'btn-checkout', 'Proceed to Checkout')
+                        }
                     }
+                    include template: 'partials/address-modal.tpl'
                 }
             }
             script(src: '/scripts/cart-update.js') {}
+            script(src: '/scripts/account-security.js') {}
         }
 

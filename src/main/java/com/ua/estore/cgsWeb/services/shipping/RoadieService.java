@@ -1,8 +1,9 @@
-package com.ua.estore.cgsWeb.services;
+package com.ua.estore.cgsWeb.services.shipping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ua.estore.cgsWeb.models.dto.RoadieEstimateRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RoadieService {
@@ -32,10 +34,9 @@ public class RoadieService {
         String url = String.format("%s/%s/estimates", baseUrl, apiVersion);
 
         try {
-            // Log the outgoing request for testing
-            System.out.println("--- ROADIE API REQUEST ---");
-            System.out.println("URL: " + url);
-            System.out.println("Payload: " + objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(request));
+            normalizeZip5InPlace(request);
+
+            log.info("Estimate Request Payload: " + objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(request));
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -43,13 +44,38 @@ public class RoadieService {
             HttpEntity<RoadieEstimateRequest> entity = new HttpEntity<>(request, headers);
 
             var response = restTemplate.postForObject(url, entity, Map.class);
-            System.out.println("--- ROADIE API RESPONSE ---");
-            System.out.println("Response: " + response);
+            log.info("Estimate Request Response: " + response);
             return response;
 
         } catch (Exception e) {
-            System.err.println("Failed to call Roadie API: " + e.getMessage());
+            log.error("Failed to call Roadie API: " + e.getMessage());
             return Map.of("error", "Failed to get Estimate: " + e.getMessage());
         }
     }
+
+
+    /******************************************************
+     * HelperMethods
+     ******************************************************/
+
+    private static void normalizeZip5InPlace(RoadieEstimateRequest request) {
+        if (request == null) return;
+
+        normalizeLocationZip(request.getPickupLocation());
+        normalizeLocationZip(request.getDeliveryLocation());
+    }
+
+    private static void normalizeLocationZip(RoadieEstimateRequest.Location loc) {
+        if (loc == null || loc.getAddress() == null) return;
+        var addr = loc.getAddress();
+        addr.setZip(zip5OrNull(addr.getZip()));
+    }
+
+    private static String zip5OrNull(String zip) {
+        if (zip == null) return null;
+        String z = zip.trim();
+        if (z.length() >= 5 && z.substring(0, 5).matches("^\\d{5}$")) return z.substring(0, 5);
+        return z; // leave it as-is if it’s already weird; Roadie will error, but logs will show the bad value
+    }
+
 }

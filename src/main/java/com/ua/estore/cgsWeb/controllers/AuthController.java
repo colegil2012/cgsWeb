@@ -84,11 +84,20 @@ public class AuthController {
                                   @RequestParam(required = false) String email,
                                   @RequestParam String username,
                                   @RequestParam String password,
+                                  @RequestParam String confirmPassword,
                                   RedirectAttributes redirectAttributes) {
 
         User user = new User();
         user.setUsername(username == null ? null : username.trim());
-        user.setPassword(password); //Encoded in service
+
+        //Password validation
+        if (password.equals(confirmPassword)) {
+            user.setPassword(password); //Encoded in service
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Passwords do not match");
+            return "redirect:/signup";
+        }
+
         user.setEmail((email == null || email.isBlank()) ? null : email.trim());
         user.setRole("USER");
 

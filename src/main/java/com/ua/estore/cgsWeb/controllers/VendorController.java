@@ -106,7 +106,9 @@ public class VendorController {
         return "vendor/vendor-portal";
     }
 
-    /***************** List Products *****************************/
+    /**********************************************************************************
+     * List Products
+     *********************************************************************************/
 
     @PostMapping("/vendor/portal/add-products")
     public String addProduct(@ModelAttribute ProductFormWrapper form,

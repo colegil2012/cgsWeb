@@ -8,7 +8,7 @@ import com.ua.estore.cgsWeb.models.dto.RoadieEstimateRequest;
 import com.ua.estore.cgsWeb.models.wrappers.PackageWrapper;
 import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
-import com.ua.estore.cgsWeb.services.RoadieService;
+import com.ua.estore.cgsWeb.services.shipping.RoadieService;
 import com.ua.estore.cgsWeb.services.VendorService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

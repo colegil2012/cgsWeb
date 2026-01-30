@@ -45,6 +45,7 @@ const celtechResult = db.vendors.insertOne({
     description: 'Celtech GS was founded with 2 main goals: creating an online marketplace where you can trust the products because they\'re made by your friends and neighbors. \nSecondly, making affordable locally sourced goods that you can trust more widely available. \nAll goods sold by Celtech GS directly are either organically garden grown or locally sourced.',
     addresses: [
 		{
+			addressId: new ObjectId(),
 			street: '4800 State Hwy 1066',
 			city: 'Bloomfield',
 			state: 'KY',
@@ -63,10 +64,13 @@ const newAgeResult = db.vendors.insertOne({
     description: 'Hand crafted home decor, using locally sourced or recycled products.',
     addresses: [
 		{
+			addressId: new ObjectId(),
 			street: '5404 Sunset Dr',
 			city: 'Louisville',
 			state: 'KY',
 			zip: '40219', 
+			latitude: 38.144,
+			longitude: -85.7,
 			isDefault: true
 		}
 	],
@@ -81,10 +85,13 @@ const organicResult = db.vendors.insertOne({
     description: 'Garden grown greens and fruits.',
     addresses: [
 		{
+			addressId: new ObjectId(),
 			street: '1006 Corn Island Ct',
 			city: 'Saint Matthews',
 			state: 'KY',
 			zip: '40207', 
+			latitude: 38.236,
+			longitude: -85.65,
 			isDefault: true
 		}
 	],
@@ -99,10 +106,13 @@ const nattyResult = db.vendors.insertOne({
     description: 'Locally and organically sourced ingredients, ground into premium health supplements.',
     addresses: [
 		{
+			addressId: new ObjectId(),
 			street: '149 Wood Gate Dr',
 			city: 'Mount Washington',
 			state: 'KY',
 			zip: '40047', 
+			latitude: 38.043,
+			longitude: -85.556,
 			isDefault: true
 		}
 	],
@@ -117,10 +127,13 @@ const munsfordResult = db.vendors.insertOne({
     description: 'Just a lil farm',
     addresses: [
 		{
-			street: '1259 Stovall Rd',
+			addressId: new ObjectId(),
+			street: '4359 Springfield Rd',
 			city: 'Elizabethtown',
 			state: 'KY',
 			zip: '42701', 
+			latitude: 38.692,
+			longitude: -85.788,
 			isDefault: true
 		}
 	],
@@ -434,11 +447,14 @@ db.users.insertMany([
         },
         addresses: [
             {
+				addressId: new ObjectId(),
                 type: "SHIPPING",
                 street: "218 Bluebill Ct.",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
+				latitude: 38.003,
+				longitude: -85.715,
                 isDefault: true
             }
         ],
@@ -457,11 +473,14 @@ db.users.insertMany([
         },
         addresses: [
             {
+				addressId: new ObjectId(),
                 type: "SHIPPING",
                 street: "218 Bluebill Ct.",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
+				latitude: 38.003,
+				longitude: -85.715,
                 isDefault: true
             }
         ],
@@ -480,11 +499,14 @@ db.users.insertMany([
         },
         addresses: [
             {
+				addressId: new ObjectId(),
                 type: "SHIPPING",
                 street: "218 Bluebill Ct.",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
+				latitude: 38.003,
+				longitude: -85.715,
                 isDefault: true
             }
         ],
@@ -503,11 +525,14 @@ db.users.insertMany([
         },
         addresses: [
             {
+				addressId: new ObjectId(),
                 type: "SHIPPING",
                 street: "218 Bluebill Ct.",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
+				latitude: 38.003,
+				longitude: -85.715,
                 isDefault: true
             }
         ],
@@ -525,11 +550,14 @@ db.users.insertMany([
         },
         addresses: [
             {
+				addressId: new ObjectId(),
                 type: "SHIPPING",
                 street: "135 Bigwood Ct.",
                 city: "Louisville",
                 state: "KY",
                 zip: "40229",
+				latitude: 38.084,
+				longitude: -85.689,
                 isDefault: true
             }
         ],
@@ -573,7 +601,7 @@ db.orders.insertOne({
 });
 
 db.orders.insertOne({
-    orderNumber: "ORD-2023-1001",
+    orderNumber: "ORD-2026-1002",
     userId: coleId,
     status: "PENDING", // PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
     items: [
@@ -591,10 +619,10 @@ db.orders.insertOne({
         total: 28.30
     },
     shippingAddress: {
-        street: "123 Main St",
-        city: "Louisville",
+        street: "218 Bluebill Ct",
+        city: "Shepherdsville",
         state: "KY",
-        zip: "40202"
+        zip: "40165"
     },
     paymentStatus: "UNPAID",
     createdAt: new Date()

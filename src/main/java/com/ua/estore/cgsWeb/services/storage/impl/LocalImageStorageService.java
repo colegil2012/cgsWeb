@@ -28,4 +28,14 @@ public class LocalImageStorageService implements ImageStorageService {
             throw new RuntimeException("Failed to store image locally: " + e.getMessage(), e);
         }
     }
+
+    public void storeVendorLogo(String fileName, MultipartFile file) {
+        try {
+            Path path = Paths.get(uploadPath, "vendors", fileName);
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to store image locally: " + e.getMessage(), e);
+        }
+    }
 }

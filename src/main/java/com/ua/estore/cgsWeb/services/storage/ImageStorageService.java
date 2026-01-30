@@ -4,4 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageStorageService {
     void storeProductImage(String fileName, MultipartFile file);
+
+    void storeVendorLogo(String fileName, MultipartFile file);
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "users")
-public class User { //implements UserDetails {
+public class User {
     @Id
     private String id;
     private String username;
@@ -39,11 +39,17 @@ public class User { //implements UserDetails {
 
     @Data
     public static class Address {
+
+        @Field(targetType = FieldType.OBJECT_ID)
+        private String addressId;
+
         private String type;  //SHIPPING, BILLING
         private String street;
         private String city;
         private String state;
         private String zip;
+        private double latitude;
+        private double longitude;
         private boolean isDefault;
     }
 

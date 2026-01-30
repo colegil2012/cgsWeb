@@ -14,6 +14,7 @@ import java.net.URI;
 @Configuration
 @Profile("prod")
 public class SpacesS3Config {
+
     @Bean
     public S3Client s3Client(SpacesS3Properties props) {
         return S3Client.builder()

@@ -57,6 +57,10 @@ layout 'layout.tpl',
                         label(for: 'password', 'Password')
                         input(type: 'password', name: 'password', id: 'password', required: 'required')
                     }
+                    div(class: 'form-control') {
+                        label(for: 'confirmPassword', 'Confirm Password')
+                        input(type: 'password', name: 'confirmPassword', id: 'confirmPassword', required: 'required')
+                    }
                     button(type: 'submit', class: 'btn', style: 'border:none; cursor:pointer;', 'Sign Up')
                 }
 

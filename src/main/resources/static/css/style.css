@@ -903,6 +903,50 @@ button.btn {
     margin: 0;
 }
 
+.cart-summary .cart-actions-block {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cart-summary .ship-to-controls {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+    padding: 0.5rem 0;
+}
+
+.cart-summary .ship-to-controls #shipping-dropdown {
+    width: 73%;
+    margin-bottom: 0;
+}
+
+.cart-summary .ship-to-controls #openUpdateAddress {
+    flex: 0 0 25%;
+    width: 25%;
+    margin: 0;
+    white-space: nowrap;
+}
+.cart-summary .btn-checkout {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 12px; /* spacing below the ship-to row */
+}
+
+
+.ship-to-controls {
+    padding: 0.5rem 0;
+}
+
+
+/* Make the button the same height feel as the select */
+.cart-summary .ship-to-controls #openUpdateAddress.btn-small {
+    border-radius: 30px;      /* matches your pill-ish inputs */
+    padding: 0.8rem 1rem;     /* similar vertical padding to selects */
+}
+
 /* Summary Details */
 .summary-row {
     display: flex;
@@ -1881,6 +1925,18 @@ button.btn {
         width: 100%;
         position: static;
         box-sizing: border-box;
+    }
+}
+
+@media (max-width: 600px) {
+    .cart-summary .ship-to-controls {
+        flex-direction: column;
+    }
+
+    .cart-summary .ship-to-controls #shipping-dropdown,
+    .cart-summary .ship-to-controls #openUpdateAddress {
+        flex: 1 1 auto;
+        width: 100%;
     }
 }
 

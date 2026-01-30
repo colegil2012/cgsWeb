@@ -38,4 +38,22 @@ public class SpacesImageStorageService implements ImageStorageService {
             throw new RuntimeException("Failed to upload image to Spaces: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public void storeVendorLogo(String fileName, MultipartFile file) {
+        try {
+            String key = "vendors/" + fileName;
+
+            PutObjectRequest req = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .contentType(file.getContentType())
+                    .acl(ObjectCannedACL.PUBLIC_READ) // assumes you want public images
+                    .build();
+
+            s3Client.putObject(req, RequestBody.fromBytes(file.getBytes()));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload image to Spaces: " + e.getMessage(), e);
+        }
+    }
 }

@@ -4,11 +4,10 @@ import com.ua.estore.cgsWeb.models.Order;
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
-import com.ua.estore.cgsWeb.services.CredentialService;
-import com.ua.estore.cgsWeb.services.OrderService;
-import com.ua.estore.cgsWeb.services.ProductService;
-import com.ua.estore.cgsWeb.services.VendorService;
+import com.ua.estore.cgsWeb.services.*;
 import com.ua.estore.cgsWeb.util.dataUtil;
+import com.ua.estore.cgsWeb.util.requestUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +33,7 @@ public class AccountController  {
 
     private final CredentialService credentialService;
     private final OrderService orderService;
+    private final AddressService addressService;
 
 
     /**********************************************************************************
@@ -43,6 +43,7 @@ public class AccountController  {
     @GetMapping("/account")
     public String accountPage(HttpSession session,
                               Model model,
+                              HttpServletRequest request,
                               @RequestParam(name = "tab", required = false, defaultValue = "profile") String tab,
                               @RequestParam(defaultValue = "0") int orderPage) {
 
@@ -64,6 +65,7 @@ public class AccountController  {
         Page<Order> orders = orderService.findByUserId(user.getId(), PageRequest.of(orderPage, 5));
         model.addAttribute("orders", orders);
 
+        //Temporary logging for coding orders logic
         if (!orders.isEmpty()) {
             log.info("Found {} orders for user: {}", orders.getTotalElements(), user.getUsername());
         } else {
@@ -114,6 +116,7 @@ public class AccountController  {
 
     @PostMapping("/account/addresses")
     public String updateAddresses(HttpSession session,
+                                  HttpServletRequest request,
                                   @ModelAttribute AddressUpdateWrapper form,
                                   RedirectAttributes redirectAttributes) {
 
@@ -123,22 +126,39 @@ public class AccountController  {
             return "redirect:/login";
         }
 
+        String returnTo = getReferalUrl(request.getHeader("Referer"), "/account?tab=addresses");
+
         try {
             log.info("Form Submission data={}", form.getNewAddresses());
-            credentialService.updateAddresses(user.getId(), form);
+            addressService.updateUserAddresses(user.getId(), form);
             log.info("Addresses updated successfully for user={}", user.getUsername());
+
+            // Refresh session user so subsequent pages (like /cart) see updated addresses
+            credentialService.getUserById(user.getId()).ifPresent(fresh -> {
+                fresh.setPassword(null); // avoid keeping password in session
+                session.setAttribute("user", fresh);
+            });
+
             redirectAttributes.addFlashAttribute("addrMsg", "Addresses updated successfully.");
-            return "redirect:/account?tab=addresses";
+            return "redirect:" + returnTo;
 
         } catch (IllegalArgumentException ex) {
             log.error("Invalid address data provided for user={}", user.getUsername(), ex);
             redirectAttributes.addFlashAttribute("addrErr", ex.getMessage());
-            return "redirect:/account?tab=addresses";
+            return "redirect:" + returnTo;
 
         } catch (Exception ex) {
             log.error("Unexpected error updating addresses for user={}", user.getUsername(), ex);
             redirectAttributes.addFlashAttribute("addrErr", "Unexpected error occurred while updating addresses.");
-            return "redirect:/account?tab=addresses";
+            return "redirect:" + returnTo;
         }
+    }
+
+    private static String getReferalUrl(String referer, String fallback) {
+        if (referer == null || referer.isBlank()) return fallback;
+        if (referer.contains("/cart")) return "/cart";
+        if (referer.contains("/account")) return "/account?tab=addresses";
+
+        return fallback;
     }
 }

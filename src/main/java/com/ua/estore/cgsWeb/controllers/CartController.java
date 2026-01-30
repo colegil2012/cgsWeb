@@ -12,6 +12,7 @@ import com.ua.estore.cgsWeb.services.shipping.RoadieService;
 import com.ua.estore.cgsWeb.services.VendorService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class CartController {
@@ -91,7 +93,7 @@ public class CartController {
                         // Total lead time = Vendor overhead + longest product prep time
                         int totalLeadTimeDays = vendor.getLead_time() + maxProductReadyTime;
 
-                        System.out.println("Lead time for " + pkg.getVendorName() + ": " + totalLeadTimeDays + " days");
+                        log.info("Lead time for " + pkg.getVendorName() + ": " + totalLeadTimeDays + " days");
 
                         OffsetDateTime pickupTime = OffsetDateTime.now().plusDays(totalLeadTimeDays);
                         OffsetDateTime deliveryDeadline = pickupTime.plusDays(1);

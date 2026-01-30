@@ -1,5 +1,6 @@
 package com.ua.estore.cgsWeb.models;
 
+import com.ua.estore.cgsWeb.models.dto.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Cart {
     @Id
     private String id;
+
     @Indexed(unique = true)
     private String userId;
+
+
+
 
 }

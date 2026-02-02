@@ -11,6 +11,7 @@ layout 'layout.tpl',
         title: 'CGS Web | View Product',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         selected_product: selected_product,
         content: {
             div(class: 'container') {

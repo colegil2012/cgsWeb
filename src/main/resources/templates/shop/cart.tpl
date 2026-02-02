@@ -6,6 +6,7 @@ layout 'layout.tpl',
         title: 'CGS Web | Home',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         content: {
             //Calculate total, subtotal and tax
             def subtotal = cartItems.collect { it.price * it.quantity }.sum() ?: 0.00

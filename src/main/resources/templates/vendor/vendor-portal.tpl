@@ -6,6 +6,7 @@ layout 'layout.tpl',
         title: 'CGS Web | Vendor',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         vendorDetail: vendorDetail,
         content: {
             div(class: 'hero') {

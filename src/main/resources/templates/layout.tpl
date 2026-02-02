@@ -44,7 +44,7 @@ html {
                         li(id: 'cart-link-container') {
                             a(href: '/cart', class: 'cart-link') {
                                 yield "Cart("
-                                span(class: 'cart-count', cartItems?.sum { it.quantity } ?: 0)
+                                span(class: 'cart-count', cartCount ?: 0)
                                 yield ")"
                             }
                         }

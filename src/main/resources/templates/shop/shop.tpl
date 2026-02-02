@@ -6,6 +6,7 @@ layout 'layout.tpl',
         title: 'CGS Web | Shop',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         content: {
             div(class: 'hero') {
                 h1('Shop')

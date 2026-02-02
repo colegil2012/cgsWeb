@@ -6,6 +6,7 @@ layout 'layout.tpl',
         title: vendor?.name ?: 'Vendor Profile',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         content: {
             div(class: 'vendor-profile-container') {
                 // Vendor Header Section

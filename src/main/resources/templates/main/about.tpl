@@ -6,6 +6,7 @@ layout 'layout.tpl',
         title: 'CGS Web | About Our Mission',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         content: {
             div(class: 'about-hero') {
                 h1('Rooted in Louisville, Growing for You.')

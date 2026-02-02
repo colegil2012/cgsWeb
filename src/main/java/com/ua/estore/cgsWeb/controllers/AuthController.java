@@ -2,7 +2,9 @@ package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.services.CartService;
 import com.ua.estore.cgsWeb.services.CredentialService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 public class AuthController {
 
     private final CredentialService credentialService;
+    private final CartService cartService;
 
 
     /*************************************************************************************************************
@@ -38,19 +41,27 @@ public class AuthController {
     @PostMapping("/login")
     public String handleLogin(@RequestParam String username,
                               @RequestParam String password,
-                              HttpSession session,
+                              HttpServletRequest request,
                               Model model) {
 
         log.info(String.format("Attempting to login user: %s", username));
         var userOpt = credentialService.authenticate(username, password);
 
         if (userOpt.isPresent()) {
+            HttpSession oldSession = request.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
+            }
+            HttpSession session = request.getSession(true);
+
             User user = userOpt.get();
             user.setPassword(null);
             session.setAttribute("user", user);
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("role", user.getRole());
-            session.setAttribute("cartItems", new ArrayList<ProductDTO>());
+
+            var cart = cartService.getOrCreateByUserId(user.getId());
+            session.setAttribute("userCart", cart);
+            session.setAttribute("cartCount", cart.totalQuantity());
+
             log.info(String.format("User %s logged in successfully.", user.getUsername()));
             return "redirect:/";
         } else {
@@ -61,8 +72,15 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public String logout(SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
+    public String logout(SessionStatus sessionStatus,
+                         HttpServletRequest request,
+                         RedirectAttributes redirectAttributes) {
         sessionStatus.setComplete();
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         redirectAttributes.addFlashAttribute("message", "You have been logged out successfully!");
         return "redirect:/login";
     }

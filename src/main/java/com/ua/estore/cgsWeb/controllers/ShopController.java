@@ -29,9 +29,6 @@ public class ShopController {
     private final VendorService vendorService;
     private final CategoryService categoryService;
 
-    @Value("${app.images.base-url:}")
-    private String imagesBaseUrl;
-
     /**********************************************************************************
      * Controller methods for handling shop-related operations
      *********************************************************************************/
@@ -54,6 +51,10 @@ public class ShopController {
         return executeFiltering("", "", "", false, page, categories, model);
     }
 
+    /*********************************************************************
+     * Filter Query
+     *********************************************************************/
+
     @GetMapping("/shop/filter")
     public String filterProducts(@RequestParam(required = false) String search,
                                  @RequestParam(required = false) String category,
@@ -67,6 +68,10 @@ public class ShopController {
 
         return executeFiltering(search, category, vendor, lowStock, page, categoryService.getCategoryNameMap(), model);
     }
+
+    /*********************************************************************
+     * View Product Page
+     *********************************************************************/
 
     @GetMapping("/shop/view/{id}")
     public String viewProduct(@PathVariable String id, Model model, HttpSession session) {
@@ -82,7 +87,6 @@ public class ShopController {
         String backHref = (String) session.getAttribute("backLinkHref");
         String backText = (String) session.getAttribute("backLinkText");
 
-        model.addAttribute("imagesBaseUrl", imagesBaseUrl);
         model.addAttribute("selected_product", productDto);
         model.addAttribute("backLinkHref", backHref != null ? backHref : "/shop");
         model.addAttribute("backLinkText", backText != null ? backText : "← Back to Shop");
@@ -100,7 +104,6 @@ public class ShopController {
     private String executeFiltering(String search, String category, String vendor, boolean lowStock, int page, Map<String, String> catMap, Model model) {
         Page<Product> productPage = productService.getProductsByFilter(search, category, vendor, lowStock, page);
 
-        model.addAttribute("imagesBaseUrl", imagesBaseUrl);
         model.addAttribute("products", dataUtil.convertToProductDto(productPage.getContent(), vendorService, catMap));
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());

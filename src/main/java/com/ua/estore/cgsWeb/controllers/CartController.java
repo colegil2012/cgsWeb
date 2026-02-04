@@ -35,7 +35,6 @@ public class CartController {
     private final ProductService productService;
     private final VendorService vendorService;
     private final CategoryService categoryService;
-    private final RoadieService roadieService;
     private final CartService cartService;
 
     /**********************************************************************************

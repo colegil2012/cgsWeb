@@ -43,6 +43,10 @@ public class VendorController {
      * View Vendor endpoints
      *********************************************************************************/
 
+    /************************************************************
+     * View All Vendors
+     ***********************************************************/
+
     @GetMapping("/vendors")
     public String allVendors(@RequestParam(defaultValue = "0") int page,
                              Model model, HttpSession session, HttpServletRequest request) {
@@ -57,6 +61,10 @@ public class VendorController {
         model.addAttribute("totalPages", vendorPage.getTotalPages());
         return "shop/view-all-vendors";
     }
+
+    /***********************************************************
+     * View Vendor by id
+     ***********************************************************/
 
     @GetMapping("/vendor/{id}")
     public String viewVendor(@RequestParam(defaultValue = "0") int page,
@@ -107,7 +115,7 @@ public class VendorController {
     }
 
     /**********************************************************************************
-     * List Products
+     * List Products for a Vendor
      *********************************************************************************/
 
     @PostMapping("/vendor/portal/add-products")

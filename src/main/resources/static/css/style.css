@@ -1966,3 +1966,31 @@ button.btn {
         box-sizing: border-box;
     }
 }
+
+/* Dark-green glow flash for newly updated values */
+@keyframes greenGlowFlash {
+  0% {
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    filter: brightness(1);
+  }
+  35% {
+    text-shadow:
+      0 0 6px rgba(0, 90, 0, 0.55),
+      0 0 14px rgba(0, 90, 0, 0.35);
+    filter: brightness(1.12);
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    filter: brightness(1);
+  }
+}
+
+.glow-green {
+  animation: greenGlowFlash 900ms ease-out 1;
+}
+
+/* Optional: if you want the shipping vendor label itself (left side) to glow too */
+.shipping-detail span:first-child.glow-green,
+.shipping-detail span:first-child .glow-green {
+  animation: greenGlowFlash 900ms ease-out 1;
+}

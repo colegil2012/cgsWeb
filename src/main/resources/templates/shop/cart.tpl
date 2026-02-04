@@ -6,6 +6,7 @@ layout 'layout.tpl',
         title: 'CGS Web | Home',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         content: {
             //Calculate total, subtotal and tax
             def subtotal = cartItems.collect { it.price * it.quantity }.sum() ?: 0.00
@@ -53,28 +54,34 @@ layout 'layout.tpl',
 
                     div(class: 'cart-summary') {
                         h2('Order Summary')
-                        div(class: 'summary-details') {
+                        div(class: 'summary-details',
+                            id: 'order-summary',
+                            'data-subtotal': subtotal,
+                            'data-tax-rate': 0.07
+                        ) {
                             div(class: 'summary-row') {
                                 span('Subtotal')
-                                span(class: 'summary-value', "\$${String.format('%.2f', subtotal)}")
+                                span(class: 'summary-value', id: 'subtotal-value', "\$${String.format('%.2f', subtotal)}")
                             }
 
-                            if(shippingEstimates) {
-                                shippingEstimates.each { estimate ->
-                                    div(class: 'summary-row shipping-detail') {
-                                        span("Shipping (${estimate.vendor})")
-                                        span(class: 'summary-value', "\$${String.format('%.2f', estimate.cost)}")
+                            div(id: 'shipping-estimates') {
+                                if(shippingEstimates) {
+                                    shippingEstimates.each { estimate ->
+                                        div(class: 'summary-row shipping-detail') {
+                                            span("Shipping (${estimate.vendor})")
+                                            span(class: 'summary-value', "\$${String.format('%.2f', estimate.cost)}")
+                                        }
                                     }
                                 }
                             }
                             div(class: 'summary-row') {
                                 span('Estimated Tax')
-                                span(class: 'summary-value', "\$${String.format('%.2f', tax)}")
+                                span(class: 'summary-value', id: 'tax-value', "\$${String.format('%.2f', tax)}")
                             }
                             hr()
                             div(class: 'summary-row total') {
                                 span('Total')
-                                span(class: 'summary-value', "\$${String.format('%.2f', finalTotal)}")
+                                span(class: 'summary-value', id: 'total-value', "\$${String.format('%.2f', finalTotal)}")
                             }
                         }
                         div(class: 'payment-methods') {

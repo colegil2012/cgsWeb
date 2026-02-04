@@ -3,9 +3,10 @@ package templates.shop
 import com.ua.estore.cgsWeb.util.ImageUrlUtil
 
 layout 'layout.tpl',
-    title: 'Our Local Vendors',
+    title: 'CGS Web | Our Vendors',
     user: user,
     cartItems: cartItems,
+    cartCount: cartCount,
     vendors: vendors,
     content: {
         div(class: 'vendor-page-container') {

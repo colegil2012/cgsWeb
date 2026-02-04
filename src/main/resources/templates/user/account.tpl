@@ -4,6 +4,7 @@ layout 'layout.tpl',
         title: 'CGS Web | My Account',
         user: user,
         cartItems: cartItems,
+        cartCount: cartCount,
         vendorInfo: vendorInfo,
         content: {
             div(class: 'account-tabs-layout') {

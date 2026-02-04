@@ -1,5 +1,6 @@
 package com.ua.estore.cgsWeb.models.dto;
 
+import com.ua.estore.cgsWeb.models.Cart;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -30,4 +31,5 @@ public class ProductDTO implements Serializable {
     public void decreaseQuantity() {
         this.quantity--;
     }
+
 }

@@ -52,5 +52,5 @@ layout 'layout.tpl',
                 }
             }
             // Include the same cart script used in shop.tpl
-            script(src: '/scripts/cart.js') {}
+            script(src: '/scripts/cart/cart.js') {}
         }

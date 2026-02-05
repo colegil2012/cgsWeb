@@ -98,7 +98,7 @@ layout 'layout.tpl',
                                 button(type: 'button', class: 'btn-small', id: 'openUpdateAddress', 'Edit Addresses')
                             }
                         }
-                        include template: 'partials/address-modal.tpl'
+                        include template: 'partials/user-address-modal.tpl'
                     }
 
                     if (activeTab == 'orders') {
@@ -251,7 +251,8 @@ layout 'layout.tpl',
                         }
                     }
 
-                    script(src: '/scripts/account-security.js') {}
+                    script(src: '/scripts/auth/account-security.js') {}
+                    script(src: '/scripts/address/address-update.js') {}
                 }
             }
         }

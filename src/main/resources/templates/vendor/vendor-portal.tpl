@@ -11,7 +11,7 @@ layout 'layout.tpl',
         content: {
             div(class: 'hero') {
                 h1('Vendor Dashboard')
-                p('List a new product for sale in the Celtech General Store.')
+                p('Manage your Vendor Profile and list items for sale at Celtech General Store.')
             }
             div(class: 'wide-container') {
                 // Alerts Section
@@ -36,7 +36,9 @@ layout 'layout.tpl',
 
                 if (vendorDetail) {
                     div(class: 'info-card vendor-profile-card') {
-                        h2 'Your Vendor Profile'
+                        div(class: 'vendor-profile-header') {
+                            h2('Your Vendor Profile')
+                        }
 
                         div(class: 'vendor-item-row') {
                             // Column 1: Sidebar Logo
@@ -49,41 +51,39 @@ layout 'layout.tpl',
                             // Get default address for display
                             def addr = vendorDetail.addresses?.find { it.isDefault } ?: (vendorDetail.addresses?.isEmpty() ? null : vendorDetail.addresses[0])
 
-                            // Row 1: 2 Columns
-                            div(class: 'info-group', style: 'grid-column: 2 / span 1;') {
+                            div(class: 'info-group', style: 'grid-column: 2 / span 2;') {
                                 label('Business Name')
                                 span(class: 'readonly-box', vendorDetail.name)
                             }
-                            div(class: 'info-group', style: 'grid-column: 3 / span 2;') {
+                            div(class: 'info-group', style: 'grid-column: 4 / span 2;') {
                                 label('Street Address')
                                 span(class: 'readonly-box', addr?.street ?: 'No Address Set')
                             }
 
-                            // Row 2: 2 Columns
                             div(class: 'info-group', style: 'grid-column: 2 / span 1;') {
-                                label('Address Type')
-                                span(class: 'readonly-box', addr?.type ?: 'N/A')
-                            }
-                            div(class: 'info-group', style: 'grid-column: 3 / span 2;') {
                                 label('City')
                                 span(class: 'readonly-box', addr?.city ?: '-')
                             }
-
-                            // Row 3: 3 Columns
-                            div(class: 'info-group', style: 'grid-column: 2 / span 1;') {
+                            div(class: 'info-group', style: 'grid-column: 3 / span 1;') {
                                 label('State')
                                 span(class: 'readonly-box', addr?.state ?: '-')
                             }
-                            div(class: 'info-group', style: 'grid-column: 3 / span 1;') {
+                            div(class: 'info-group', style: 'grid-column: 4 / span 1;') {
                                 label('Zip')
                                 span(class: 'readonly-box', addr?.zip ?: '-')
                             }
-                            div(class: 'info-group', style: 'grid-column: 4 / span 1;') {
+                            div(class: 'info-group', style: 'grid-column: 5 / span 1;') {
                                 label('Status')
                                 span(class: 'readonly-box', vendorDetail.active ? 'Active' : 'Inactive')
                             }
+
+                            div(class: 'info-group vendor-edit-addresses', style: 'grid-column: 5 / span 1;') {
+                                button(class: 'btn-small', id: 'openUpdateAddress', 'Edit Addresses')
+                            }
                         }
                     }
+
+                    include template: 'partials/vendor-address-modal.tpl'
                 }
             }
 
@@ -163,4 +163,5 @@ layout 'layout.tpl',
                 }
             }
             script(src: '/scripts/vendor.js') {}
+            script(src: '/scripts/address/address-update.js') {}
         }

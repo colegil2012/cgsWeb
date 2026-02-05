@@ -121,13 +121,13 @@ layout 'layout.tpl',
                                 }
                             }
 
-                            button(class: 'btn-checkout', 'Proceed to Checkout')
+                            a(href: '/checkout', class: 'btn-checkout', 'Proceed to Checkout')
                         }
                     }
-                    include template: 'partials/address-modal.tpl'
+                    include template: 'partials/user-address-modal.tpl'
                 }
             }
-            script(src: '/scripts/cart-update.js') {}
-            script(src: '/scripts/account-security.js') {}
+            script(src: '/scripts/cart/cart-update.js') {}
+            script(src: '/scripts/address/address-update.js') {}
         }
 

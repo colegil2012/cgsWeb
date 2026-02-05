@@ -94,5 +94,5 @@ layout 'layout.tpl',
                     }
                 }
             }
-            script(src: '/scripts/cart.js') {}
+            script(src: '/scripts/cart/cart.js') {}
         }

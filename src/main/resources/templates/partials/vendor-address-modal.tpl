@@ -7,7 +7,7 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
             button(type: 'button', class: 'modal-close', id: 'closeUpdateAddress', '×')
         }
 
-        form(action: '/account/addresses', method: 'post', class: 'form-group') {
+        form('data-address-scope': 'vendor', action: '/vendor/addresses', method: 'post', class: 'form-group') {
 
             input(
                     type: 'hidden',
@@ -15,47 +15,31 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                     value: (_csrf?.token ?: '')
             )
 
-            if (user?.addresses && !user.addresses.isEmpty()) {
+            if (vendorDetail?.addresses && !vendorDetail.addresses.isEmpty()) {
                 h4('Existing Addresses')
-                user.addresses.eachWithIndex { addr, i ->
+                vendorDetail.addresses.eachWithIndex { addr, i ->
                     div(class: 'address-edit-card') {
                         strong("Address #${i + 1}")
 
                         input(
                                 type: 'hidden',
-                                name: "addresses[${i}].addressId",
+                                name: "vAddresses[${i}].addressId",
                                 value: (addr?.addressId ?: '')
                         )
 
                         div(class: 'form-control') {
-                            label("Type")
-                            def t = addr?.type?.trim()?.toUpperCase()
-
-                            select(name: "addresses[${i}].type", required: 'required') {
-                                if (t == 'SHIPPING') option(value: 'SHIPPING', selected: 'selected', 'SHIPPING')
-                                else option(value: 'SHIPPING', 'SHIPPING')
-
-                                if (t == 'BILLING') option(value: 'BILLING', selected: 'selected', 'BILLING')
-                                else option(value: 'BILLING', 'BILLING')
-
-                                if (t == 'ALTERNATE') option(value: 'ALTERNATE', selected: 'selected', 'ALTERNATE')
-                                else option(value: 'ALTERNATE', 'ALTERNATE')
-                            }
-                        }
-
-                        div(class: 'form-control') {
                             label("Street")
-                            input(type: 'text', name: "addresses[${i}].street", value: (addr?.street ?: ''))
+                            input(type: 'text', name: "vAddresses[${i}].street", value: (addr?.street ?: ''))
                         }
                         div(class: 'form-control') {
                             label("City")
-                            input(type: 'text', name: "addresses[${i}].city", value: (addr?.city ?: ''))
+                            input(type: 'text', name: "vAddresses[${i}].city", value: (addr?.city ?: ''))
                         }
                         div(class: 'form-control') {
                             label("State")
                             input(
                                     type: 'text',
-                                    name: "addresses[${i}].state",
+                                    name: "vAddresses[${i}].state",
                                     value: (addr?.state ?: ''),
                                     required: 'required',
                                     pattern: '^[A-Za-z]{2}$',
@@ -66,7 +50,7 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                             label("Zip")
                             input(
                                     type: 'text',
-                                    name: "addresses[${i}].zip",
+                                    name: "vAddresses[${i}].zip",
                                     value: (addr?.zip ?: ''),
                                     required: 'required',
                                     pattern: '^\\d{5}(-\\d{4})?$',
@@ -78,9 +62,9 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                         div(class: 'update-address-footer') {
                             div(class: 'form-control') {
                                 if (addr?.isDefault) {
-                                    input(type: 'checkbox', name: "addresses[${i}].default", value: 'true', checked: 'checked')
+                                    input(type: 'checkbox', name: "vAddresses[${i}].default", value: 'true', checked: 'checked')
                                 } else {
-                                    input(type: 'checkbox', name: "addresses[${i}].default", value: 'true')
+                                    input(type: 'checkbox', name: "vAddresses[${i}].default", value: 'true')
                                 }
                                 label(style: 'margin:0;', 'Make default')
                             }
@@ -106,3 +90,4 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
         }
     }
 }
+

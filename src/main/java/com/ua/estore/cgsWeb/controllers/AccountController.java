@@ -1,20 +1,15 @@
 package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.Order;
-import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
 import com.ua.estore.cgsWeb.services.*;
-import com.ua.estore.cgsWeb.util.dataUtil;
-import com.ua.estore.cgsWeb.util.requestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Optional;
+import static com.ua.estore.cgsWeb.util.requestUtil.getReferalUrl;
 
 @Slf4j
 @Controller
@@ -152,13 +146,5 @@ public class AccountController  {
             redirectAttributes.addFlashAttribute("addrErr", "Unexpected error occurred while updating addresses.");
             return "redirect:" + returnTo;
         }
-    }
-
-    private static String getReferalUrl(String referer, String fallback) {
-        if (referer == null || referer.isBlank()) return fallback;
-        if (referer.contains("/cart")) return "/cart";
-        if (referer.contains("/account")) return "/account?tab=addresses";
-
-        return fallback;
     }
 }

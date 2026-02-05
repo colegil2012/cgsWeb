@@ -21,6 +21,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<aws.sdk.version>2.25.60</aws.sdk.version>
+		<square.version>46.0.0.20260122</square.version>
 	</properties>
 
 	<dependencies>
@@ -59,6 +60,11 @@
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>s3</artifactId>
 			<version>${aws.sdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup</groupId>
+			<artifactId>square</artifactId>
+			<version>${square.version}</version>
 		</dependency>
 	</dependencies>
 

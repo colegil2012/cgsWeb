@@ -3,7 +3,9 @@ package com.ua.estore.cgsWeb.controllers;
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.Vendor;
+import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
 import com.ua.estore.cgsWeb.models.wrappers.ProductFormWrapper;
+import com.ua.estore.cgsWeb.services.AddressService;
 import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
@@ -14,20 +16,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.ua.estore.cgsWeb.util.requestUtil.getReferalUrl;
 
 @Slf4j
 @Controller
@@ -38,6 +38,7 @@ public class VendorController {
     private final VendorService vendorService;
     private final CategoryService categoryService;
     private final ImageStorageService imageStorageService;
+    private final AddressService addressService;
 
     /*********************************************************************************
      * View Vendor endpoints
@@ -160,4 +161,55 @@ public class VendorController {
 
         return "redirect:/vendor/portal";
     }
+
+    /**********************************************************************************
+     * Update Vendor Addresses
+     **********************************************************************************/
+
+    @PostMapping("/vendor/addresses")
+    public String updateAddresses(HttpSession session,
+                                  HttpServletRequest request,
+                                  @ModelAttribute AddressUpdateWrapper form,
+                                  RedirectAttributes redirectAttributes) {
+
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getUsername() == null) {
+            redirectAttributes.addFlashAttribute("addrErr", "Please login again to update addresses.");
+            return "redirect:/login";
+        }
+
+        Optional<Vendor> vendor = vendorService.getVendorById(user.getVendorId());
+        if(vendor.isEmpty() || vendor.get().getId() == null) {
+            redirectAttributes.addFlashAttribute("addrErr", "Vendor not found.");
+            return "redirect:/vendor/portal";
+        }
+
+
+        String returnTo = getReferalUrl(request.getHeader("Referer"), "/vendor/portal");
+
+        try {
+            log.info("Form Submission data={}", form.getNewVAddresses());
+            addressService.updateVendorAddresses(vendor.get().getId(), form);
+            log.info("Addresses updated successfully for Vendor={}", vendor.get().getName());
+
+            //Refresh Vendor Details so it sees updated addresses
+            vendorService.getVendorById(user.getVendorId()).ifPresent(fresh -> {
+                session.setAttribute("vendorDetail", fresh);
+            });
+
+            redirectAttributes.addFlashAttribute("addrMsg", "Addresses updated successfully.");
+            return "redirect:" + returnTo;
+
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid address data provided for Vendor={}", user.getUsername(), ex);
+            redirectAttributes.addFlashAttribute("addrErr", ex.getMessage());
+            return "redirect:" + returnTo;
+
+        } catch (Exception ex) {
+            log.error("Unexpected error updating addresses for Vendor={}", user.getUsername(), ex);
+            redirectAttributes.addFlashAttribute("addrErr", "Unexpected error occurred while updating addresses.");
+            return "redirect:" + returnTo;
+        }
+    }
+
 }

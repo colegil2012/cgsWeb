@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +27,17 @@ public class Vendor {
 
     @Data
     public static class Address {
+
+        @Field(targetType = FieldType.OBJECT_ID)
+        private String addressId;
+
         private String type;
         private String street;
         private String city;
         private String state;
         private String zip;
+        private double latitude;
+        private double longitude;
         private boolean isDefault;
     }
 }

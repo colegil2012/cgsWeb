@@ -985,11 +985,17 @@ button.btn {
     font-weight: bold;
     font-size: 1.1rem;
     cursor: pointer;
-    transition: background 0.3s;
+
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-checkout:hover {
     background-color: var(--dark-green);
+    text-decoration: none;
 }
 
 /* Account Page Styles */
@@ -1530,14 +1536,37 @@ button.btn {
     padding: 0 2rem;
 }
 
+.vendor-profile-card .vendor-profile-header {
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+.vendor-profile-card .vendor-profile-header h2 {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.vendor-profile-card .vendor-profile-header h2::after {
+    content: "";
+    display: block;
+    height: 4px;
+    width: 86px;
+    margin: 10px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent-green), var(--dark-green));
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
 .vendor-profile-card .vendor-item-row {
     border: none;
     box-shadow: none;
-    padding: 0;
+    padding: 2rem 1rem;
     background: transparent;
     margin-bottom: 0;
     display: grid;
-    grid-template-columns: 140px 1fr 1fr 1fr;
+    grid-template-columns: 160px 1fr 1fr 1fr 1fr;
     gap: 0.8rem 1.5rem;
     align-items: end;
 }
@@ -1558,7 +1587,7 @@ button.btn {
 
 .vendor-profile-logo-group {
     grid-column: 1;
-    grid-row: 1 / span 3;
+    grid-row: 1 / span 2;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1577,6 +1606,18 @@ button.btn {
     height: 100px;
     margin-bottom: 0.5rem;
 }
+
+.vendor-profile-card .vendor-edit-addresses {
+    justify-self: end;
+    align-self: end;
+    margin-bottom: 0;
+}
+
+.vendor-settings-container {
+    margin: 2rem 0;
+
+}
+
 
 /* Resetting full width for description */
 .vendor-profile-card .full-width {

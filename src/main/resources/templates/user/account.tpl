@@ -71,8 +71,8 @@ layout 'layout.tpl',
                     if (activeTab == 'addresses') {
                         div(class: 'info-card') {
 
-                            if(addrErr) div(class: 'alert alert-error', addrErr)
-                            if(addrMsg) div(class: 'alert alert-success', addrMsg)
+                            if(message) div(class: 'alert alert-success', message)
+                            if(error) div(class: 'alert alert-error', error)
 
                             h2('Addresses')
                             hr()
@@ -98,7 +98,7 @@ layout 'layout.tpl',
                                 button(type: 'button', class: 'btn-small', id: 'openUpdateAddress', 'Edit Addresses')
                             }
                         }
-                        include template: 'partials/address-modal.tpl'
+                        include template: 'partials/user-address-modal.tpl'
                     }
 
                     if (activeTab == 'orders') {
@@ -192,12 +192,8 @@ layout 'layout.tpl',
                             h2('Security')
                             hr()
 
-                            if (pwErr) {
-                                div(class: 'alert alert-error', pwErr)
-                            }
-                            if (pwMsg) {
-                                div(class: 'alert alert-success', pwMsg)
-                            }
+                            if (message) { div(class: 'alert alert-success', message) }
+                            if (error) { div(class: 'alert alert-error', error) }
 
                             div(class: 'info-group') {
                                 label('Password')
@@ -251,7 +247,8 @@ layout 'layout.tpl',
                         }
                     }
 
-                    script(src: '/scripts/account-security.js') {}
+                    script(src: '/scripts/auth/account-security.js') {}
+                    script(src: '/scripts/address/address-update.js') {}
                 }
             }
         }

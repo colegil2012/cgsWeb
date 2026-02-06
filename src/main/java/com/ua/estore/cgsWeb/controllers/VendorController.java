@@ -3,7 +3,9 @@ package com.ua.estore.cgsWeb.controllers;
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.Vendor;
+import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
 import com.ua.estore.cgsWeb.models.wrappers.ProductFormWrapper;
+import com.ua.estore.cgsWeb.services.AddressService;
 import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
@@ -14,20 +16,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.ua.estore.cgsWeb.util.requestUtil.getReferalUrl;
 
 @Slf4j
 @Controller
@@ -38,6 +39,7 @@ public class VendorController {
     private final VendorService vendorService;
     private final CategoryService categoryService;
     private final ImageStorageService imageStorageService;
+    private final AddressService addressService;
 
     /*********************************************************************************
      * View Vendor endpoints
@@ -115,6 +117,84 @@ public class VendorController {
     }
 
     /**********************************************************************************
+     * UPLOAD VENDOR LOGO
+     *********************************************************************************/
+
+    @PostMapping("/vendor/portal/update-logo")
+    public String uploadVendorLogo(HttpSession session,
+                                              RedirectAttributes redirectAttributes,
+                                              @RequestParam("vendorId") String vendorId,
+                                              @RequestParam("vendorLogo") MultipartFile vendorLogo) {
+        List<String> successes = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
+
+        try {
+            User user = (User) session.getAttribute("user");
+            if (user == null || !"VENDOR".equalsIgnoreCase(user.getRole())) {
+                errors.add("User not authorized.");
+                redirectAttributes.addFlashAttribute("message", successes);
+                redirectAttributes.addFlashAttribute("error", errors);
+                return "redirect:/vendor/portal";
+            }
+
+            if (user.getVendorId() == null || user.getVendorId().isBlank()) {
+                errors.add("Vendor not found for user.");
+                redirectAttributes.addFlashAttribute("message", successes);
+                redirectAttributes.addFlashAttribute("error", errors);
+                return "redirect:/vendor/portal";
+            }
+
+            if (vendorId == null || vendorId.isBlank()) {
+                errors.add("Vendor id is missing.");
+                redirectAttributes.addFlashAttribute("message", successes);
+                redirectAttributes.addFlashAttribute("error", errors);
+                return "redirect:/vendor/portal";
+            }
+
+            if (!vendorId.equals(user.getVendorId())) {
+                errors.add("You are not allowed to update this vendor.");
+                redirectAttributes.addFlashAttribute("message", successes);
+                redirectAttributes.addFlashAttribute("error", errors);
+                return "redirect:/vendor/portal";
+            }
+
+            if (vendorLogo == null || vendorLogo.isEmpty()) {
+                errors.add("No file selected.");
+                redirectAttributes.addFlashAttribute("message", successes);
+                redirectAttributes.addFlashAttribute("error", errors);
+                return "redirect:/vendor/portal";
+            }
+
+            Vendor vendor = vendorService.getVendorById(user.getVendorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Vendor not found."));
+
+            String safeOriginalName = vendorLogo.getOriginalFilename() == null ? "logo" : vendorLogo.getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + safeOriginalName;
+
+            imageStorageService.storeVendorLogo(fileName, vendorLogo);
+
+            String logoUrl = "/images/vendors/" + fileName;
+            vendorService.updateVendorLogoUrl(vendor.getId(), logoUrl);
+
+            // Refresh vendor detail in session (optional)
+            vendorService.getVendorById(user.getVendorId()).ifPresent(fresh -> session.setAttribute("vendorDetail", fresh));
+            successes.add("Logo updated successfully.");
+
+        } catch (IllegalArgumentException ex) {
+            errors.add(ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Unexpected error uploading vendor logo", ex);
+            errors.add("Upload failed. Please try again.");
+        }
+
+        redirectAttributes.addFlashAttribute("message", successes);
+        redirectAttributes.addFlashAttribute("error", errors);
+
+        return "redirect:/vendor/portal";
+    }
+
+
+    /**********************************************************************************
      * List Products for a Vendor
      *********************************************************************************/
 
@@ -160,4 +240,64 @@ public class VendorController {
 
         return "redirect:/vendor/portal";
     }
+
+    /**********************************************************************************
+     * Update Vendor Addresses
+     **********************************************************************************/
+
+    @PostMapping("/vendor/addresses")
+    public String updateAddresses(HttpSession session,
+                                  HttpServletRequest request,
+                                  @ModelAttribute AddressUpdateWrapper form,
+                                  RedirectAttributes redirectAttributes) {
+
+        List<String> successes = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
+
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getUsername() == null) {
+            errors.add("Please login again to update addresses.");
+            redirectAttributes.addFlashAttribute("message", successes);
+            redirectAttributes.addFlashAttribute("error", errors);
+            return "redirect:/login";
+        }
+
+        Optional<Vendor> vendor = vendorService.getVendorById(user.getVendorId());
+        if(vendor.isEmpty() || vendor.get().getId() == null) {
+            errors.add("Vendor not found.");
+            redirectAttributes.addFlashAttribute("message", successes);
+            redirectAttributes.addFlashAttribute("error", errors);
+            return "redirect:/vendor/portal";
+        }
+
+
+        String returnTo = getReferalUrl(request.getHeader("Referer"), "/vendor/portal");
+
+        try {
+            log.info("Form Submission data={}", form.getNewVAddresses());
+            addressService.updateVendorAddresses(vendor.get().getId(), form);
+            log.info("Addresses updated successfully for Vendor={}", vendor.get().getName());
+
+            //Refresh Vendor Details so it sees updated addresses
+            vendorService.getVendorById(user.getVendorId()).ifPresent(fresh -> {
+                session.setAttribute("vendorDetail", fresh);
+            });
+
+            successes.add("Addresses updated successfully.");
+
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid address data provided for Vendor={}", user.getUsername(), ex);
+            errors.add(ex.getMessage());
+
+        } catch (Exception ex) {
+            log.error("Unexpected error updating addresses for Vendor={}", user.getUsername(), ex);
+            errors.add("Failed to update addresses. Please try again.");
+        }
+
+        redirectAttributes.addFlashAttribute("message", successes);
+        redirectAttributes.addFlashAttribute("error", errors);
+
+        return "redirect:" + returnTo;
+    }
+
 }

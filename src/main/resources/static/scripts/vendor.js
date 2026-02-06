@@ -30,11 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
             newRow.querySelectorAll('input, select, textarea').forEach(el => {
                 const name = el.getAttribute('name');
                 if (name) {
-                    // This regex will now catch both products[0] and productImages[0]
                     el.setAttribute('name', name.replace(/\[\d+\]/, `[${index}]`));
 
                     if (el.type === 'file') {
-                        el.value = ''; // Clear file selection for new row
+                        el.value = '';
                     } else if (el.tagName !== 'SELECT') {
                         el.value = '';
                     }
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Helper to keep numbers consistent if one in the middle is removed
     function reindexRows() {
         Array.from(itemsContainer.children).forEach((row, idx) => {
             row.querySelector('.row-number span').textContent = `Product #${idx + 1}`;
@@ -55,6 +53,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.setAttribute('name', name.replace(/\[\d+\]/, `[${idx}]`));
                 }
             });
+        });
+    }
+
+    // Logo upload (non-AJAX): pick file -> submit form -> redirect back with flash messages
+    const changeLogoBtn = document.getElementById('changeLogoBtn');
+    const vendorLogoUpload = document.getElementById('vendorLogoUpload');
+    const vendorLogoForm = document.getElementById('vendorLogoForm');
+
+    if (changeLogoBtn && vendorLogoUpload) {
+        changeLogoBtn.addEventListener('click', () => vendorLogoUpload.click());
+    }
+
+    if (vendorLogoUpload && vendorLogoForm) {
+        vendorLogoUpload.addEventListener('change', () => {
+            const file = vendorLogoUpload.files && vendorLogoUpload.files[0];
+            if (!file) return;
+            vendorLogoForm.submit();
         });
     }
 });

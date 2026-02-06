@@ -42,4 +42,13 @@ public class VendorService {
         return vendorRepository.findAll().stream()
                 .collect(Collectors.toMap(Vendor::getId, Vendor::getName));
     }
+
+    public void updateVendorLogoUrl(String vendorId, String logoUrl) {
+        String cleanId = dataUtil.parseToObjectId(vendorId).toHexString();
+        Vendor vendor = vendorRepository.findById(cleanId)
+                .orElseThrow(() -> new IllegalArgumentException("Vendor not found"));
+
+        vendor.setLogo_url(logoUrl);
+        vendorRepository.save(vendor);
+    }
 }

@@ -5,6 +5,10 @@ html {
     head {
         title(title ?: 'CGS Web - Organic Produce')
         link(rel: 'stylesheet', href: '/css/style.css')
+
+        if (binding?.hasVariable('headContent') && headContent) {
+            headContent()
+        }
     }
     body {
         header {

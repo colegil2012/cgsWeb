@@ -82,24 +82,24 @@ public class AccountController  {
                                  RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
         if (user == null || user.getUsername() == null) {
-            redirectAttributes.addFlashAttribute("pwErr", "Please login again to change your password");
+            redirectAttributes.addFlashAttribute("error", "Please login again to change your password");
             return "redirect:/login";
         }
 
         try {
             credentialService.updatePassword(user.getId(), oldPassword, newPassword, confirmNewPassword);
             log.info("Password updated successfully for user={}", user.getUsername());
-            redirectAttributes.addFlashAttribute("pwMsg", "Password updated successfully");
+            redirectAttributes.addFlashAttribute("message", "Password updated successfully");
             return "redirect:/account?tab=security";
 
         } catch (IllegalArgumentException ex) {
             log.error("Invalid password data provided for user={}", user.getUsername(), ex);
-            redirectAttributes.addFlashAttribute("pwErr", ex.getMessage());
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
             return "redirect:/account?tab=security";
 
         } catch (Exception e) {
             log.error("Unexpected error while updating password for user={}", user.getUsername(), e);
-            redirectAttributes.addFlashAttribute("pwErr", "Unexpected error occurred while updating password");
+            redirectAttributes.addFlashAttribute("error", "Unexpected error occurred while updating password");
             return "redirect:/account?tab=security";
         }
     }
@@ -116,7 +116,7 @@ public class AccountController  {
 
         User user = (User) session.getAttribute("user");
         if (user == null || user.getUsername() == null) {
-            redirectAttributes.addFlashAttribute("addrErr", "Please login again to update addresses.");
+            redirectAttributes.addFlashAttribute("error", "Please login again to update addresses.");
             return "redirect:/login";
         }
 
@@ -133,17 +133,17 @@ public class AccountController  {
                 session.setAttribute("user", fresh);
             });
 
-            redirectAttributes.addFlashAttribute("addrMsg", "Addresses updated successfully.");
+            redirectAttributes.addFlashAttribute("message", "Addresses updated successfully.");
             return "redirect:" + returnTo;
 
         } catch (IllegalArgumentException ex) {
             log.error("Invalid address data provided for user={}", user.getUsername(), ex);
-            redirectAttributes.addFlashAttribute("addrErr", ex.getMessage());
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
             return "redirect:" + returnTo;
 
         } catch (Exception ex) {
             log.error("Unexpected error updating addresses for user={}", user.getUsername(), ex);
-            redirectAttributes.addFlashAttribute("addrErr", "Unexpected error occurred while updating addresses.");
+            redirectAttributes.addFlashAttribute("error", "Unexpected error occurred while updating addresses.");
             return "redirect:" + returnTo;
         }
     }

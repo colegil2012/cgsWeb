@@ -15,19 +15,19 @@ layout 'layout.tpl',
             }
             div(class: 'wide-container') {
                 // Alerts Section
-                if (successMessages || errorMessages) {
+                if (message || error) {
                     div(class: 'alert-wrapper') {
-                        if (successMessages) {
+                        if (message) {
                             div(class: 'alert alert-success') {
                                 ul(style: 'margin:0; padding-left: 20px;') {
-                                    successMessages.each { msg -> li(msg) }
+                                    message.each { msg -> li(msg) }
                                 }
                             }
                         }
-                        if (errorMessages) {
+                        if (error) {
                             div(class: 'alert alert-error') {
                                 ul(style: 'margin:0; padding-left: 20px;') {
-                                    errorMessages.each { msg -> li(msg) }
+                                    error.each { msg -> li(msg) }
                                 }
                             }
                         }
@@ -43,9 +43,36 @@ layout 'layout.tpl',
                         div(class: 'vendor-item-row') {
                             // Column 1: Sidebar Logo
                             div(class: 'info-group vendor-profile-logo-group') {
-                                img(src: ImageUrlUtil.resolve(vendorDetail.logo_url, imagesBaseUrl) ?: '/images/site-images/default-vendor.png', alt: 'Logo Preview')
-                                label(for: 'vendorLogoUpload', class: 'upload-link', 'Change Logo')
-                                input(type: 'file', id: 'vendorLogoUpload', name: 'vendorLogo', style: 'display:none;', accept: 'image/*')
+                                img(
+                                        id: 'vendorLogoPreview',
+                                        src: ImageUrlUtil.resolve(vendorDetail.logo_url, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
+                                        alt: 'Logo Preview'
+                                )
+
+                                button(type: 'button', class: 'btn-small', id: 'changeLogoBtn', 'Change Logo')
+
+                                form(
+                                        id: 'vendorLogoForm',
+                                        action: '/vendor/portal/update-logo',
+                                        method: 'post',
+                                        enctype: 'multipart/form-data',
+                                        style: 'display:inline;'
+                                ) {
+                                    input(
+                                            type: 'hidden',
+                                            id: 'vendorId',
+                                            name: 'vendorId',
+                                            value: vendorDetail?.id
+                                    )
+
+                                    input(
+                                            type: 'file',
+                                            id: 'vendorLogoUpload',
+                                            name: 'vendorLogo',
+                                            style: 'display:none;',
+                                            accept: 'image/*'
+                                    )
+                                }
                             }
 
                             // Get default address for display
@@ -84,6 +111,14 @@ layout 'layout.tpl',
                     }
 
                     include template: 'partials/vendor-address-modal.tpl'
+                }
+            }
+
+            div(class: 'container vendor-settings-container') {
+                div(class: 'info-group') {
+                    h2('Vendor Settings')
+                    label('Lead Time (Process all orders)')
+                    span(class: 'readonly-box vendor-lead-time', vendorDetail?.lead_time)
                 }
             }
 

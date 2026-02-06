@@ -108,7 +108,7 @@ public class AddressService {
                 a.setLongitude(Math.round(lng * 1000.0d) / 1000.0d);
 
             } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException(a.getType() + " address error: " + ex.getMessage(), ex);
+                throw new IllegalArgumentException("Address Error: " + ex.getMessage(), ex);
             }
         }
 
@@ -199,7 +199,7 @@ public class AddressService {
                 a.setLongitude(Math.round(lng * 1000.0d) / 1000.0d);
 
             } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException(a.getType() + " address error: " + ex.getMessage(), ex);
+                throw new IllegalArgumentException("Address Error: " + ex.getMessage(), ex);
             }
         }
 

@@ -4,7 +4,10 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/cgsweb}
-
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 app:
   upload:
     path: ${IMAGE_UPLOAD_PATH:external-images/}

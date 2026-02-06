@@ -71,8 +71,8 @@ layout 'layout.tpl',
                     if (activeTab == 'addresses') {
                         div(class: 'info-card') {
 
-                            if(addrErr) div(class: 'alert alert-error', addrErr)
-                            if(addrMsg) div(class: 'alert alert-success', addrMsg)
+                            if(message) div(class: 'alert alert-success', message)
+                            if(error) div(class: 'alert alert-error', error)
 
                             h2('Addresses')
                             hr()
@@ -192,12 +192,8 @@ layout 'layout.tpl',
                             h2('Security')
                             hr()
 
-                            if (pwErr) {
-                                div(class: 'alert alert-error', pwErr)
-                            }
-                            if (pwMsg) {
-                                div(class: 'alert alert-success', pwMsg)
-                            }
+                            if (message) { div(class: 'alert alert-success', message) }
+                            if (error) { div(class: 'alert alert-error', error) }
 
                             div(class: 'info-group') {
                                 label('Password')

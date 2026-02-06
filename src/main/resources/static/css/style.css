@@ -1613,6 +1613,12 @@ button.btn {
     margin-bottom: 0;
 }
 
+.vendor-settings-container {
+    margin: 2rem 0;
+
+}
+
+
 /* Resetting full width for description */
 .vendor-profile-card .full-width {
     grid-column: 1 / -1; /* Stretch across all 4 columns */

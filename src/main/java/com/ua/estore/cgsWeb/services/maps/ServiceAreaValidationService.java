@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.services.maps;
 
 import com.ua.estore.cgsWeb.config.props.ServiceAreaProperties;
-import com.ua.estore.cgsWeb.models.dto.ValidatedAddress;
+import com.ua.estore.cgsWeb.models.dto.address.ValidatedAddress;
 import com.ua.estore.cgsWeb.util.GeoDistance;
 import org.springframework.stereotype.Service;
 

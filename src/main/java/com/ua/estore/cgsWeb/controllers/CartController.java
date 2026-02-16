@@ -1,16 +1,11 @@
 package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.Cart;
-import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.User;
-import com.ua.estore.cgsWeb.models.Vendor;
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
-import com.ua.estore.cgsWeb.models.dto.RoadieEstimateRequest;
-import com.ua.estore.cgsWeb.models.wrappers.PackageWrapper;
+import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.services.CartService;
 import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
-import com.ua.estore.cgsWeb.services.shipping.RoadieService;
 import com.ua.estore.cgsWeb.services.VendorService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.*;
 
 @Slf4j

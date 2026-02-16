@@ -1,9 +1,10 @@
 package com.ua.estore.cgsWeb.services;
 
+import com.ua.estore.cgsWeb.models.Address;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.Vendor;
-import com.ua.estore.cgsWeb.models.dto.AddressDTO;
-import com.ua.estore.cgsWeb.models.dto.ValidatedAddress;
+import com.ua.estore.cgsWeb.models.dto.address.AddressDTO;
+import com.ua.estore.cgsWeb.models.dto.address.ValidatedAddress;
 import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
 import com.ua.estore.cgsWeb.repositories.UserRepository;
 import com.ua.estore.cgsWeb.repositories.VendorRepository;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,8 +30,6 @@ public class AddressService {
     private final ServiceAreaValidationService serviceAreaValidationService;
 
     private static final Set<String> ALLOWED_ADDRESS_TYPES = Set.of("SHIPPING", "BILLING", "ALTERNATE");
-
-    /*********** Update Addresses ***************/
 
     /********************************************************************************
      * Update User addresses
@@ -48,7 +46,7 @@ public class AddressService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
 
-        List<User.Address> merged = new ArrayList<>();
+        List<Address> merged = new ArrayList<>();
         if (form.getAddresses() != null) merged.addAll(form.getAddresses());
         if (form.getNewAddresses() != null) merged.addAll(form.getNewAddresses());
 
@@ -65,10 +63,11 @@ public class AddressService {
         }
 
         // Normalize fields (trim strings)
-        for (User.Address a : merged) {
+        for (Address a : merged) {
             if (isBlank(a.getAddressId())) { a.setAddressId(new ObjectId().toString()); }
             if (a.getType() != null) a.setType(a.getType().trim().toUpperCase());
-            if (a.getStreet() != null) a.setStreet(a.getStreet().trim());
+            if (a.getStreet1() != null) a.setStreet1(a.getStreet1().trim());
+            a.setStreet2("");
             if (a.getCity() != null) a.setCity(a.getCity().trim());
             if (a.getState() != null) a.setState(a.getState().trim());
             if (a.getZip() != null) a.setZip(a.getZip().trim());
@@ -77,12 +76,12 @@ public class AddressService {
             if (!ALLOWED_ADDRESS_TYPES.contains(a.getType())) { throw new IllegalArgumentException(
                         "Invalid address type: " + a.getType() + ". Allowed: SHIPPING, BILLING, ALTERNATE." ); }
 
-            if (isBlank(a.getStreet())) throw new IllegalArgumentException("Street is required for each address.");
+            if (isBlank(a.getStreet1())) throw new IllegalArgumentException("Street is required for each address.");
             if (isBlank(a.getCity())) throw new IllegalArgumentException("City is required for each address.");
             if (isBlank(a.getState())) throw new IllegalArgumentException("State is required for each address.");
             if (isBlank(a.getZip())) throw new IllegalArgumentException("Zip is required for each address.");
 
-            if (!a.getStreet().matches(".*\\d+.*")) { throw new IllegalArgumentException(
+            if (!a.getStreet1().matches(".*\\d+.*")) { throw new IllegalArgumentException(
                         a.getType() + " address street must include a street number (e.g., \"123 Main St\")."); }
             if (!a.getState().matches("(?i)^[a-z]{2}$")) { throw new IllegalArgumentException(
                         a.getType() + " address state must be a 2-letter code (e.g., \"CA\")." ); }
@@ -96,7 +95,8 @@ public class AddressService {
             if (zip5 == null) { throw new IllegalArgumentException(a.getType() + " address ZIP must start with 5 digits."); }
             a.setZip(zip5);
 
-            AddressDTO input = new AddressDTO(a.getStreet(), a.getCity(), a.getState(), rawZip);
+            //Placeholder for Street 2
+            AddressDTO input = new AddressDTO(a.getStreet1(), a.getStreet2(), a.getCity(), a.getState(), rawZip);
             try {
                 ValidatedAddress validated = googleAddressValidationService.validateUsHighCertainty(input);
                 serviceAreaValidationService.enforceWithinRadiusOrThrow(validated);
@@ -133,7 +133,7 @@ public class AddressService {
 
     public void updateVendorAddresses(String vendorId, AddressUpdateWrapper form) {
         if (vendorId == null || vendorId.isBlank()) {
-            throw new IllegalArgumentException("User not found.");
+            throw new IllegalArgumentException("Vendor not found.");
         }
         if (form == null) {
             throw new IllegalArgumentException("Address form payload is missing.");
@@ -144,9 +144,9 @@ public class AddressService {
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new IllegalArgumentException("Vendor not found."));
 
-        List<Vendor.Address> merged = new ArrayList<>();
-        if (form.getVAddresses() != null) merged.addAll(form.getVAddresses());
-        if (form.getNewVAddresses() != null) merged.addAll(form.getNewVAddresses());
+        List<Address> merged = new ArrayList<>();
+        if (form.getAddresses() != null) merged.addAll(form.getAddresses());
+        if (form.getNewAddresses() != null) merged.addAll(form.getNewAddresses());
 
         // If the user submitted nothing useful
         if (merged.isEmpty()) {
@@ -161,19 +161,20 @@ public class AddressService {
         }
 
         // Normalize fields (trim strings)
-        for (Vendor.Address a : merged) {
+        for (Address a : merged) {
             if (isBlank(a.getAddressId())) { a.setAddressId(new ObjectId().toString()); }
-            if (a.getStreet() != null) a.setStreet(a.getStreet().trim());
+            if (a.getStreet1() != null) a.setStreet1(a.getStreet1().trim());
+            a.setStreet2("");
             if (a.getCity() != null) a.setCity(a.getCity().trim());
             if (a.getState() != null) a.setState(a.getState().trim());
             if (a.getZip() != null) a.setZip(a.getZip().trim());
 
-            if (isBlank(a.getStreet())) throw new IllegalArgumentException("Street is required for each address.");
+            if (isBlank(a.getStreet1())) throw new IllegalArgumentException("Street is required for each address.");
             if (isBlank(a.getCity())) throw new IllegalArgumentException("City is required for each address.");
             if (isBlank(a.getState())) throw new IllegalArgumentException("State is required for each address.");
             if (isBlank(a.getZip())) throw new IllegalArgumentException("Zip is required for each address.");
 
-            if (!a.getStreet().matches(".*\\d+.*")) { throw new IllegalArgumentException(
+            if (!a.getStreet1().matches(".*\\d+.*")) { throw new IllegalArgumentException(
                     a.getType() + " address street must include a street number (e.g., \"123 Main St\")."); }
             if (!a.getState().matches("(?i)^[a-z]{2}$")) { throw new IllegalArgumentException(
                     a.getType() + " address state must be a 2-letter code (e.g., \"CA\")." ); }
@@ -187,7 +188,7 @@ public class AddressService {
             if (zip5 == null) { throw new IllegalArgumentException(a.getType() + " address ZIP must start with 5 digits."); }
             a.setZip(zip5);
 
-            AddressDTO input = new AddressDTO(a.getStreet(), a.getCity(), a.getState(), rawZip);
+            AddressDTO input = new AddressDTO(a.getStreet1(), a.getStreet2(), a.getCity(), a.getState(), rawZip);
             try {
                 ValidatedAddress validated = googleAddressValidationService.validateUsHighCertainty(input);
                 serviceAreaValidationService.enforceWithinRadiusOrThrow(validated);
@@ -232,20 +233,10 @@ public class AddressService {
         return null;
     }
 
-    private boolean isBlankAddress(User.Address a) {
+    private boolean isBlankAddress(Address a) {
         return a == null || (
                 isBlank(a.getType()) &&
-                        isBlank(a.getStreet()) &&
-                        isBlank(a.getCity()) &&
-                        isBlank(a.getState()) &&
-                        isBlank(a.getZip())
-        );
-    }
-
-    private boolean isBlankAddress(Vendor.Address a) {
-        return a == null || (
-                isBlank(a.getType()) &&
-                        isBlank(a.getStreet()) &&
+                        isBlank(a.getStreet1()) &&
                         isBlank(a.getCity()) &&
                         isBlank(a.getState()) &&
                         isBlank(a.getZip())

@@ -1,6 +1,5 @@
-package com.ua.estore.cgsWeb.models.dto;
+package com.ua.estore.cgsWeb.models.dto.product;
 
-import com.ua.estore.cgsWeb.models.Cart;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

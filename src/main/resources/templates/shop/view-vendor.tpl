@@ -21,7 +21,7 @@ layout 'layout.tpl',
                             span(class: 'location-label', 'Find us at:')
                             def displayAddr = vendor?.addresses?.find { it.isDefault } ?: vendor?.addresses?.getAt(0)
                             if (displayAddr) {
-                                p(class: 'address-line', "${displayAddr.street ?: ''}")
+                                p(class: 'address-line', "${displayAddr.street1 ?: ''}")
                                 p(class: 'address-line', "${displayAddr.city ?: ''}, ${displayAddr.state ?: ''} ${displayAddr.zip ?: ''}")
                             } else {
                                 p(class: 'address-line', 'No address listed.')

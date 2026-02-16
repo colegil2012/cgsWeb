@@ -2,7 +2,7 @@ package com.ua.estore.cgsWeb.services;
 
 import com.ua.estore.cgsWeb.models.Cart;
 import com.ua.estore.cgsWeb.models.Product;
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.repositories.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

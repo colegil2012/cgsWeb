@@ -84,7 +84,7 @@ layout 'layout.tpl',
                             }
                             div(class: 'info-group', style: 'grid-column: 4 / span 2;') {
                                 label('Street Address')
-                                span(class: 'readonly-box', addr?.street ?: 'No Address Set')
+                                span(class: 'readonly-box', addr?.street1 ?: 'No Address Set')
                             }
 
                             div(class: 'info-group', style: 'grid-column: 2 / span 1;') {
@@ -114,11 +114,67 @@ layout 'layout.tpl',
                 }
             }
 
-            div(class: 'container vendor-settings-container') {
-                div(class: 'info-group') {
+            div(class: 'vendor-settings-wrapper') {
+                div(class: 'info-group vendor-settings-container vendor-settings-compact') {
                     h2('Vendor Settings')
-                    label('Lead Time (Process all orders)')
-                    span(class: 'readonly-box vendor-lead-time', vendorDetail?.lead_time)
+
+                    form(
+                            id: 'vendorSettingsForm',
+                            action: '/vendor/portal/update-settings',
+                            method: 'post'
+                    ) {
+                        input(type: 'hidden', name: 'vendorId', value: vendorDetail?.id)
+
+                        div(class: 'vendor-settings-grid', id: 'vendorSettingsGrid') {
+                            div(class: 'vendor-setting', 'data-setting': 'lead_time') {
+                                label('Order Processing Time (Days)')
+
+                                // Readonly display
+                                span(
+                                        class: 'readonly-box vendor-setting-display',
+                                        'data-setting-display': 'lead_time',
+                                        vendorDetail?.lead_time
+                                )
+
+                                // Editable field (hidden until Edit is clicked)
+                                input(
+                                        type: 'number',
+                                        name: 'leadTime',
+                                        min: '0',
+                                        step: '1',
+                                        value: vendorDetail?.lead_time,
+                                        class: 'vendor-setting-input',
+                                        'data-setting-input': 'lead_time',
+                                        style: 'display:none;',
+                                        disabled: 'disabled'
+                                )
+
+                                label('Accepted Payment Types')
+                                span(
+                                        class: 'readonly-box vendor-setting-display',
+                                        'data-setting-display': 'lead_time',
+                                        "Placeholder"
+                                )
+
+                                label('Payments Provider')
+                                span(
+                                        class: 'readonly-box vendor-setting-display',
+                                        'data-setting-display': 'lead_time',
+                                        "Placeholder"
+                                )
+                            }
+
+                            // Add more settings later by duplicating a block like above.
+                            // Example:
+                            // div(class:'vendor-setting', 'data-setting':'someSetting') { ... }
+
+                        }
+                        div(class: 'vendor-settings-actions') {
+                            button(type: 'button', class: 'btn-small', id: 'editVendorSettingsBtn', 'Edit Settings')
+                            button(type: 'button', class: 'btn-small', id: 'cancelVendorSettingsBtn', style: 'display:none;', 'Cancel')
+                            button(type: 'submit', class: 'btn-small', id: 'saveVendorSettingsBtn', form: 'vendorSettingsForm', style: 'display:none;', 'Save')
+                        }
+                    }
                 }
             }
 

@@ -22,7 +22,13 @@ public class CredentialService {
         return userRepository.findByUsername(username);
     }
 
-    /********** Authenticate ***************/
+    public boolean checkUsername(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    /**************************************************************************
+     * Authentication
+     *************************************************************************/
 
     public Optional<User> authenticate(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
@@ -33,7 +39,9 @@ public class CredentialService {
         return Optional.empty();
     }
 
-    /********** Save User ***************/
+    /**************************************************************************
+     * Save New User
+     *************************************************************************/
 
     public String saveUser(User user) {
         if (user == null || user.getUsername() == null || user.getUsername().isBlank()) {
@@ -57,7 +65,9 @@ public class CredentialService {
         return user.getId();
     }
 
-    /********** Update Password ***************/
+    /**************************************************************************
+     * Update User Password
+     *************************************************************************/
 
     public void updatePassword(String userId, String oldPassword, String newPassword, String confirmNewPassword) {
 

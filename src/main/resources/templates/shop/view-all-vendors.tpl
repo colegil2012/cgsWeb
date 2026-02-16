@@ -41,7 +41,7 @@ layout 'layout.tpl',
                                 if (defaultAddress) {
                                     strong "${defaultAddress.type ?: 'Location'}:"
                                     p {
-                                        yield "${defaultAddress.street ?: ''}"
+                                        yield "${defaultAddress.street1 ?: ''}"
                                         br()
                                         yield "${defaultAddress.city ?: ''}, ${defaultAddress.state ?: ''} ${defaultAddress.zip ?: ''}"
                                     }

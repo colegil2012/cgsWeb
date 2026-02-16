@@ -3,8 +3,8 @@ package com.ua.estore.cgsWeb.services.maps;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ua.estore.cgsWeb.config.props.GoogleMapsProperties;
-import com.ua.estore.cgsWeb.models.dto.AddressDTO;
-import com.ua.estore.cgsWeb.models.dto.AddressSuggestion;
+import com.ua.estore.cgsWeb.models.dto.address.AddressDTO;
+import com.ua.estore.cgsWeb.models.dto.address.AddressSuggestion;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -98,7 +98,7 @@ public class GooglePlacesAutocompleteService {
         String street = joinNonBlank(" ", streetNumber, route);
 
         // Return what we can; frontend can still allow manual edits.
-        return new AddressDTO(street, locality, adminArea1, postalCode);
+        return new AddressDTO(street, "", locality, adminArea1, postalCode);
     }
 
     private static boolean hasType(JsonNode typesArray, String type) {

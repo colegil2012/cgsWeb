@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.controllers;
 
-import com.ua.estore.cgsWeb.models.dto.AddressDTO;
-import com.ua.estore.cgsWeb.models.dto.AddressSuggestion;
+import com.ua.estore.cgsWeb.models.dto.address.AddressDTO;
+import com.ua.estore.cgsWeb.models.dto.address.AddressSuggestion;
 import com.ua.estore.cgsWeb.services.maps.GooglePlacesAutocompleteService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

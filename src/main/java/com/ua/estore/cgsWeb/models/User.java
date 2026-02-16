@@ -37,20 +37,4 @@ public class User {
         private String phoneNumber;
     }
 
-    @Data
-    public static class Address {
-
-        @Field(targetType = FieldType.OBJECT_ID)
-        private String addressId;
-
-        private String type;  //SHIPPING, BILLING
-        private String street;
-        private String city;
-        private String state;
-        private String zip;
-        private double latitude;
-        private double longitude;
-        private boolean isDefault;
-    }
-
 }

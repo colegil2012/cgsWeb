@@ -22,14 +22,23 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**") // Protect everything...
-                .excludePathPatterns("/login", "/logout", "/signup", "/signup/submit",
-                        "/css/**", "/images/**", "/js/**", "/about"); // ...except these
+                .excludePathPatterns("/login", "/logout",
+                        "/signup/**",
+                        "/css/**", "/images/**",
+                        "/scripts/**",
+                        "/js/**", "/about"); // ...except these
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**")
                 .addResourceLocations("classpath:/static/css/");
+
+        registry.addResourceHandler("/scripts/**")
+                .addResourceLocations("classpath:/static/scripts/",
+                        "classpath:/static/scripts/address/",
+                        "classpath:/static/scripts/auth/",
+                        "classpath:/static/scripts/cart/");
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
         if (!absolutePath.endsWith(File.separator)) {

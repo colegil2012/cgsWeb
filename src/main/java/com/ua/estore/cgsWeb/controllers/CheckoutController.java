@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.User;
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.services.CartService;
 import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;

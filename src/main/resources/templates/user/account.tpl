@@ -85,7 +85,7 @@ layout 'layout.tpl',
                                             if (addr?.isDefault) span(class: 'badge', 'Default')
                                         }
                                         div(class: 'address-lines') {
-                                            div(addr?.street ?: '')
+                                            div(addr?.street1 ?: '')
                                             div("${addr?.city ?: ''}, ${addr?.state ?: ''} ${addr?.zip ?: ''}".toString())
                                         }
                                     }

@@ -2,7 +2,7 @@ package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.Vendor;
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.services.CategoryService;
 import com.ua.estore.cgsWeb.services.ProductService;
 import com.ua.estore.cgsWeb.services.VendorService;
@@ -11,7 +11,6 @@ import com.ua.estore.cgsWeb.util.requestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -46,10 +46,13 @@ const celtechResult = db.vendors.insertOne({
     addresses: [
 		{
 			addressId: new ObjectId(),
-			street: '4800 State Hwy 1066',
+			street1: '4800 State Hwy 1066',
+			street2: '',
 			city: 'Bloomfield',
 			state: 'KY',
-			zip: '40008', 
+			zip: '40008',
+			latitude: 37.949,
+			longitude: -85.235,
 			isDefault: true
 		}
 	],
@@ -65,7 +68,8 @@ const newAgeResult = db.vendors.insertOne({
     addresses: [
 		{
 			addressId: new ObjectId(),
-			street: '5404 Sunset Dr',
+			street1: '5404 Sunset Dr',
+			street2: '',
 			city: 'Louisville',
 			state: 'KY',
 			zip: '40219', 
@@ -86,7 +90,8 @@ const organicResult = db.vendors.insertOne({
     addresses: [
 		{
 			addressId: new ObjectId(),
-			street: '1006 Corn Island Ct',
+			street1: '1006 Corn Island Ct',
+			street2: '',
 			city: 'Saint Matthews',
 			state: 'KY',
 			zip: '40207', 
@@ -107,7 +112,8 @@ const nattyResult = db.vendors.insertOne({
     addresses: [
 		{
 			addressId: new ObjectId(),
-			street: '149 Wood Gate Dr',
+			street1: '149 Wood Gate Dr',
+			street2: '',
 			city: 'Mount Washington',
 			state: 'KY',
 			zip: '40047', 
@@ -128,7 +134,8 @@ const munsfordResult = db.vendors.insertOne({
     addresses: [
 		{
 			addressId: new ObjectId(),
-			street: '4359 Springfield Rd',
+			street1: '4359 Springfield Rd',
+			street2: '',
 			city: 'Elizabethtown',
 			state: 'KY',
 			zip: '42701', 
@@ -449,7 +456,8 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street: "218 Bluebill Ct.",
+                street1: "218 Bluebill Ct.",
+                street2: "",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
@@ -475,7 +483,8 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street: "218 Bluebill Ct.",
+                street1: "218 Bluebill Ct.",
+                street2: "",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
@@ -501,7 +510,8 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street: "218 Bluebill Ct.",
+                street1: "218 Bluebill Ct.",
+                street2: "",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
@@ -527,7 +537,8 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street: "218 Bluebill Ct.",
+                street1: "218 Bluebill Ct.",
+                street2: "",
                 city: "Shepherdsville",
                 state: "KY",
                 zip: "40165",
@@ -552,7 +563,8 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street: "135 Bigwood Ct.",
+                street1: "135 Bigwood Ct.",
+                street2: "",
                 city: "Louisville",
                 state: "KY",
                 zip: "40229",

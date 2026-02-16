@@ -1,6 +1,6 @@
 package templates.shop
 
-import com.ua.estore.cgsWeb.models.dto.ProductDTO
+import com.ua.estore.cgsWeb.models.dto.product.ProductDTO
 import com.ua.estore.cgsWeb.util.ImageUrlUtil;
 
 modelTypes = [

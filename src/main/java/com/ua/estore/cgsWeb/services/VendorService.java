@@ -51,4 +51,13 @@ public class VendorService {
         vendor.setLogo_url(logoUrl);
         vendorRepository.save(vendor);
     }
+
+    public void updateSettings(String vendorId, int leadTime) {
+        String cleanId = dataUtil.parseToObjectId(vendorId).toHexString();
+        Vendor vendor = vendorRepository.findById(cleanId)
+                .orElseThrow(() -> new IllegalArgumentException("Vendor not found"));
+
+        vendor.setLead_time(leadTime);
+        vendorRepository.save(vendor);
+    }
 }

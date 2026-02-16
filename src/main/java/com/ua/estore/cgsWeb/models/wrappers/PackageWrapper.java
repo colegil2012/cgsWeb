@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.models.wrappers;
 
 import com.ua.estore.cgsWeb.models.Product;
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
+import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import lombok.Data;
 
 import java.util.ArrayList;

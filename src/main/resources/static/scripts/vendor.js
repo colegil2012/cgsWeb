@@ -72,4 +72,46 @@ document.addEventListener('DOMContentLoaded', () => {
             vendorLogoForm.submit();
         });
     }
+
+    // Vendor Settings edit toggle
+    const editBtn = document.getElementById('editVendorSettingsBtn');
+    const cancelBtn = document.getElementById('cancelVendorSettingsBtn');
+    const saveBtn = document.getElementById('saveVendorSettingsBtn');
+    const settingsGrid = document.getElementById('vendorSettingsGrid');
+
+    if (editBtn && cancelBtn && saveBtn && settingsGrid) {
+        const setEditing = (editing) => {
+            const displays = settingsGrid.querySelectorAll('[data-setting-display]');
+            const inputs = settingsGrid.querySelectorAll('[data-setting-input]');
+
+            displays.forEach(el => el.style.display = editing ? 'none' : 'block');
+
+            inputs.forEach(input => {
+                input.style.display = editing ? 'block' : 'none';
+                if (editing) {
+                    input.removeAttribute('disabled');
+                } else {
+                    input.setAttribute('disabled', 'disabled');
+                }
+            });
+
+            editBtn.style.display = editing ? 'none' : 'inline-block';
+            cancelBtn.style.display = editing ? 'inline-block' : 'none';
+            saveBtn.style.display = editing ? 'inline-block' : 'none';
+        };
+
+        editBtn.addEventListener('click', () => setEditing(true));
+
+        cancelBtn.addEventListener('click', () => {
+            // revert inputs back to their original values from the readonly displays
+            const displays = settingsGrid.querySelectorAll('[data-setting-display]');
+            displays.forEach(display => {
+                const key = display.getAttribute('data-setting-display');
+                const input = settingsGrid.querySelector(`[data-setting-input="${key}"]`);
+                if (input) input.value = (display.textContent || '').trim();
+            });
+
+            setEditing(false);
+        });
+    }
 });

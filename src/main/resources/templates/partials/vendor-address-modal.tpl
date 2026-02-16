@@ -7,7 +7,7 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
             button(type: 'button', class: 'modal-close', id: 'closeUpdateAddress', '×')
         }
 
-        form('data-address-scope': 'vendor', action: '/vendor/addresses', method: 'post', class: 'form-group') {
+        form(action: '/vendor/addresses', method: 'post', class: 'form-group') {
 
             input(
                     type: 'hidden',
@@ -23,23 +23,23 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
 
                         input(
                                 type: 'hidden',
-                                name: "vAddresses[${i}].addressId",
+                                name: "addresses[${i}].addressId",
                                 value: (addr?.addressId ?: '')
                         )
 
                         div(class: 'form-control') {
                             label("Street")
-                            input(type: 'text', name: "vAddresses[${i}].street", value: (addr?.street ?: ''))
+                            input(type: 'text', name: "addresses[${i}].street1", value: (addr?.street1 ?: ''))
                         }
                         div(class: 'form-control') {
                             label("City")
-                            input(type: 'text', name: "vAddresses[${i}].city", value: (addr?.city ?: ''))
+                            input(type: 'text', name: "addresses[${i}].city", value: (addr?.city ?: ''))
                         }
                         div(class: 'form-control') {
                             label("State")
                             input(
                                     type: 'text',
-                                    name: "vAddresses[${i}].state",
+                                    name: "addresses[${i}].state",
                                     value: (addr?.state ?: ''),
                                     required: 'required',
                                     pattern: '^[A-Za-z]{2}$',
@@ -50,7 +50,7 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                             label("Zip")
                             input(
                                     type: 'text',
-                                    name: "vAddresses[${i}].zip",
+                                    name: "addresses[${i}].zip",
                                     value: (addr?.zip ?: ''),
                                     required: 'required',
                                     pattern: '^\\d{5}(-\\d{4})?$',
@@ -62,9 +62,9 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                         div(class: 'update-address-footer') {
                             div(class: 'form-control') {
                                 if (addr?.isDefault) {
-                                    input(type: 'checkbox', name: "vAddresses[${i}].default", value: 'true', checked: 'checked')
+                                    input(type: 'checkbox', name: "addresses[${i}].default", value: 'true', checked: 'checked')
                                 } else {
-                                    input(type: 'checkbox', name: "vAddresses[${i}].default", value: 'true')
+                                    input(type: 'checkbox', name: "addresses[${i}].default", value: 'true')
                                 }
                                 label(style: 'margin:0;', 'Make default')
                             }

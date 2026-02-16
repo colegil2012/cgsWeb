@@ -7,7 +7,7 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
             button(type: 'button', class: 'modal-close', id: 'closeUpdateAddress', '×')
         }
 
-        form('data-address-scope': 'user', action: '/account/addresses', method: 'post', class: 'form-group') {
+        form(action: '/account/addresses', method: 'post', class: 'form-group') {
 
             input(
                     type: 'hidden',
@@ -19,13 +19,15 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                 h4('Existing Addresses')
                 user.addresses.eachWithIndex { addr, i ->
                     div(class: 'address-edit-card') {
-                        strong("Address #${i + 1}")
+                        div(class: 'address-edit-card-header') {
+                            strong("Address #${i + 1}")
 
-                        input(
-                                type: 'hidden',
-                                name: "addresses[${i}].addressId",
-                                value: (addr?.addressId ?: '')
-                        )
+                            input(
+                                    type: 'hidden',
+                                    name: "addresses[${i}].addressId",
+                                    value: (addr?.addressId ?: '')
+                            )
+                        }
 
                         div(class: 'form-control') {
                             label("Type")
@@ -45,7 +47,7 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
 
                         div(class: 'form-control') {
                             label("Street")
-                            input(type: 'text', name: "addresses[${i}].street", value: (addr?.street ?: ''))
+                            input(type: 'text', name: "addresses[${i}].street1", value: (addr?.street1 ?: ''))
                         }
                         div(class: 'form-control') {
                             label("City")

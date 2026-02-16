@@ -53,22 +53,26 @@
     const addBtn = document.getElementById("addAddressBlockBtn");
     const container = document.getElementById("newAddressesContainer");
 
-    const getNewListName = () => {
-      if (!container) return "newAddresses";
-      const form = container.closest("form");
-      if (!form) return "newAddresses";
+    const isDefaultCheckbox = (el) =>
+      el &&
+      el.tagName === "INPUT" &&
+      el.type === "checkbox" &&
+      typeof el.name === "string" &&
+      el.name.endsWith(".default");
 
-      // 1) Best: explicit marker on the form: data-address-scope="vendor" | "user"
-      const scope = (form.dataset.addressScope || "").toString().trim().toLowerCase();
-      if (scope === "vendor") return "newVAddresses";
-      if (scope === "user") return "newAddresses";
+    addrModal.overlay.addEventListener("change", (e) => {
+      const el = e.target;
+      if (!isDefaultCheckbox(el)) return;
 
-      // 2) Fallback: infer from action URL (more brittle, but works)
-      const action = (form.getAttribute("action") || form.action || "").toString();
-      if (action.includes("/vendor/addresses")) return "newVAddresses";
+      // If user unchecked it, don't auto-select anything else.
+      if (!el.checked) return;
 
-      return "newAddresses";
-    };
+      // Uncheck all other ".default" checkboxes within this same modal overlay
+      const allDefaultChecks = addrModal.overlay.querySelectorAll('input[type="checkbox"][name$=".default"]');
+      allDefaultChecks.forEach((cb) => {
+        if (cb !== el) cb.checked = false;
+      });
+    });
 
     const renderTypeOptions = (selectedValue) => {
       const normalized = (selectedValue || "SHIPPING").toString().trim().toUpperCase();
@@ -79,48 +83,48 @@
     };
 
     const buildAddressBlock = (index) => {
-      const listName = getNewListName();
-
       const wrapper = document.createElement("div");
       wrapper.className = "address-edit-card";
       wrapper.dataset.index = String(index);
 
       wrapper.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        <div class="address-edit-card-header">
           <strong>New Address #${index + 1}</strong>
           <button type="button" class="btn-small" data-remove="1">Remove</button>
         </div>
 
         <div class="form-control">
           <label>Type</label>
-          <select name="${listName}[${index}].type" required>
+          <select name="newAddresses[${index}].type" required>
             ${renderTypeOptions("SHIPPING")}
           </select>
         </div>
 
         <div class="form-control">
           <label>Street</label>
-          <input type="text" name="${listName}[${index}].street" autocomplete="off" />
+          <input type="text" name="newAddresses[${index}].street1" autocomplete="off" />
         </div>
 
         <div class="form-control">
           <label>City</label>
-          <input type="text" name="${listName}[${index}].city" />
+          <input type="text" name="newAddresses[${index}].city" />
         </div>
 
         <div class="form-control">
           <label>State</label>
-          <input type="text" name="${listName}[${index}].state" required="required" pattern="^[A-Za-z]{2}$" maxlength="2" title="Use 2-letter state code (e.g., KY)" />
+          <input type="text" name="newAddresses[${index}].state" required="required" pattern="^[A-Za-z]{2}$" maxlength="2" title="Use 2-letter state code (e.g., KY)" />
         </div>
 
         <div class="form-control">
           <label>Zip</label>
-          <input type="text" name="${listName}[${index}].zip" required="required" pattern="^\\d{5}(?:-\\d{4})?$" inputmode="numeric" />
+          <input type="text" name="newAddresses[${index}].zip" required="required" pattern="^\\d{5}(?:-\\d{4})?$" inputmode="numeric" />
         </div>
 
-        <div class="form-control" style="display:flex; align-items:center; gap:10px;">
-          <input type="checkbox" name="${listName}[${index}].default" value="true" />
-          <label style="margin:0;">Make default</label>
+        <div class="update-address-footer">
+            <div class="form-control">
+              <input type="checkbox" name="newAddresses[${index}].default" value="true" />
+              <label style="margin:0;">Make default</label>
+            </div>
         </div>
       `;
 
@@ -157,13 +161,13 @@
       el.tagName === "INPUT" &&
       el.type === "text" &&
       typeof el.name === "string" &&
-      el.name.endsWith(".street");
+      el.name.endsWith(".street1");
 
     const prefixFromStreetName = (streetName) => {
       // "addresses[0].street" -> "addresses[0]."
       // "newAddresses[2].street" -> "newAddresses[2]."
-      if (!streetName || !streetName.endsWith(".street")) return null;
-      return streetName.slice(0, -".street".length) + ".";
+      if (!streetName || !streetName.endsWith(".street1")) return null;
+      return streetName.slice(0, -".street1".length) + ".";
     };
 
     const setByName = (root, name, value) => {

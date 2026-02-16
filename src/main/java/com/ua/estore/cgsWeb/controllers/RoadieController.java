@@ -1,11 +1,12 @@
 package com.ua.estore.cgsWeb.controllers;
 
-import com.ua.estore.cgsWeb.models.Cart;
+import com.ua.estore.cgsWeb.models.Address;
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.User;
 import com.ua.estore.cgsWeb.models.Vendor;
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
-import com.ua.estore.cgsWeb.models.dto.RoadieEstimateRequest;
+import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
+import com.ua.estore.cgsWeb.models.dto.roadie.*;
+import com.ua.estore.cgsWeb.models.dto.roadie.Package;
 import com.ua.estore.cgsWeb.models.wrappers.PackageWrapper;
 import com.ua.estore.cgsWeb.services.CartService;
 import com.ua.estore.cgsWeb.services.CategoryService;
@@ -54,7 +55,7 @@ public class RoadieController {
         var cartEntity = cartService.getOrCreateByUserId(user.getId());
         List<ProductDTO> cartItems = cartService.mapToProductDTOs(cartEntity, productService, vendorService, categoryService);
 
-        User.Address deliveryAddress = null;
+        Address deliveryAddress = null;
         if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
             if (shippingAddressId != null && !shippingAddressId.isBlank()) {
                 deliveryAddress = user.getAddresses().stream()
@@ -64,7 +65,7 @@ public class RoadieController {
             }
             if (deliveryAddress == null) {
                 deliveryAddress = user.getAddresses().stream()
-                        .filter(User.Address::isDefault)
+                        .filter(Address::isDefault)
                         .findFirst()
                         .orElse(user.getAddresses().get(0));
             }
@@ -95,7 +96,7 @@ public class RoadieController {
                 if (vendor == null) continue;
 
                 var pickupAddr = vendor.getAddresses().stream()
-                        .filter(Vendor.Address::isDefault).findFirst()
+                        .filter(Address::isDefault).findFirst()
                         .orElse(vendor.getAddresses().isEmpty() ? null : vendor.getAddresses().get(0));
 
                 if (pickupAddr == null) continue;
@@ -113,26 +114,26 @@ public class RoadieController {
                 OffsetDateTime deliveryDeadline = pickupTime.plusDays(1);
 
                 RoadieEstimateRequest request = RoadieEstimateRequest.builder()
-                        .pickupLocation(RoadieEstimateRequest.Location.builder()
-                                .address(RoadieEstimateRequest.Address.builder()
-                                        .street1(pickupAddr.getStreet())
+                        .pickupLocation(EstimateLocation.builder()
+                                .address(RoadieAddress.builder()
+                                        .street1( (pickupAddr.getStreet1() + " " + pickupAddr.getStreet2()).trim() )
                                         .city(pickupAddr.getCity())
                                         .state(pickupAddr.getState())
                                         .zip(pickupAddr.getZip()).build())
                                 .build())
-                        .deliveryLocation(RoadieEstimateRequest.Location.builder()
-                                .address(RoadieEstimateRequest.Address.builder()
-                                        .street1(deliveryAddress.getStreet())
+                        .deliveryLocation(EstimateLocation.builder()
+                                .address(RoadieAddress.builder()
+                                        .street1( (deliveryAddress.getStreet1() + " " + deliveryAddress.getStreet2()).trim() )
                                         .city(deliveryAddress.getCity())
                                         .state(deliveryAddress.getState())
                                         .zip(deliveryAddress.getZip()).build())
                                 .build())
                         .pickupAfter(pickupTime.toString())
-                        .deliverBetween(RoadieEstimateRequest.DeliveryWindow.builder()
+                        .deliverBetween(DeliveryWindow.builder()
                                 .start(deliveryDeadline.toString())
                                 .end(deliveryDeadline.plusHours(2).toString())
                                 .build())
-                        .items(List.of(RoadieEstimateRequest.Package.builder()
+                        .items(List.of(Package.builder()
                                 .length(String.valueOf(pkg.getTotalLength()))
                                 .width(String.valueOf(pkg.getTotalWidth()))
                                 .height(String.valueOf(pkg.getTotalHeight()))
@@ -161,4 +162,26 @@ public class RoadieController {
                 "totalShipping", totalShipping
         ));
     }
+
+    /********************************************************************************
+     * Endpoint for creating Roadie shipment
+     * Called from
+     * Returns Response body
+     *******************************************************************************/
+
+    /*@PostMapping("/api/roadie/shipment")
+    public ResponseEntity<Map<String, Object>> createShipment(HttpSession session,
+                                                              @RequestParam("shippingAddressId") String shippingAddressId) {
+
+        User user = (User) session.getAttribute("user");
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authenticated"));
+        }
+
+        var cartEntity = cartService.getOrCreateByUserId(user.getId());
+        List<ProductDTO> cartItems = cartService.mapToProductDTOs(cartEntity, productService, vendorService, categoryService);
+
+
+
+    } */
 }

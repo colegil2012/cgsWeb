@@ -106,7 +106,7 @@ layout 'layout.tpl',
                                     } else {
                                         select(id: 'shipping-dropdown', name: 'shippingAddressId') {
                                             addresses.each { a ->
-                                                def labelText = "${a.street}, ${a.city}, ${a.state} ${a.zip}"
+                                                def labelText = "${a.street1}, ${a.city}, ${a.state} ${a.zip}"
                                                 def addrId = a?.addressId ?: ''
                                                 if (a.isDefault()) {
                                                     option(value: addrId, selected: 'selected', labelText)

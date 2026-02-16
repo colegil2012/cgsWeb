@@ -3,9 +3,9 @@ package com.ua.estore.cgsWeb.services.maps;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ua.estore.cgsWeb.config.props.GoogleMapsProperties;
-import com.ua.estore.cgsWeb.models.dto.AddressDTO;
-import com.ua.estore.cgsWeb.models.dto.GoogleAddressValidationStrictMapper;
-import com.ua.estore.cgsWeb.models.dto.ValidatedAddress;
+import com.ua.estore.cgsWeb.models.dto.address.AddressDTO;
+import com.ua.estore.cgsWeb.models.dto.address.GoogleAddressValidationStrictMapper;
+import com.ua.estore.cgsWeb.models.dto.address.ValidatedAddress;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class GoogleAddressValidationService {
         }
 
         if (input == null
-                || isBlank(input.street())
+                || isBlank(input.street1())
                 || isBlank(input.city())
                 || isBlank(input.state())
                 || isBlank(input.zip())) {
@@ -49,7 +49,7 @@ public class GoogleAddressValidationService {
         Map<String, Object> address = new LinkedHashMap<>();
         address.put("regionCode", "US");
         address.put("addressLines", new String[]{
-                input.street(),
+                input.street1(),
                 input.city() + ", " + input.state() + " " + input.zip()
         });
 
@@ -65,7 +65,7 @@ public class GoogleAddressValidationService {
             } else {
                 // Keep INFO concise; you can flip to DEBUG when troubleshooting.
                 log.info("Google Address Validation request -> url={}, street='{}', city='{}', state='{}', zip='{}'",
-                        safeUrl, input.street(), input.city(), input.state(), input.zip());
+                        safeUrl, input.street1(), input.city(), input.state(), input.zip());
             }
 
             Object raw = restClient.post()

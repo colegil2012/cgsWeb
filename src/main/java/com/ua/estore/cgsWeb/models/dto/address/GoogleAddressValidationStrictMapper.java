@@ -1,4 +1,4 @@
-package com.ua.estore.cgsWeb.models.dto;
+package com.ua.estore.cgsWeb.models.dto.address;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;

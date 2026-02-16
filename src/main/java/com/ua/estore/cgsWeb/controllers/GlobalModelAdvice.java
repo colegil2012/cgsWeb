@@ -2,7 +2,6 @@ package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.models.Cart;
 import com.ua.estore.cgsWeb.models.User;
-import com.ua.estore.cgsWeb.models.dto.ProductDTO;
 import com.ua.estore.cgsWeb.services.CartService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttribute;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @ControllerAdvice
 public class GlobalModelAdvice {

@@ -11,7 +11,35 @@ layout 'layout.tpl',
                 if (error) div(class: 'alert alert-error', error)
                 if (message) div(class: 'alert alert-success', message)
 
+                //FORM for Signup new user
                 form(action: '/signup/submit', method: 'post', class: 'form-group') {
+                    div(class: 'form-control') {
+                        label(for: 'username', 'Username')
+
+                        div(class: 'input-row') {
+                            input(type: 'text', name: 'username', id: 'username', required: 'required')
+                            span(id: 'usernameStatus', '')
+                        }
+
+                        div(class: 'field-feedback', id: 'usernameFeedback', '')
+                    }
+
+                    div(class: 'form-control') {
+                        label(for: 'password', 'Password')
+                        input(type: 'password', name: 'password', id: 'password', required: 'required')
+                    }
+
+                    div(class: 'form-control') {
+                        label(for: 'confirmPassword', 'Confirm Password')
+
+                        div(class: 'input-row') {
+                            input(type: 'password', name: 'confirmPassword', id: 'confirmPassword', required: 'required')
+                            span(id: 'passwordStatus', '')
+                        }
+
+                        div(class: 'field-feedback', id: 'passwordFeedback', '')
+                    }
+
                     div(class: 'form-control') {
                         label(for: 'firstName', 'First Name')
                         input(type: 'text', name: 'firstName', id: 'firstName', required: 'required')
@@ -26,20 +54,22 @@ layout 'layout.tpl',
                     }
 
                     div(class: 'form-control') {
-                        label(for: 'phone', 'Phone Number (Opt.)')
+                        label(for: 'phone', 'Phone Number')
                         input(
                                 type: 'tel',
                                 name: 'phone',
                                 id: 'phone',
                                 placeholder: '555-555-5555',
-                                pattern: '^\\+?1?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$',
+                                pattern: '^\\(\\d{3}\\)-\\d{3}-\\d{4}$',
+                                maxlength: '14',
+                                inputmode: 'numeric',
                                 title: 'Enter a valid phone number (e.g., 555-555-5555)'
                         )
                         div(class: 'field-feedback', id: 'phoneFeedback', '')
                     }
 
                     div(class: 'form-control') {
-                        label(for: 'email', 'Email (Opt.)')
+                        label(for: 'email', 'Email')
                         input(
                                 type: 'email',
                                 name: 'email',
@@ -49,21 +79,8 @@ layout 'layout.tpl',
                         div(class: 'field-feedback', id: 'emailFeedback', '')
                     }
 
-                    div(class: 'form-control') {
-                        label(for: 'username', 'Username')
-                        input(type: 'text', name: 'username', id: 'username', required: 'required')
-                    }
-                    div(class: 'form-control') {
-                        label(for: 'password', 'Password')
-                        input(type: 'password', name: 'password', id: 'password', required: 'required')
-                    }
-                    div(class: 'form-control') {
-                        label(for: 'confirmPassword', 'Confirm Password')
-                        input(type: 'password', name: 'confirmPassword', id: 'confirmPassword', required: 'required')
-                    }
-                    button(type: 'submit', class: 'btn', style: 'border:none; cursor:pointer;', 'Sign Up')
+                    button(id: 'signupSubmit', type: 'submit', class: 'btn', style: 'border:none; cursor:pointer;', disabled: 'disabled', 'Sign Up')
                 }
-
-                script(src: '/scripts/signup.js')
             }
+            script(src: '/scripts/signup.js') {}
         }

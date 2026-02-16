@@ -24,20 +24,4 @@ public class Vendor {
     private String logo_url;
     private int lead_time;
     private boolean active;
-
-    @Data
-    public static class Address {
-
-        @Field(targetType = FieldType.OBJECT_ID)
-        private String addressId;
-
-        private String type;
-        private String street;
-        private String city;
-        private String state;
-        private String zip;
-        private double latitude;
-        private double longitude;
-        private boolean isDefault;
-    }
 }

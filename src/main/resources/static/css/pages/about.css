@@ -1,0 +1,83 @@
+/* /css/pages/about.css */
+/* About page Styles */
+
+.about-hero {
+    background: linear-gradient(rgba(29, 79, 30, 0.8), rgba(29, 79, 30, 0.8)), url('/images/about-hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: var(--white);
+    padding: 6rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.about-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-green);
+}
+
+.about-section {
+    padding: 4rem 0;
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.about-section.split.reverse {
+    flex-direction: row-reverse;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-text h2 {
+    font-size: 2.5rem;
+    border-bottom: 4px solid var(--accent-green);
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.about-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--earth-brown);
+}
+
+.about-image {
+    flex: 1;
+}
+
+.floating-img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 20px 20px 0px var(--primary-green);
+    transition: transform 0.3s ease;
+}
+
+.floating-img:hover {
+    transform: translate(-10px, -10px);
+}
+
+.future-vision {
+    background: var(--primary-green);
+    padding: 4rem;
+    border-radius: 30px;
+    margin: 4rem 0;
+    text-align: center;
+}
+
+.vision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.vision-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}

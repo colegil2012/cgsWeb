@@ -7,6 +7,7 @@ layout 'layout.tpl',
         user: user,
         cartItems: cartItems,
         cartCount: cartCount,
+        headContent: { link(rel: 'stylesheet', href: '/css/pages/shop.css') },
         content: {
             div(class: 'hero') {
                 h1('Shop')
@@ -15,46 +16,53 @@ layout 'layout.tpl',
             div(class: 'filter-container') {
                 form(action: '/shop/filter', method: 'get', class: 'filter-form') {
 
-                    div(class: 'filter-group') {
-                        label(for: 'searchInput', 'Search')
-                        input(type: 'text', id: 'searchInput', name: 'search', placeholder: 'Find a product...')
-                    }
+                    div(class: 'search-container') {
+                        div(class: 'filter-group') {
+                            label(for: 'searchInput', 'Search')
+                            input(type: 'text', id: 'searchInput', name: 'search', placeholder: 'Find a product...')
+                        }
 
-                    div(class: 'filter-group') {
-                        label(for: 'categoryFilter', 'Filter by Category: ')
-                        select(id: 'categoryFilter', name: 'category') {
-                            option(value: '', 'All Categories')
-                            categories.each { id, name ->
-                                option(value: id, name)
+                        div(class: 'filter-group') {
+                            label(for: 'categoryFilter', 'Filter by Category: ')
+                            select(id: 'categoryFilter', name: 'category') {
+                                option(value: '', 'All Categories')
+                                categories.each { id, name ->
+                                    option(value: id, name)
+                                }
+                            }
+                        }
+
+                        div(class: 'filter-group') {
+                            label(for: 'vendorFilter', 'Filter by Vendor: ')
+                            select(id: 'vendorFilter', name: 'vendor') {
+                                option(value: '', 'All Vendors')
+                                vendors.each { vendor ->
+                                    option(value: vendor.id, vendor.name)
+                                }
                             }
                         }
                     }
 
-                    div(class: 'filter-group') {
-                        label(for: 'vendorFilter', 'Filter by Vendor: ')
-                        select(id: 'vendorFilter', name: 'vendor') {
-                            option(value: '', 'All Vendors')
-                            vendors.each { vendor ->
-                                option(value: vendor.id, vendor.name)
+                    div(class: 'btn-container') {
+                        div(class: 'checkbox-group') {
+                            label(for: 'lowStock', 'Low Stock!')
+                            input(type: 'checkbox', id: 'lowStock', name: 'lowStock', value: 'true')
+                        }
+
+                        div(class: 'btn-group') {
+                            button(type: 'submit', class: 'btn-search') {
+                                span('Apply')
                             }
                         }
-                    }
-
-                    div(class: 'filter-group checkbox-group') {
-                        label(for: 'lowStock', 'Low Stock!')
-                        input(type: 'checkbox', id: 'lowStock', name: 'lowStock', value: 'true')
-                    }
-
-                    button(type: 'submit', class: 'btn-search') {
-                        span('Apply')
                     }
                 }
             }
-            div(class: 'container') {
+
+            div(class: 'wide-container') {
                 div(class: 'product-grid') {
                     products.each { product ->
                         div(class: 'product-card') {
-                            a(href: "/shop/view/${product.id}", 'class: product-image-link') {
+                            a(href: "/shop/view/${product.id}", class: 'product-image-link') {
                                 img(src: ImageUrlUtil.resolve(product.imageUrl, imagesBaseUrl), alt: product.name)
                             }
                             div(class: 'product-info') {
@@ -63,7 +71,9 @@ layout 'layout.tpl',
                                     span(class: 'category', product.categoryName)
                                 }
                                 div(class: 'product-meta') {
-                                    a(href: "/vendor/${product.vendorId}", class: 'vendor-tag', "By: ${product.vendorName}")
+                                    a(href: "/vendor/${product.vendorId}", class: 'vendor-tag') {
+                                        span("By: ${product.vendorName}")
+                                    }
                                 }
                                 p(class: 'description', product.description)
 
@@ -94,5 +104,5 @@ layout 'layout.tpl',
                     }
                 }
             }
-            script(src: '/scripts/cart/cart.js') {}
+            script(src: '/scripts/shop/cart-update.js') {}
         }

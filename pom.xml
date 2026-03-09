@@ -22,6 +22,7 @@
 		<java.version>21</java.version>
 		<aws.sdk.version>2.25.60</aws.sdk.version>
 		<square.version>46.0.0.20260122</square.version>
+		<square.okhttp3.version>5.3.2</square.okhttp3.version>
 	</properties>
 
 	<dependencies>
@@ -57,6 +58,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mongodb</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>s3</artifactId>
 			<version>${aws.sdk.version}</version>
@@ -65,6 +76,16 @@
 			<groupId>com.squareup</groupId>
 			<artifactId>square</artifactId>
 			<version>${square.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${square.okhttp3.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>logging-interceptor</artifactId>
+			<version>${square.okhttp3.version}</version>
 		</dependency>
 	</dependencies>
 

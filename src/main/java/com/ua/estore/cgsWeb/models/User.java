@@ -21,12 +21,13 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private String role;
+    private List<String> roles;
 
     @Field(targetType = FieldType.OBJECT_ID)
     private String vendorId;
 
     private UserProfile profile;
+    private SquareProfile squareProfile;
     private List<Address> addresses = new ArrayList<>();
 
     @Data

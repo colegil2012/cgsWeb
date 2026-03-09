@@ -1,0 +1,62 @@
+/* /css/pages/account.css */
+/* My Account Page Styles */
+
+/* Account Tabs Layout */
+.account-tabs-layout {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.account-tabs-nav {
+    background: linear-gradient(to bottom,var(--accent-brown), var(--white));
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 110px; /* keeps it visible under your sticky header */
+}
+
+.account-tabs-nav h2 {
+    margin-top: 0;
+    border-bottom: none;
+}
+
+.tabs-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tab-item a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--earth-brown);
+    border: 1px solid transparent;
+}
+
+.tab-item a:hover {
+    background: var(--primary-green);
+    border-color: var(--soft-brown);
+}
+
+.tab-item.active a {
+    background: var(--primary-green);
+    border-color: var(--accent-green);
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+.account-tabs-panel {
+    min-width: 0;
+}

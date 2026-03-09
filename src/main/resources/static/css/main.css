@@ -1,0 +1,158 @@
+/* /css/main.css */
+/* Global Styles */
+
+:root {
+    --primary-green: #e8f5e9;
+    --secondary-green: #1d4f1e;
+    --accent-green: #689f38;
+    --dark-green: #33691e;
+
+    --test-green: #008000;
+
+    --soft-brown: #d7ccc8;
+    --earth-brown: #5d4037;
+    --accent-brown: #faf6f3;
+
+    --primary-blue: #3366ff;
+    --accent-blue: #809fff;
+
+    --text-color: #2e3440;
+    --white: #ffffff;
+    --glow: #9dfa78;
+
+    --warning-red: #ff6666;
+    --warning-bg: #fff3f3;
+    --error-red: #ff0000;
+    --light-red: #f56767;
+}
+
+main {
+    min-height: 60vh;
+    display: block;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: var(--white);
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.wide-container {
+    max-width: 1400px;
+    margin: 1rem auto;
+    padding: 0 2rem;
+}
+
+/* Hero Styles */
+.hero {
+    background: linear-gradient(to bottom, var(--white), var(--primary-green));
+    padding: 4rem 2rem;
+    text-align: center;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+
+.hero h1 {
+    color: var(--dark-green);
+    font-size: 3rem;
+    margin: 0 0 1rem 0;
+}
+
+/* Typography */
+h2 {
+    color: var(--dark-green);
+    border-bottom: 2px solid var(--primary-green);
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+.readonly-box {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 0.8rem;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 0rem;
+}
+
+.readonly-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: default;
+    pointer-events: none;
+    position: relative;
+    vertical-align: middle;
+}
+
+.readonly-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Shared Checkout Styles */
+.checkout-summary {
+  flex: 1;
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--soft-brown);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 100px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.summary-row.total {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--dark-green);
+  margin-top: 1rem;
+}
+
+.spacer {
+  flex: 1;
+  width: 100%;
+}
+
+.checkout-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-top: 0.5rem;
+}
+
+.checkout-footer img {
+  flex: 1;
+  max-width: 75px;
+}

@@ -7,6 +7,7 @@ layout 'layout.tpl',
         user: user,
         cartItems: cartItems,
         cartCount: cartCount,
+        headContent: { link(rel: 'stylesheet', href: '/css/pages/vendor.css') },
         content: {
             div(class: 'vendor-profile-container') {
                 // Vendor Header Section
@@ -71,5 +72,5 @@ layout 'layout.tpl',
                     }
                 }
             }
-            script(src: '/scripts/cart/cart.js') {}
+            script(src: '/scripts/shop/cart-update.js') {}
         }

@@ -1,0 +1,22 @@
+/* /components/pagination.css */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 3rem;
+}
+
+.page-link {
+    padding: 8px 16px;
+    border-radius: 4px;
+    background: var(--primary-green);
+    color: var(--dark-green);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.page-link.active {
+    background: var(--accent-green);
+    color: white;
+}

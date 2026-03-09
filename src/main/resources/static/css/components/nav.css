@@ -1,0 +1,118 @@
+/* /css/components/nav.css */
+/* Navigation Component Styles */
+
+
+/* Layout & Header */
+header {
+    background: var(--earth-brown);
+    border-bottom: 1px solid var(--soft-brown);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.welcome-message {
+    font-size: 1.2rem;
+    color: var(--soft-brown);
+    font-style: italic;
+    position: absolute;
+    left: 20%;
+    transform: translateX(-50%);
+    margin: 0;
+    pointer-events: none;
+    animation: subtle-glow 3s ease-in-out infinite;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-green);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 2rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--primary-green);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: var(--accent-green);
+}
+
+/* Dropdown navigation */
+nav ul li.nav-dropdown {
+    position: relative;
+}
+
+nav ul li.nav-dropdown > a.nav-dropdown-toggle {
+    display: inline-block;
+}
+
+/* the menu */
+nav ul li.nav-dropdown .nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    min-width: 200px;
+    padding: 0.5rem 0;
+    margin: 0;
+
+    list-style: none;
+    background: var(--white);
+    border: 1px solid var(--soft-brown);
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    z-index: 2000;
+}
+
+/* show on hover (desktop) */
+nav ul li.nav-dropdown:hover .nav-dropdown-menu {
+    display: block;
+}
+
+/* dropdown items */
+nav ul li.nav-dropdown .nav-dropdown-menu li {
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li.nav-dropdown .nav-dropdown-menu a {
+    display: block;
+    color: var(--dark-brown);
+    padding: 0.6rem 1rem;
+    white-space: nowrap;
+}
+
+nav ul li.nav-dropdown .nav-dropdown-menu a:hover {
+    background: var(--primary-green);
+}
+
+.cart-count {
+    display: inline-block;
+    font-weight: bold;
+}
+
+.logout-link {
+    color: #c62828 !important;
+    font-weight: bold;
+}
+
+.logout-link:hover {
+    color: #b71c1c !important;
+}

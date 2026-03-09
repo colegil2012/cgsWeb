@@ -21,6 +21,13 @@ app:
     access-key: ${SPACES_ACCESS_KEY:}
     secret-key: ${SPACES_SECRET_KEY:}
 
+square:
+  environment: sandbox
+  sandbox:
+    access-token: ${SQUARE_ACCESS_TOKEN:}
+  application-id: ${SQUARE_APPLICATION_ID:}
+  location-id: ${SQUARE_LOCATION_ID:}
+
 roadie:
   url: ${ROADIE_DEV_API:https://connect-sandbox.roadie.com}
   api:

@@ -1,0 +1,343 @@
+/* /css/pages/vendor-portal.css */
+/* Vendor Portal Page Styles — Tabbed Layout */
+
+/* ─── Container ─── */
+.vendor-portal-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Padding helper */
+.padding-container {
+    padding: 1.2rem;
+}
+
+/* ─── Tab Navigation (horizontal bar) ─── */
+.vendor-tabs-nav {
+    background: linear-gradient(to bottom, var(--soft-brown), var(--accent-brown));
+    border: 1px solid var(--soft-brown);
+    border-radius: 10px;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    margin-top: -50px;
+}
+
+.vendor-tabs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0;
+}
+
+.vendor-tab {
+    flex: 1;
+    text-align: center;
+}
+
+.vendor-tab a {
+    display: block;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: var(--earth-brown);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    border-radius: 10px;
+}
+
+.vendor-tab a:hover {
+    background: var(--accent-brown);
+    color: var(--accent-green);
+}
+
+.vendor-tab.active a {
+    background: var(--white);
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+/* ─── Tab Content Panel ─── */
+.vendor-tabs-panel {
+    margin-top: 1rem;
+    border: 1px solid var(--soft-brown);
+    border-radius: 10px;
+    background: linear-gradient(to bottom, var(--accent-brown), var(--white));
+    min-height: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+}
+
+.vendor-tab-content h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* ─── Profile Tab / Logo Section ─── */
+.vendor-logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.vendor-logo-section img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid var(--soft-brown);
+}
+
+/* ─── Profile Tab / Settings Section ─── */
+
+.vendor-settings-section {
+    border-top: 1px solid var(--soft-brown);
+    width: 100%;
+}
+
+.vendor-section-header {
+    width: 100%;
+    background: var(--primary-green);
+    border-top: 2px solid var(--dark-green);
+    border-bottom: 2px solid var(--dark-green);
+    text-align: center;
+    margin: 1rem 0;
+    padding: 0.5rem 0;
+}
+
+.settings-header h2 {
+    color: var(--dark-green);
+}
+
+.vendor-settings {
+    margin-bottom: 1rem;
+}
+
+.vendor-settings label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--accent-green);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+}
+
+.vendor-settings .vendor-setting-input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--soft-brown);
+    border-radius: 8px;
+    background: #fdfdfd;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+}
+
+.vendor-settings-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+
+/* ─── Inventory Management ─── */
+
+.inventory-item-card {
+    background: var(--white);
+    border: 2px solid var(--soft-brown);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s;
+}
+
+.inventory-item-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+}
+
+.inventory-item-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--soft-brown);
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 2px solid var(--soft-brown);
+}
+
+.inventory-item-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--white);
+    font-size: 1.05rem;
+}
+
+.badge {
+    font-size: 0.7rem;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-active {
+    background: var(--primary-green);
+    color: var(--dark-green);
+}
+
+.badge-inactive {
+    background: var(--warning-bg);
+    color: var(--warning-red);
+}
+
+.inventory-item-details {
+    display: grid;
+    padding: 1.25rem 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.inventory-detail-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.inventory-detail-group.full-width {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+}
+
+.inventory-detail-group label {
+    font-size: 0.72rem;
+    font-weight: bold;
+    color: var(--accent-green);
+    text-transform: uppercase;
+}
+
+.low-stock {
+    color: var(--error-red) !important;
+    font-weight: 700;
+}
+
+/* ── Edit Form ── */
+.inventory-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.inventory-edit-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.inventory-edit-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.inventory-edit-group label {
+    font-size: 0.72rem;
+    font-weight: bold;
+    color: var(--accent-green);
+    text-transform: uppercase;
+}
+
+.inventory-edit-group input[type="text"],
+.inventory-edit-group input[type="number"],
+.inventory-edit-group textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--soft-brown);
+    border-radius: 8px;
+    background: #fdfdfd;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+.inventory-edit-group textarea {
+    resize: vertical;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox-wrapper label {
+    font-size: 0.85rem;
+    text-transform: none;
+    font-weight: normal;
+    color: var(--text-color);
+}
+
+.inventory-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--soft-brown);
+}
+
+.btn-save {
+    background: var(--accent-green) !important;
+    color: var(--white) !important;
+}
+
+.btn-save:hover {
+    background: var(--dark-green) !important;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .vendor-tabs-list {
+        flex-direction: column;
+    }
+
+    .vendor-tabs-nav {
+        border-radius: 10px;
+    }
+
+    .vendor-tab a {
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        border-radius: 0;
+        text-align: left;
+        padding: 12px 16px;
+    }
+
+    .vendor-tab.active a {
+        border-bottom: none;
+        border-left: 3px solid var(--accent-green);
+    }
+
+    .vendor-tabs-panel {
+        border-radius: 0 0 10px 10px;
+        padding: 20px 16px;
+    }
+
+    .inventory-item-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .inventory-edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .inventory-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

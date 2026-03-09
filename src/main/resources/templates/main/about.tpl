@@ -7,6 +7,7 @@ layout 'layout.tpl',
         user: user,
         cartItems: cartItems,
         cartCount: cartCount,
+        headContent: { link( rel: 'stylesheet', href: '/css/pages/about.css') },
         content: {
             div(class: 'about-hero') {
                 h1('Rooted in Louisville, Growing for You.')

@@ -6,6 +6,7 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         vendorInfo: vendorInfo,
+        headContent: { link(rel: 'stylesheet', href: '/css/pages/account.css') },
         content: {
             div(class: 'account-tabs-layout') {
 
@@ -48,7 +49,7 @@ layout 'layout.tpl',
 
                             div(class: 'info-group') {
                                 label('Account Role')
-                                span(class: 'readonly-box') { yield user?.role ?: 'CUSTOMER' }
+                                span(class: 'readonly-box') { yield user?.roles ?: 'USER' }
                             }
 
                             if (user?.profile) {
@@ -84,7 +85,7 @@ layout 'layout.tpl',
                                             strong(addr?.type ?: 'ADDRESS')
                                             if (addr?.isDefault) span(class: 'badge', 'Default')
                                         }
-                                        div(class: 'address-lines') {
+                                        div(class: 'address-line') {
                                             div(addr?.street1 ?: '')
                                             div("${addr?.city ?: ''}, ${addr?.state ?: ''} ${addr?.zip ?: ''}".toString())
                                         }
@@ -247,7 +248,7 @@ layout 'layout.tpl',
                         }
                     }
 
-                    script(src: '/scripts/auth/account-security.js') {}
+                    script(src: '/scripts/user/account-security.js') {}
                     script(src: '/scripts/address/address-update.js') {}
                 }
             }

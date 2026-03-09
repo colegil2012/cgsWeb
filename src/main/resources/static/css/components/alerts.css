@@ -1,0 +1,36 @@
+/* /components/alerts.css */
+/* Alert Component Styles */
+
+.alert {
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: block;
+}
+
+.alert-error {
+    background: var(--warning-bg);
+    color: var(--error-red);
+    border: 1px solid var(--warning-red);
+}
+
+.alert-success {
+    background: #c8e6c9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.alert ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.alert li {
+    margin-bottom: 0.5rem;
+}
+
+.alert li:last-child {
+    margin-bottom: 0;
+}

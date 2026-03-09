@@ -16,14 +16,18 @@ import java.util.List;
 public class Order {
     @Id
     private String id;
-    private String orderNumber;
 
     @Field(targetType = FieldType.OBJECT_ID)
     private String userId;
+
     private String status; // PENDING, PAID, SHIPPED, DELIVERED
-    private List<OrderItem> items = new ArrayList<>();
     private OrderTotals totals;
+    private List<OrderItem> items = new ArrayList<>();
+    private SquareData squareData;
+    private List<RoadieData> roadieData;
+
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Data
     public static class OrderTotals {
@@ -39,5 +43,18 @@ public class Order {
         private String name;
         private BigDecimal priceAtPurchase;
         private Integer quantity;
+    }
+
+    @Data
+    public static class SquareData {
+        private String idempotencyKey;
+        private String paymentId;
+        private String receiptUrl;
+    }
+
+    @Data
+    public static class RoadieData {
+        private String orderId;
+        private String trackingNumber;
     }
 }

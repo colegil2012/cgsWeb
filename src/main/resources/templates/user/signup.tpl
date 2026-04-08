@@ -2,6 +2,7 @@ package templates.user
 
 layout 'layout.tpl',
         title: 'CGS Web | Sign Up',
+        imagesBaseUrl: imagesBaseUrl,
         content: {
             div(class: 'hero') {
                 h1('New User')

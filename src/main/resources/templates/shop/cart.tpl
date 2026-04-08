@@ -7,6 +7,7 @@ layout 'layout.tpl',
         user: user,
         cartItems: cartItems,
         cartCount: cartCount,
+        imagesBaseUrl: imagesBaseUrl,
         headContent: { link(rel: 'stylesheet', href: '/css/pages/cart.css') },
         content: {
             //Calculate total, subtotal and tax

@@ -8,6 +8,7 @@ layout 'layout.tpl',
         user: user,
         cartItems: cartItems,
         cartCount: cartCount,
+        imagesBaseUrl: imagesBaseUrl,
         headContent: {
             script(src: 'https://sandbox.web.squarecdn.com/v1/square.js') {}
             link(rel: 'stylesheet', href: '/css/pages/checkout.css') },

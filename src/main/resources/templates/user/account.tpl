@@ -6,6 +6,7 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         vendorInfo: vendorInfo,
+        imagesBaseUrl: imagesBaseUrl,
         headContent: { link(rel: 'stylesheet', href: '/css/pages/account.css') },
         content: {
             div(class: 'account-tabs-layout') {

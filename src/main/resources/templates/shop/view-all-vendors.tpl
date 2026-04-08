@@ -3,8 +3,13 @@ package templates.shop
 import com.ua.estore.cgsWeb.util.ImageUrlUtil
 
 layout 'layout.tpl',
-    title: 'CGS Web | Our Vendors',
-    user: user, cartItems: cartItems, cartCount: cartCount, vendors: vendors, headContent: { link(rel: 'stylesheet', href: '/css/pages/vendors.css') },
+        title: 'CGS Web | Our Vendors',
+        user: user,
+        cartItems: cartItems,
+        cartCount: cartCount,
+        vendors: vendors,
+        imagesBaseUrl: imagesBaseUrl,
+        headContent: { link(rel: 'stylesheet', href: '/css/pages/vendors.css') },
     content: {
         div(class: 'vendor-page-container') {
             div(class: 'hero') {

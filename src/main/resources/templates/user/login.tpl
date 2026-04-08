@@ -4,6 +4,7 @@ import com.ua.estore.cgsWeb.util.ImageUrlUtil
 
 layout 'layout.tpl',
         title: 'CGS Web | Login',
+        imagesBaseUrl: imagesBaseUrl,
         content: {
             div(class: 'hero') {
                 img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'logo-image')

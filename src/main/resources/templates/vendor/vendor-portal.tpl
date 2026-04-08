@@ -9,6 +9,7 @@ layout 'layout.tpl',
         cartCount: cartCount,
         vendorDetail: vendorDetail,
         products: products,
+        imagesBaseUrl: imagesBaseUrl,
         headContent: { link(rel: 'stylesheet', href: '/css/pages/vendor-portal.css') },
         content: {
 

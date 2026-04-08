@@ -13,6 +13,7 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         selected_product: selected_product,
+        imagesBaseUrl: imagesBaseUrl,
         headContent: { link(rel: 'stylesheet', href: '/css/pages/product.css') },
         content: {
             div(class: 'container') {

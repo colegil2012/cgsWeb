@@ -1,11 +1,12 @@
 package templates.user
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 layout 'layout.tpl',
         title: 'CGS Web | Login',
         content: {
             div(class: 'hero') {
-                h1('Welcome Back')
-                p('Please sign in to access the general store.')
+                img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'logo-image')
             }
             div(class: 'auth-container') {
                 if (error) div(class: 'alert alert-error', error)

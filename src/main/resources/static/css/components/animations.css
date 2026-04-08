@@ -40,17 +40,6 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* Subtle glow effect */
-@keyframes subtle-glow {
-    0%, 100% {
-        text-shadow: 0 0 0px transparent;
-        color: var(--earth-brown);
-    } 50% {
-        text-shadow: 0 0 8px rgba(104, 159, 56, 0.4);
-        color: var(--soft-brown);
-    }
-}
-
 @keyframes card-select-pop {
     0% {
         transform: scale(1);

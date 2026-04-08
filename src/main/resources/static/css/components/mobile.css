@@ -48,10 +48,6 @@
         box-sizing: border-box;
     }
 
-    .welcome-message {
-        display: none;
-    }
-
     .account-tabs-layout {
         grid-template-columns: 1fr;
     }

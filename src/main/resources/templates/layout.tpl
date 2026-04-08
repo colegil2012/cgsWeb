@@ -1,5 +1,7 @@
 package templates
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 yieldUnescaped '<!DOCTYPE html>'
 html {
     head {
@@ -18,6 +20,7 @@ html {
         link(rel: 'stylesheet', href: '/css/components/animations.css')
         link(rel: 'stylesheet', href: '/css/components/pagination.css')
         link(rel: 'stylesheet', href: '/css/components/mobile.css')
+        link(rel: 'stylesheet', href: '/css/components/images.css')
 
         if(headContent != null) {
             headContent()
@@ -25,9 +28,8 @@ html {
     }
     body {
         header {
-            div(class: 'logo', 'Celtech GS')
-            if (user) {
-                span(class: 'welcome-message', "Welcome, ${user.profile.firstName}!")
+            div(class: 'logo') {
+                img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'header-image')
             }
             nav {
                 ul {

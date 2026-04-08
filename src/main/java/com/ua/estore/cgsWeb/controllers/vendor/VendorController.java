@@ -124,7 +124,8 @@ public class VendorController {
             Vendor vendor = vendorService.getVendorById(user.getVendorId())
                     .orElseThrow(() -> new IllegalArgumentException("Vendor not found."));
 
-            String safeOriginalName = vendorLogo.getOriginalFilename() == null ? "logo" : vendorLogo.getOriginalFilename();
+            String safeOriginalName = vendorLogo.getOriginalFilename() == null ? "logo" :
+                    vendorLogo.getOriginalFilename();
             String fileName = System.currentTimeMillis() + "_" + safeOriginalName;
 
             imageStorageService.storeVendorLogo(fileName, vendorLogo);
@@ -133,7 +134,8 @@ public class VendorController {
             vendorService.updateVendorLogoUrl(vendor.getId(), logoUrl);
 
             // Refresh vendor detail in session (optional)
-            vendorService.getVendorById(user.getVendorId()).ifPresent(fresh -> session.setAttribute("vendorDetail", fresh));
+            vendorService.getVendorById(user.getVendorId()).ifPresent(fresh ->
+                    session.setAttribute("vendorDetail", fresh));
             successes.add("Logo updated successfully.");
 
         } catch (IllegalArgumentException ex) {
@@ -197,7 +199,7 @@ public class VendorController {
 
 
     /**********************************************************************************
-     * Add Products for a Vendor
+     * Add Products for a Vendor99999999
      *********************************************************************************/
 
     @PostMapping("/vendor/portal/add-products")

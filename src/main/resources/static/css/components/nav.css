@@ -5,8 +5,8 @@
 /* Layout & Header */
 header {
     background: var(--earth-brown);
-    border-bottom: 1px solid var(--soft-brown);
-    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--light-brown);
+    padding: 0.5rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -16,22 +16,10 @@ header {
     z-index: 1000;
 }
 
-.welcome-message {
-    font-size: 1.2rem;
-    color: var(--soft-brown);
-    font-style: italic;
-    position: absolute;
-    left: 20%;
-    transform: translateX(-50%);
-    margin: 0;
-    pointer-events: none;
-    animation: subtle-glow 3s ease-in-out infinite;
-}
-
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary-green);
+    color: var(--white);
 }
 
 nav ul {
@@ -44,7 +32,7 @@ nav ul {
 
 nav a {
     text-decoration: none;
-    color: var(--primary-green);
+    color: var(--white);
     font-weight: 500;
     transition: color 0.3s;
 }

@@ -10,8 +10,7 @@ layout 'layout.tpl',
         headContent: { link(rel: 'stylesheet', href: '/css/pages/shop.css') },
         content: {
             div(class: 'hero') {
-                h1('Shop')
-                p('\'Fresh organic produce, herbs, and seasonings delivered from our soil to your kitchen.\'')
+                img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'logo-image')
             }
             div(class: 'filter-container') {
                 form(action: '/shop/filter', method: 'get', class: 'filter-form') {

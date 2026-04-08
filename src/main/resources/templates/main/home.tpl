@@ -1,5 +1,7 @@
 package templates.main
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 layout 'layout.tpl',
         title: 'CGS Web | Home',
         user: user,
@@ -8,8 +10,9 @@ layout 'layout.tpl',
         headContent: { link(rel: 'stylesheet', href: '/css/pages/home.css') },
         content: {
             div(class: 'hero') {
-                h1('Celtech General Store')
-                p('Helping to foster better relationships between Kentucy Citizens, Farmers and Crafters.')
+                img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'logo-image')
+            }
+            div(class: 'shop-btn-container') {
                 a(href: '/shop', class: 'btn', 'Explore Shop')
             }
             div(class: 'container') {

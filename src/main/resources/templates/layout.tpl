@@ -1,20 +1,35 @@
 package templates
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 yieldUnescaped '<!DOCTYPE html>'
 html {
     head {
-        title(title ?: 'CGS Web - Organic Produce')
-        link(rel: 'stylesheet', href: '/css/style.css')
+        title(title ?: 'CGS Web | Louisville\'s Online Farmers Market')
 
-        if (binding?.hasVariable('headContent') && headContent) {
+        //Global Styles
+        link(rel: 'stylesheet', href: '/css/main.css')
+
+        //Component Styles
+        link(rel: 'stylesheet', href: '/css/components/nav.css')
+        link(rel: 'stylesheet', href: '/css/components/buttons.css')
+        link(rel: 'stylesheet', href: '/css/components/forms.css')
+        link(rel: 'stylesheet', href: '/css/components/cards.css')
+        link(rel: 'stylesheet', href: '/css/components/modal.css')
+        link(rel: 'stylesheet', href: '/css/components/alerts.css')
+        link(rel: 'stylesheet', href: '/css/components/animations.css')
+        link(rel: 'stylesheet', href: '/css/components/pagination.css')
+        link(rel: 'stylesheet', href: '/css/components/mobile.css')
+        link(rel: 'stylesheet', href: '/css/components/images.css')
+
+        if(headContent != null) {
             headContent()
         }
     }
     body {
         header {
-            div(class: 'logo', 'Celtech GS')
-            if (user) {
-                span(class: 'welcome-message', "Welcome, ${user.profile.firstName}!")
+            div(class: 'logo') {
+                img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'header-image')
             }
             nav {
                 ul {
@@ -33,10 +48,10 @@ html {
                             a(href: '#', class: 'nav-dropdown-toggle', 'Manage')
                             ul(class: 'nav-dropdown-menu') {
                                 li { a(href: '/account', 'My Account') }
-                                if ( user?.role == 'ADMIN') {
+                                if ( user?.roles?.contains('ADMIN')) {
                                     li { a(href: '/admin', 'Admin Portal') }
                                 }
-                                if ( user?.role == 'VENDOR') {
+                                if ( user?.roles?.contains('VENDOR')) {
                                     li { a(href: '/vendor/portal', 'Vendor Portal') }
                                 }
                             }

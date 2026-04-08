@@ -13,6 +13,7 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         selected_product: selected_product,
+        headContent: { link(rel: 'stylesheet', href: '/css/pages/product.css') },
         content: {
             div(class: 'container') {
                 a(
@@ -51,6 +52,5 @@ layout 'layout.tpl',
                     }
                 }
             }
-            // Include the same cart script used in shop.tpl
-            script(src: '/scripts/cart/cart.js') {}
+            script(src: '/scripts/shop/cart-update.js') {}
         }

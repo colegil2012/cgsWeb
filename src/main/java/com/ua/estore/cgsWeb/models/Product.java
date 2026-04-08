@@ -49,8 +49,6 @@ public class Product {
         private String type;
     }
 
-
-
     public void increaseStock() {
         this.stock++;
     }

@@ -1,0 +1,238 @@
+/* components/forms.css */
+
+
+
+.auth-container {
+    max-width: 400px;
+    margin: 3rem auto;
+    padding-top: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-control {
+    margin-bottom: 1rem;
+}
+
+.auth-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.auth-actions-grid > * {
+    line-height: 1;
+}
+
+/************** Signup Form **************/
+
+.signup-container {
+    max-width: 520px;
+    margin: 2.5rem auto;
+    padding: 2.25rem 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--soft-brown);
+    background: var(--white);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.signup-container .alert {
+    margin-bottom: 1rem;
+}
+
+.signup-container .form-control input {
+    background: var(--white);
+}
+
+.signup-conainer .btn {
+    margin-top: 0.25rem;
+}
+
+.hero + .signup-container {
+    margin-top: -1.5rem;
+}
+
+.form-control label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--earth-brown);
+}
+
+.form-control input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--soft-brown);
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensures padding doesn't break layout */
+}
+
+.form-control .input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-control .input-row input {
+    flex: 1 1 auto;
+    min-width: 0; /* prevents overflow in flex layouts */
+}
+
+#usernameStatus,
+#passwordStatus {
+    flex: 0 0 auto;
+    margin-left: -30px;               /* gap handles spacing now */
+    min-width: 1.25rem;           /* keeps layout stable when empty */
+    text-align: center;
+    line-height: 1;
+}
+
+.form-control input:focus {
+    outline: none;
+    border-color: var(--accent-green);
+    box-shadow: 0 0 0 2px var(--primary-green);
+}
+
+.field-feedback {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--error-red);
+    min-height: 1em; /* prevents layout jump when message appears */
+}
+
+.form-control input.invalid {
+    border-color: var(--error-red);
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.12);
+}
+
+.filter-container {
+    max-width: 1200px;
+    margin: -30px auto 2rem;
+    padding: 1.25rem 2rem;
+    background: linear-gradient(to bottom, var(--accent-brown), var(--white));
+    border-radius: 100px;
+    box-shadow: 0 10px 25px rgba(93, 64, 55, 0.12);
+    border: 2px solid var(--soft-brown);
+    position: relative;
+    z-index: 10;
+}
+
+.filter-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    flex: 0 0 auto;
+    gap: 2rem;
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    flex: 0 0 auto;
+    gap: 2rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.filter-group label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--earth-brown);
+  margin-left: 0.75rem;
+}
+
+.filter-group select,
+.filter-group input[type="text"] {
+  padding: 0.65rem 1.1rem;
+  border: 1px solid var(--soft-brown);
+  border-radius: 30px;
+  background: var(--white);
+  color: var(--earth-brown);
+  font-weight: 500;
+  font-size: 0.88rem;
+  min-width: 180px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-group select:focus,
+.filter-group input[type="text"]:focus {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 2px var(--primary-green);
+}
+
+.checkbox-group {
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0.65rem 1.1rem;
+  border: 1px solid var(--soft-brown);
+  border-radius: 30px;
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  height: auto;
+}
+
+.checkbox-group:hover {
+  border-color: var(--earth-brown);
+}
+
+.checkbox-group:has(input:checked) {
+  border-color: var(--accent-green);
+  background: var(--primary-green);
+  box-shadow: 0 0 0 2px rgba(104, 159, 56, 0.2);
+}
+
+.checkbox-group:has(input:checked) label {
+  color: var(--dark-green);
+}
+
+.checkbox-group label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--earth-brown);
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.checkbox-group input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}

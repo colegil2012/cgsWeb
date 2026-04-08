@@ -1,0 +1,35 @@
+/* /css/pages/vendor.css */
+/* Vendor Page styles */
+
+.vendor-products-section {
+    background: var(--white);
+    border-radius: 0 0 20px 20px;
+    padding-top: 1rem;
+}
+
+.product-header-container {
+    max-width: fit-content;
+    margin: -40px auto 2rem;
+    padding: 0.5rem 3rem;
+    background: var(--white);
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1.5px solid var(--dark-green);
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+
+.vendor-products-section h2 {
+    margin: 0.7rem 7rem;
+    padding: 0.5rem 0;
+    border-bottom: none;
+    font-size: 1.7rem;
+    font-style: italic;
+}
+
+.vendor-profile-container {
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+}

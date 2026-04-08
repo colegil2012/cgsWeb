@@ -3,10 +3,11 @@ package templates.shop
 import com.ua.estore.cgsWeb.util.ImageUrlUtil
 
 layout 'layout.tpl',
-        title: 'CGS Web | Home',
+        title: 'CGS Web | My Cart',
         user: user,
         cartItems: cartItems,
         cartCount: cartCount,
+        headContent: { link(rel: 'stylesheet', href: '/css/pages/cart.css') },
         content: {
             //Calculate total, subtotal and tax
             def subtotal = cartItems.collect { it.price * it.quantity }.sum() ?: 0.00
@@ -52,7 +53,7 @@ layout 'layout.tpl',
                         }
                     }
 
-                    div(class: 'cart-summary') {
+                    div(class: 'checkout-summary') {
                         h2('Order Summary')
                         div(class: 'summary-details',
                             id: 'order-summary',
@@ -84,18 +85,10 @@ layout 'layout.tpl',
                                 span(class: 'summary-value', id: 'total-value', "\$${String.format('%.2f', finalTotal)}")
                             }
                         }
-                        div(class: 'payment-methods') {
-                            p('Accepted Payments:')
-                            div(class: 'payment-icons') {
-                                span(class: 'payment-badge', 'Visa')
-                                span(class: 'payment-badge', 'MasterCard')
-                                span(class: 'payment-badge', 'PayPal')
-                            }
-                        }
 
                         div(class: 'cart-actions-block') {
                             div(class: 'filter-group ship-to-row') {
-                                label(for: 'shipping-dropdown', 'Ship To...')
+                                label(for: 'shipping-dropdown', 'Deliver To...')
 
                                 div(class: 'ship-to-controls') {
                                     def addresses = user?.addresses ?: []
@@ -121,13 +114,20 @@ layout 'layout.tpl',
                                 }
                             }
 
-                            a(href: '/checkout', class: 'btn-checkout', 'Proceed to Checkout')
+                            a(id: 'checkout-link', href: '/checkout', class: 'btn-checkout', 'Proceed to Checkout')
+                        }
+                        div(class: 'checkout-footer') {
+                            span(class: 'spacer') {}
+                            img(src: ImageUrlUtil.resolve('/images/site-images/Roadie UPS Logo Horiz_BROWN.png', imagesBaseUrl), alt: 'Delivery provided by Roadie')
+                            span(class: 'spacer') {}
+                            img(src: ImageUrlUtil.resolve('/images/site-images/Square_Logo_2025_Black.png', imagesBaseUrl), alt: 'Secure Checkout provided by Square')
+                            span(class: 'spacer') {}
                         }
                     }
                     include template: 'partials/user-address-modal.tpl'
                 }
             }
-            script(src: '/scripts/cart/cart-update.js') {}
+            script(src: '/scripts/shop/cart.js') {}
             script(src: '/scripts/address/address-update.js') {}
         }
 

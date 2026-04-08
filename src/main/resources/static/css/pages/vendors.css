@@ -1,0 +1,132 @@
+/* /css/pages/vendors.css */
+/* View All Vendors Styles */
+
+.vendor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+/*------------- Vendor Card ----------------*/
+
+.vendor-card {
+    border: 2px solid var(--soft-brown);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vendor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(93, 64, 55, 0.15);
+}
+
+/*------------- Logo Section ----------------*/
+
+.vendor-logo-container {
+    height: 160px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    line-height: 0;
+}
+
+.vendor-logo-img {
+    max-height: 130px;
+    max-width: 75%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    filter: contrast(1.1);
+    transition: transform 0.3s ease;
+}
+
+.vendor-card:hover .vendor-logo-img {
+    transform: scale(1.05);
+}
+
+/*------------- Info Section ----------------*/
+
+.vendor-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.vendor-info h2 {
+    margin: 0;
+    padding: 0.6rem 1rem 0.4rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--earth-brown);
+    letter-spacing: 0.3px;
+    border-bottom: none;
+    text-align: center;
+}
+
+.vendor-description {
+    font-size: 0.88rem;
+    color: var(--accent-green);
+    font-style: italic;
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+    padding: 0 1.2rem;
+    margin: 0 0 0.75rem 0;
+    height: 2.7em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.vendor-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 15px;
+    margin-top: auto;
+}
+
+.vendor-address {
+    padding: 0.65rem 0.9rem;
+    background: linear-gradient(to bottom,var(--accent-brown), var(--white));
+    border-top: 2px solid var(--soft-brown);
+    font-size: 0.85rem;
+    color: var(--earth-brown);
+    flex-grow: 1;
+}
+
+.vendor-address strong {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    text-align: center;
+    color: var(--earth-brown);
+    margin-bottom: 0.25rem;
+}
+
+.vendor-address p {
+    margin: 0;
+    line-height: 1.45;
+    text-align: center;
+    color: var(--earth-brown);
+}
+
+/*------------- Footer ----------------*/
+
+.vendor-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    margin-top: auto;
+    background: var(--soft-brown);
+    border-top: 1px solid rgba(93, 64, 55, 0.12);
+}

@@ -8,6 +8,9 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         imagesBaseUrl: imagesBaseUrl,
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/cart.css') },
         content: {
             //Calculate total, subtotal and tax
@@ -70,7 +73,7 @@ layout 'layout.tpl',
                                 if(shippingEstimates) {
                                     shippingEstimates.each { estimate ->
                                         div(class: 'summary-row shipping-detail') {
-                                            span("Shipping (${estimate.vendor})")
+                                            span("Shipping")
                                             span(class: 'summary-value', "\$${String.format('%.2f', estimate.cost)}")
                                         }
                                     }
@@ -119,7 +122,7 @@ layout 'layout.tpl',
                         }
                         div(class: 'checkout-footer') {
                             span(class: 'spacer') {}
-                            img(src: ImageUrlUtil.resolve('/images/site-images/Roadie UPS Logo Horiz_BROWN.png', imagesBaseUrl), alt: 'Delivery provided by Roadie')
+                            img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl), alt: 'Delivery provided by Celtech General Store')
                             span(class: 'spacer') {}
                             img(src: ImageUrlUtil.resolve('/images/site-images/Square_Logo_2025_Black.png', imagesBaseUrl), alt: 'Secure Checkout provided by Square')
                             span(class: 'spacer') {}

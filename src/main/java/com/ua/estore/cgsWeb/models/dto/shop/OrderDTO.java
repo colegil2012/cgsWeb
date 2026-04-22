@@ -24,9 +24,6 @@ public class OrderDTO {
     private String description;
     private String status;
 
-    //Shipping
-    private List<Shipment> roadieShipments;
-
     //Payment
     private BigDecimal totalPrice;
     private BigDecimal shippingPrice;
@@ -35,10 +32,4 @@ public class OrderDTO {
 
     //Cart
     private List<ProductDTO> products;
-
-    @Data
-    public static class Shipment {
-        private String orderId;
-        private String trackingNumber;
-    }
 }

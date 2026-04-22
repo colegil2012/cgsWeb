@@ -2,6 +2,9 @@ package templates.user
 
 layout 'layout.tpl',
         title: 'CGS Web | Sign Up',
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         imagesBaseUrl: imagesBaseUrl,
         content: {
             div(class: 'hero') {
@@ -14,11 +17,17 @@ layout 'layout.tpl',
 
                 //FORM for Signup new user
                 form(action: '/signup/submit', method: 'post', class: 'form-group') {
+                    input(
+                            type: 'hidden',
+                            name: (csrfParamName ?: '_csrf'),
+                            value: (csrfToken ?: '')
+                    )
+
                     div(class: 'form-control') {
                         label(for: 'username', 'Username')
 
                         div(class: 'input-row') {
-                            input(type: 'text', name: 'username', id: 'username', required: 'required')
+                            input(type: 'text', name: 'username', id: 'username', required: 'required', autocomplete: 'username')
                             span(id: 'usernameStatus', '')
                         }
 
@@ -27,14 +36,14 @@ layout 'layout.tpl',
 
                     div(class: 'form-control') {
                         label(for: 'password', 'Password')
-                        input(type: 'password', name: 'password', id: 'password', required: 'required')
+                        input(type: 'password', name: 'password', id: 'password', required: 'required', autocomplete: 'new-password', minlength: '12')
                     }
 
                     div(class: 'form-control') {
                         label(for: 'confirmPassword', 'Confirm Password')
 
                         div(class: 'input-row') {
-                            input(type: 'password', name: 'confirmPassword', id: 'confirmPassword', required: 'required')
+                            input(type: 'password', name: 'confirmPassword', id: 'confirmPassword', required: 'required', autocomplete: 'new-password', minlength: '12')
                             span(id: 'passwordStatus', '')
                         }
 

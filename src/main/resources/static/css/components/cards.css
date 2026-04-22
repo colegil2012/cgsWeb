@@ -274,26 +274,17 @@
 }
 
 .vendor-header-logo {
+   padding: 1rem;
+   background: var(--white);
+   border-radius: 10px;
    margin-bottom: 1.5rem;
 }
 
 .vendor-header-logo img {
     max-width: 180px;
     height: auto;
-    border-radius: 70%
-    border: 4px solid var(--white);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     mix-blend-mode: multiply;
     filter: contrast(1.4);
-}
-
-.vendor-header {
-    background: #2e7d32; /* Organic Green */
-    color: white;
-    padding: 15px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .vendor-name {

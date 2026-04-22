@@ -5,7 +5,6 @@ import com.squareup.square.types.Currency;
 import com.ua.estore.cgsWeb.models.*;
 import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.models.dto.shop.OrderDTO;
-import com.ua.estore.cgsWeb.services.shipping.RoadieService;
 import com.ua.estore.cgsWeb.services.shop.*;
 import com.ua.estore.cgsWeb.services.vendor.VendorService;
 import jakarta.servlet.http.HttpSession;
@@ -34,7 +33,6 @@ public class CheckoutController {
     private final CategoryService categoryService;
     private final VendorService vendorService;
     private final SquareService squareService;
-    private final RoadieService roadieService;
 
 
     /*****************************************************
@@ -154,36 +152,9 @@ public class CheckoutController {
             return "redirect:/checkout";
         }
 
-        //Call Roadie Create Shipment // Need finalized shipping estimates for square payment
-        Map<String, Object> shipments = roadieService.createShipment(orderTracker, selectedAddress);
-
-        if (!shipments.containsKey("error")) {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> shipmentList = (List<Map<String, Object>>) shipments.get("shipments");
-
-            List<OrderDTO.Shipment> roadieShipments = new ArrayList<>();
-            if (shipmentList != null) {
-                for (Map<String, Object> entry : shipmentList) {
-                    OrderDTO.Shipment shipment = new OrderDTO.Shipment();
-                    shipment.setOrderId(String.valueOf(entry.get("orderId")));
-                    shipment.setTrackingNumber(String.valueOf(entry.get("tracking")));
-                    roadieShipments.add(shipment);
-                }
-            }
-
-            orderTracker.setRoadieShipments(roadieShipments);
-            orderService.saveShipmentCreatedOrder(orderTracker);
-
-        } else {
-            log.error("Error creating Roadie shipment: " + shipments.get("error"));
-            redirectAttributes.addFlashAttribute("error", "Unable to complete checkout. Error creating Roadie shipment.");
-            return "redirect:/checkout";
-        }
-
-
         //Call Square Create Payment
-        CreatePaymentResponse payResponse = squareService.createPayment(sourceId, idempotencyKey.toString(),
-                subtotal.multiply(BigDecimal.valueOf(100)).longValue(), tipCents, Currency.USD);
+        //CreatePaymentResponse payResponse = squareService.createPayment(sourceId, idempotencyKey.toString(),
+                //subtotal.multiply(BigDecimal.valueOf(100)).longValue(), tipCents, Currency.USD);
 
 
 

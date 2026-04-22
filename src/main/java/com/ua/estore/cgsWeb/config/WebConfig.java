@@ -1,5 +1,6 @@
 package com.ua.estore.cgsWeb.config;
 
+import com.ua.estore.cgsWeb.security.CsrfTokenModelInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -13,20 +14,14 @@ import java.io.File;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AuthInterceptor authInterceptor;
+    private final CsrfTokenModelInterceptor csrfTokenModelInterceptor;
 
     @Value("${app.upload.path}")
     private String uploadPath;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/**") // Protect everything...
-                .excludePathPatterns("/login", "/logout",
-                        "/signup/**",
-                        "/css/**", "/images/**",
-                        "/scripts/**",
-                        "/js/**", "/about"); // ...except these
+        registry.addInterceptor(csrfTokenModelInterceptor);
     }
 
     @Override
@@ -35,10 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/css/");
 
         registry.addResourceHandler("/scripts/**")
-                .addResourceLocations("classpath:/static/scripts/",
-                        "classpath:/static/scripts/address/",
-                        "classpath:/static/scripts/auth/",
-                        "classpath:/static/scripts/cart/");
+                .addResourceLocations("classpath:/static/scripts/");
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
         if (!absolutePath.endsWith(File.separator)) {

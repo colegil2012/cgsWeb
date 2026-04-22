@@ -455,18 +455,18 @@ db.users.insertMany([
         squareProfile: {
             squareCustomerId: "13SCT2RBH6EMKQERFQ31V24AZ4",
             idempotencyKey: "546e5295-d860-4927-bd75-0bc1956102e5"
-        }
+        },
         addresses: [
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street1: "218 Bluebill Ct.",
+                street1: "1006 Corn Island Ct",
                 street2: "",
-                city: "Shepherdsville",
+                city: "Saint Matthews",
                 state: "KY",
-                zip: "40165",
-				latitude: 38.003,
-				longitude: -85.715,
+                zip: "40207",
+				latitude: 38.236,
+				longitude: -85.65,
                 isDefault: true
             }
         ],
@@ -487,13 +487,13 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street1: "218 Bluebill Ct.",
+                street1: "149 Wood Gate Dr",
                 street2: "",
-                city: "Shepherdsville",
+                city: "Mount Washington",
                 state: "KY",
-                zip: "40165",
-				latitude: 38.003,
-				longitude: -85.715,
+                zip: "40047",
+				latitude: 38.043,
+				longitude: -85.556,
                 isDefault: true
             }
         ],
@@ -514,13 +514,13 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street1: "218 Bluebill Ct.",
+                street1: "5404 Sunset Dr",
                 street2: "",
-                city: "Shepherdsville",
+                city: "Louisville",
                 state: "KY",
-                zip: "40165",
-				latitude: 38.003,
-				longitude: -85.715,
+                zip: "40219",
+				latitude: 38.144,
+				longitude: -85.7,
                 isDefault: true
             }
         ],
@@ -541,13 +541,13 @@ db.users.insertMany([
             {
 				addressId: new ObjectId(),
                 type: "SHIPPING",
-                street1: "218 Bluebill Ct.",
+                street1: "4800 State Hwy 1066",
                 street2: "",
-                city: "Shepherdsville",
+                city: "Bloomfield",
                 state: "KY",
-                zip: "40165",
-				latitude: 38.003,
-				longitude: -85.715,
+                zip: "40228",
+				latitude: 37.949,
+				longitude: -85.235,
                 isDefault: true
             }
         ],
@@ -587,61 +587,44 @@ const carterId = db.users.findOne({username: "carter"})._id;
 const brynleeId = db.users.findOne({username: "brynlee"})._id;
 const userId = db.users.findOne({username: "test_user"})._id;
 
-// 6. Seed an Example Order (The "B2C" requirement)
-db.orders.insertOne({
-    orderNumber: "ORD-2023-1001",
-    userId: userId,
-    status: "PENDING", // PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
-    items: [
-        {
-            productId: db.products.findOne({name: "Grapes"})._id,
-            name: "Grapes",
-            priceAtPurchase: 10.99,
-            quantity: 2
-        }
-    ],
-    totals: {
-        subtotal: 21.98,
-        tax: 1.32,
-        shipping: 5.00,
-        total: 28.30
-    },
-    shippingAddress: {
-        street: "123 Main St",
-        city: "Louisville",
-        state: "KY",
-        zip: "40202"
-    },
-    paymentStatus: "UNPAID",
+db.rateCards.drop();
+db.createCollection("rateCards");
+
+db.rateCards.insertOne({
+    name: "Standard 2026",
+    version: 1,
+    active: true,
+    baseFee: 4.99,
+    perMileRate: 0.55,
+    minimumFee: 4.99,
+    freeShippingThreshold: 75.00,
+    effectiveFrom: new Date(),
+    effectiveTo: null,
     createdAt: new Date()
 });
 
-db.orders.insertOne({
-    orderNumber: "ORD-2026-1002",
-    userId: coleId,
-    status: "PENDING", // PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
-    items: [
-        {
-            productId: db.products.findOne({name: "Grapes"})._id,
-            name: "Grapes",
-            priceAtPurchase: 10.99,
-            quantity: 2
-        }
-    ],
-    totals: {
-        subtotal: 21.98,
-        tax: 1.32,
-        shipping: 5.00,
-        total: 28.30
-    },
-    shippingAddress: {
-        street: "218 Bluebill Ct",
+db.warehouses.drop();
+db.createCollection("warehouses");
+
+db.warehouses.insertOne({
+    name: "Celtech General Store",
+    slug: "celtech-shepherdsville",
+    address: {
+        addressId: new ObjectId(),
+        type: "WAREHOUSE",
+        street1: "218 Bluebill Ct.",
+        street2: "",
         city: "Shepherdsville",
         state: "KY",
-        zip: "40165"
+        zip: "40165",
+        latitude: 38.003,
+        longitude: -85.715,
+        isDefault: true
     },
-    paymentStatus: "UNPAID",
-    createdAt: new Date()
+    primary: true,
+    active: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
 });
 
 print('--- B2C Seed Complete! ---');

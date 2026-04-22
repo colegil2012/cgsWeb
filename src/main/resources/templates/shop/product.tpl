@@ -14,6 +14,9 @@ layout 'layout.tpl',
         cartCount: cartCount,
         selected_product: selected_product,
         imagesBaseUrl: imagesBaseUrl,
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/product.css') },
         content: {
             div(class: 'container') {

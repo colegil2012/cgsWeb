@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,15 +24,44 @@ public class Cart {
     @Id
     private String id;
 
-    @Indexed(unique = true)
+    /**
+     * For authenticated users. Null for guest carts.
+     * Sparse unique index allows multiple null values (one cart per user max).
+     */
+    @Indexed(unique = true, sparse = true)
     @Field(targetType = FieldType.OBJECT_ID)
     private String userId;
+
+    /**
+     * For guest visitors. Null for authenticated user carts.
+     * Sparse unique index: one cart per guest cookie.
+     */
+    @Indexed(unique = true, sparse = true)
+    private String guestId;
+
+    /**
+     * When set, Mongo will auto-delete the cart after the TTL expires.
+     * Populated for guest carts; null for user carts (we keep those forever).
+     * The TTL index itself is declared in a @PostConstruct initializer (see CartTtlIndexInitializer).
+     */
+    private Instant expiresAt;
 
     private List<Item> items = new ArrayList<>();
 
     public Cart(String userId) {
         this.userId = userId;
         this.items = new ArrayList<>();
+    }
+
+    /**
+     * Factory for a new guest cart.
+     */
+    public static Cart forGuest(String guestId, Instant expiresAt) {
+        Cart c = new Cart();
+        c.setGuestId(guestId);
+        c.setExpiresAt(expiresAt);
+        c.setItems(new ArrayList<>());
+        return c;
     }
 
     /**

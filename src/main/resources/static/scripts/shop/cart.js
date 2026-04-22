@@ -6,9 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             const url = this.getAttribute('href');
 
+            const csrfHeaders = (window.CGS && window.CGS.csrfHeaders) ? window.CGS.csrfHeaders() : {};
+
             fetch(url, {
-                method: 'GET',
+                method: 'POST',
+                credentials: 'same-origin',
                 headers: {
+                    ...csrfHeaders,
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
@@ -19,8 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (cartLinkContainer) {
                         cartLinkContainer.innerHTML = `<a href="/cart">Cart(${data.cartCount})</a>`;
                     }
-
-                    // Reload to update subtotal/tax/totals accurately
                     window.location.reload();
                 }
             })
@@ -28,18 +30,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-     // Shipping estimate refresh (address dropdown)
-     const shippingDropdown = document.getElementById('shipping-dropdown');
-     const shippingEstimatesContainer = document.getElementById('shipping-estimates');
+    // Shipping estimate refresh (address dropdown)
+    const shippingDropdown = document.getElementById('shipping-dropdown');
+    const shippingEstimatesContainer = document.getElementById('shipping-estimates');
 
-     const orderSummary = document.getElementById('order-summary');
-     const taxValueEl = document.getElementById('tax-value');
-     const totalValueEl = document.getElementById('total-value');
+    const orderSummary = document.getElementById('order-summary');
+    const taxValueEl = document.getElementById('tax-value');
+    const totalValueEl = document.getElementById('total-value');
 
     function flashGlow(el) {
         if (!el) return;
-        el.classList.remove('glow-green'); // reset so re-adding replays animation
-        void el.offsetWidth;               // force reflow
+        el.classList.remove('glow-green');
+        void el.offsetWidth;
         el.classList.add('glow-green');
         window.setTimeout(() => el.classList.remove('glow-green'), 950);
     }
@@ -49,88 +51,89 @@ document.addEventListener('DOMContentLoaded', function() {
         nodeList.forEach(flashGlow);
     }
 
-     function formatUsd(amount) {
-         const num = Number(amount);
-         const safe = Number.isFinite(num) ? num : 0;
-         return `$${safe.toFixed(2)}`;
-     }
+    function formatUsd(amount) {
+        const num = Number(amount);
+        const safe = Number.isFinite(num) ? num : 0;
+        return `$${safe.toFixed(2)}`;
+    }
 
-     function getSubtotalAndTaxRate() {
-         if (!orderSummary) return { subtotal: 0, taxRate: 0.07 };
+    function getSubtotalAndTaxRate() {
+        if (!orderSummary) return { subtotal: 0, taxRate: 0.07 };
+        const subtotal = Number(orderSummary.dataset.subtotal);
+        const taxRate = Number(orderSummary.dataset.taxRate);
+        return {
+            subtotal: Number.isFinite(subtotal) ? subtotal : 0,
+            taxRate: Number.isFinite(taxRate) ? taxRate : 0.07
+        };
+    }
 
-         const subtotal = Number(orderSummary.dataset.subtotal);
-         const taxRate = Number(orderSummary.dataset.taxRate);
+    function updateTaxAndTotal(totalShipping) {
+        const { subtotal, taxRate } = getSubtotalAndTaxRate();
+        const shipping = Number(totalShipping);
+        const safeShipping = Number.isFinite(shipping) ? shipping : 0;
 
-         return {
-             subtotal: Number.isFinite(subtotal) ? subtotal : 0,
-             taxRate: Number.isFinite(taxRate) ? taxRate : 0.07
-         };
-     }
+        const tax = (subtotal + safeShipping) * taxRate;
+        const total = subtotal + safeShipping + tax;
 
-     function updateTaxAndTotal(totalShipping) {
-         const { subtotal, taxRate } = getSubtotalAndTaxRate();
+        if (taxValueEl) taxValueEl.textContent = formatUsd(tax);
+        if (totalValueEl) totalValueEl.textContent = formatUsd(total);
 
-         const shipping = Number(totalShipping);
-         const safeShipping = Number.isFinite(shipping) ? shipping : 0;
+        flashGlow(taxValueEl);
+        flashGlow(totalValueEl);
+    }
 
-         const tax = (subtotal + safeShipping) * taxRate;
-         const total = subtotal + safeShipping + tax;
+    function renderShippingEstimates(estimates) {
+        if (!shippingEstimatesContainer) return;
+        shippingEstimatesContainer.innerHTML = '';
 
-         if (taxValueEl) taxValueEl.textContent = formatUsd(tax);
-         if (totalValueEl) totalValueEl.textContent = formatUsd(total);
+        if (!estimates || estimates.length === 0) {
+            const emptyRow = document.createElement('div');
+            emptyRow.className = 'summary-row shipping-detail';
+            emptyRow.innerHTML = `<span>Shipping</span><span class="summary-value">—</span>`;
+            shippingEstimatesContainer.appendChild(emptyRow);
+            return;
+        }
 
-         flashGlow(taxValueEl);
-         flashGlow(totalValueEl);
-     }
+        estimates.forEach(est => {
+            const row = document.createElement('div');
+            row.className = 'summary-row shipping-detail';
+            row.innerHTML =
+                `<span>Shipping</span>` +
+                `<span class="summary-value">${formatUsd(est.cost)}</span>`;
+            shippingEstimatesContainer.appendChild(row);
+        });
 
-     async function refreshShippingEstimates() {
-         if (!shippingDropdown || !shippingEstimatesContainer) return;
+        flashGlowAll(shippingEstimatesContainer.querySelectorAll('.summary-value'));
+    }
 
-         const shippingAddressId = shippingDropdown.value;
-         if (!shippingAddressId) return;
+    async function refreshShippingEstimates() {
+        if (!shippingDropdown) return;
+        const addressId = shippingDropdown.value;
+        if (!addressId) {
+            renderShippingEstimates([]);
+            updateTaxAndTotal(0);
+            return;
+        }
 
-         try {
-             const res = await fetch(`/api/roadie/estimate?shippingAddressId=${encodeURIComponent(shippingAddressId)}`, {
-                 method: 'POST',
-                 headers: { 'Accept': 'application/json' }
-             });
+        try {
+            const res = await fetch(`/api/shipping/estimate?addressId=${encodeURIComponent(addressId)}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!res.ok) throw new Error(`Estimate request failed: ${res.status}`);
+            const data = await res.json();
 
-             if (!res.ok) {
-                 console.error('Shipping estimate request failed:', await res.text());
-                 return;
-             }
+            renderShippingEstimates(data.estimates || []);
+            updateTaxAndTotal(data.totalShipping || 0);
+        } catch (err) {
+            console.error('Error refreshing shipping estimates:', err);
+        }
+    }
 
-             const data = await res.json();
-             console.log('estimate data', data);
-             const estimates = Array.isArray(data.shippingEstimates) ? data.shippingEstimates : [];
+    if (shippingDropdown) {
+        shippingDropdown.addEventListener('change', refreshShippingEstimates);
+        refreshShippingEstimates();
+    }
 
-             shippingEstimatesContainer.innerHTML = estimates.map(e => {
-                 const vendor = e.vendor ?? '';
-                 const costNum = Number(e.cost);
-                 const cost = Number.isFinite(costNum) ? costNum.toFixed(2) : '0.00';
-
-                 return `
-                     <div class="summary-row shipping-detail">
-                         <span class="ship-name">Shipping (${vendor})</span>
-                         <span class="summary-value ship-cost">$${cost}</span>
-                     </div>
-                 `;
-             }).join('');
-
-             // Glow the newly inserted shipping names + costs
-             flashGlowAll(shippingEstimatesContainer.querySelectorAll('.ship-name'));
-             flashGlowAll(shippingEstimatesContainer.querySelectorAll('.ship-cost'));
-
-             updateTaxAndTotal(data.totalShipping);
-         } catch (err) {
-             console.error('Error fetching shipping estimates:', err);
-         }
-     }
-
-     if (shippingDropdown) {
-         shippingDropdown.addEventListener('change', () => {
-            refreshShippingEstimates();
-         });
-         refreshShippingEstimates();
-     }
- });
+    window.CGS = window.CGS || {};
+    window.CGS.refreshShippingEstimates = refreshShippingEstimates;
+});

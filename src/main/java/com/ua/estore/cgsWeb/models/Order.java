@@ -24,7 +24,6 @@ public class Order {
     private OrderTotals totals;
     private List<OrderItem> items = new ArrayList<>();
     private SquareData squareData;
-    private List<RoadieData> roadieData;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -50,11 +49,5 @@ public class Order {
         private String idempotencyKey;
         private String paymentId;
         private String receiptUrl;
-    }
-
-    @Data
-    public static class RoadieData {
-        private String orderId;
-        private String trackingNumber;
     }
 }

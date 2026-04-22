@@ -34,3 +34,6 @@ build/
 
 #external Upload folder
 external-images/
+
+#Project Documentation
+.docs/

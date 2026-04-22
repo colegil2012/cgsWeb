@@ -11,8 +11,8 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
 
             input(
                     type: 'hidden',
-                    name: (_csrf?.parameterName ?: '_csrf'),
-                    value: (_csrf?.token ?: '')
+                    name: (csrfParamName ?: '_csrf'),
+                    value: (csrfToken ?: '')
             )
 
             if (vendorDetail?.addresses && !vendorDetail.addresses.isEmpty()) {

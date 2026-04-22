@@ -7,6 +7,11 @@ html {
     head {
         title(title ?: 'CGS Web | Louisville\'s Online Farmers Market')
 
+        // CSRF meta tags — JavaScript reads these to send X-XSRF-TOKEN on fetch POSTs
+        meta(name: '_csrf', content: (csrfToken ?: ''))
+        meta(name: '_csrf_header', content: (csrfHeaderName ?: 'X-CSRF-TOKEN'))
+        meta(name: '_csrf_parameter', content: (csrfParamName ?: '_csrf'))
+
         //Global Styles
         link(rel: 'stylesheet', href: '/css/main.css')
 
@@ -35,15 +40,16 @@ html {
                 ul {
                     li { a(href: '/', 'Home') }
 
-                    if (user) {
-                        li(class: 'nav-dropdown') {
-                            a(href: '#', class: 'nav-dropdown-toggle', 'Shop')
-                            ul(class: 'nav-dropdown-menu') {
-                                li { a(href: '/shop', 'Shop') }
-                                li { a(href: '/vendors', 'Vendors') }
-                            }
+                    // Shop and Vendors are now public (guests can browse)
+                    li(class: 'nav-dropdown') {
+                        a(href: '#', class: 'nav-dropdown-toggle', 'Shop')
+                        ul(class: 'nav-dropdown-menu') {
+                            li { a(href: '/shop', 'Shop') }
+                            li { a(href: '/vendors', 'Vendors') }
                         }
+                    }
 
+                    if (user) {
                         li(class: 'nav-dropdown') {
                             a(href: '#', class: 'nav-dropdown-toggle', 'Manage')
                             ul(class: 'nav-dropdown-menu') {
@@ -59,15 +65,28 @@ html {
                     }
 
                     li { a(href: '/about', 'About') }
+
+                    // Cart is visible for EVERYONE (guest or auth'd)
+                    li(id: 'cart-link-container') {
+                        a(href: '/cart', class: 'cart-link') {
+                            yield "Cart("
+                            span(class: 'cart-count', cartCount ?: 0)
+                            yield ")"
+                        }
+                    }
+
                     if (user) {
-                        li(id: 'cart-link-container') {
-                            a(href: '/cart', class: 'cart-link') {
-                                yield "Cart("
-                                span(class: 'cart-count', cartCount ?: 0)
-                                yield ")"
+                        // Logout is a POST in Spring Security — wrap in a tiny form
+                        li {
+                            form(action: '/logout', method: 'post', style: 'display:inline;') {
+                                input(type: 'hidden', name: (csrfParamName ?: '_csrf'), value: (csrfToken ?: ''))
+                                button(type: 'submit', class: 'logout-link',
+                                        style: 'background:none;border:none;padding:0;font:inherit;cursor:pointer;color:#c62828;font-weight:bold;',
+                                        'Logout')
                             }
                         }
-                        li { a(href: '/logout', class: 'logout-link', 'Logout') }
+                    } else {
+                        li { a(href: '/login', 'Sign In') }
                     }
                 }
             }
@@ -75,5 +94,6 @@ html {
         main {
             content()
         }
+        script(src: '/scripts/_csrf.js') {}
     }
 }

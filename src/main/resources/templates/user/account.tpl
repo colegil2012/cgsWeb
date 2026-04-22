@@ -7,6 +7,9 @@ layout 'layout.tpl',
         cartCount: cartCount,
         vendorInfo: vendorInfo,
         imagesBaseUrl: imagesBaseUrl,
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/account.css') },
         content: {
             div(class: 'account-tabs-layout') {
@@ -220,8 +223,8 @@ layout 'layout.tpl',
                                         // CSRF support (works when Spring Security exposes _csrf in request)
                                         input(
                                                 type: 'hidden',
-                                                name: (_csrf?.parameterName ?: '_csrf'),
-                                                value: (_csrf?.token ?: '')
+                                                name: (csrfParamName ?: '_csrf'),
+                                                value: (csrfToken ?: '')
                                         )
 
                                         div(class: 'form-control') {

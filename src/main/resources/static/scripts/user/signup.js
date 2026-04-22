@@ -260,6 +260,20 @@
         if (inFlightController) inFlightController.abort();
         setUsernameStatus(usernameStatus, usernameFeedback, 'idle');
         setSubmitEnabled(false);
+        try {
+          const csrfHeaders = (window.CGS && window.CGS.csrfHeaders) ? window.CGS.csrfHeaders() : {};
+          const res = await fetch('/signup/checkUsername', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              ...csrfHeaders,
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams({ username: trimmed }).toString(),
+            signal: inFlightController.signal,
+          });
+
+          if (!res.ok) throw new Error('Non-OK response');
         return;
       }
 

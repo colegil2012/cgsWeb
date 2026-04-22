@@ -10,6 +10,9 @@ layout 'layout.tpl',
         vendorDetail: vendorDetail,
         products: products,
         imagesBaseUrl: imagesBaseUrl,
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/vendor-portal.css') },
         content: {
 

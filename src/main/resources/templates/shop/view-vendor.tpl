@@ -8,6 +8,9 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         imagesBaseUrl: imagesBaseUrl,
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/vendor.css') },
         content: {
             div(class: 'vendor-profile-container') {

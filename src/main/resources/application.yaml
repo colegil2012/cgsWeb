@@ -4,6 +4,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/cgsweb}
+      auto-index-creation: true
   servlet:
     multipart:
       max-file-size: 10MB
@@ -14,6 +15,12 @@ app:
   security:
     bcrypt:
       strength: ${BCRYPT_STRENGTH:12}
+    remember-me:
+      key: ${REMEMBER_ME_KEY:cgsweb-dev-remember-me-key}
+      validity-seconds: ${REMEMBER_ME_VALIDITY:1209600}
+    guest-cart:
+      cookie-name: cgs_guest_id
+      max-age-days: 30
   spaces:
     bucket: ${SPACES_BUCKET:cgsweb-img}
     region: ${SPACES_REGION:nyc3}
@@ -28,12 +35,6 @@ square:
   application-id: ${SQUARE_APPLICATION_ID:}
   location-id: ${SQUARE_LOCATION_ID:}
 
-roadie:
-  url: ${ROADIE_DEV_API:https://connect-sandbox.roadie.com}
-  api:
-    key: ${ROADIE_API_KEY:}
-    version: ${ROADIE_API_VERSION:v1}
-
 google:
   maps:
     api-key: ${GOOGLE_MAPS_API_KEY:}
@@ -42,3 +43,11 @@ service-area:
   origin-lat: ${SVC_AREA_LAT:38.00317456212482}
   origin-lng: ${SVC_AREA_LONG:-85.71534984109215}
   radius-miles: ${SVC_AREA_RADIUS:50}
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.cgs.web: DEBUG
+    org.springframework.security: DEBUG
+    com.ua.estore.cgsWeb.security: DEBUG

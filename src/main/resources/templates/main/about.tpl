@@ -8,6 +8,9 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         imagesBaseUrl: imagesBaseUrl,
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link( rel: 'stylesheet', href: '/css/pages/about.css') },
         content: {
             div(class: 'about-hero') {
@@ -43,7 +46,7 @@ layout 'layout.tpl',
                     div(class: 'vision-grid') {
                         div(class: 'vision-card') {
                             h4('Roadie Integration')
-                            p('Integration with Roadie API to provide shipping estimates and create our small scale logistics network.')
+                            p('In the process of Prototyping and developing our own delivery management and tracking system, stay tuned!')
                         }
                         div(class: 'vision-card') {
                             h4('Looking outward')

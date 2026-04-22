@@ -43,25 +43,6 @@ public class OrderService {
     }
 
     //Save Shipment Created Order
-    public String saveShipmentCreatedOrder(OrderDTO orderDTO) {
-        Order order = getOrderById(orderDTO.getOrderId());
-
-        if (order == null) return null;
-
-        List<Order.RoadieData> roadieDataList = new ArrayList<>();
-        if (orderDTO.getRoadieShipments() != null) {
-            for (OrderDTO.Shipment shipment : orderDTO.getRoadieShipments()) {
-                Order.RoadieData roadieData = new Order.RoadieData();
-                roadieData.setOrderId(shipment.getOrderId());
-                roadieData.setTrackingNumber(shipment.getTrackingNumber());
-                roadieDataList.add(roadieData);
-            }
-        }
-
-        order.setRoadieData(roadieDataList);
-        order.setUpdatedAt(TimeUtil.getCurrentDateTime());
-        order.setStatus("SHIPMENT_CREATED");
-
-        return orderRepository.save(order).getId();
+    public void saveShipmentCreatedOrder(OrderDTO orderDTO) {
     }
 }

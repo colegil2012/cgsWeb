@@ -9,6 +9,9 @@ layout 'layout.tpl',
         cartItems: cartItems,
         cartCount: cartCount,
         imagesBaseUrl: imagesBaseUrl,
+        csrfToken: (csrfToken ?: ''),
+        csrfParamName: (csrfParamName ?: '_csrf'),
+        csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: {
             script(src: 'https://sandbox.web.squarecdn.com/v1/square.js') {}
             link(rel: 'stylesheet', href: '/css/pages/checkout.css') },
@@ -40,24 +43,6 @@ layout 'layout.tpl',
 
                                             div(class: 'checkout-vendor-name') {
                                                 h3(vendor.name)
-                                            }
-
-                                            def shipFrom = vendor.addresses?.find { it.isDefault() } ?: vendor.addresses?.getAt(0)
-                                            if (shipFrom) {
-                                                div(class: 'checkout-ship-from') {
-                                                    div(class: 'ship-from-label') {
-                                                        img(src: ImageUrlUtil.resolve('/images/site-images/Roadie Circle R Icon_COLOR.png', imagesBaseUrl))
-                                                        span('Pickup from: ')
-                                                    }
-                                                    div(class: 'ship-from-address') {
-                                                        if (shipFrom.street2 != null) {
-                                                            span("${shipFrom.street1} ${shipFrom.street2}")
-                                                        } else {
-                                                            span("${shipFrom.street1}")
-                                                        }
-                                                        span("${shipFrom.city}, ${shipFrom.state} ${shipFrom.zip}")
-                                                    }
-                                                }
                                             }
                                         }
 
@@ -114,7 +99,7 @@ layout 'layout.tpl',
                             }
 
                             div(class: 'checkout-section-note') {
-                                img(src: ImageUrlUtil.resolve('/images/site-images/Roadie UPS Logo Horiz_BROWN.png', imagesBaseUrl), alt: 'Delivery provided by Roadie')
+                                img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl), alt: 'Delivery provided by Celtech General Store')
                             }
                         }
                     }
@@ -162,7 +147,7 @@ layout 'layout.tpl',
                                 if (shippingEstimates) {
                                     shippingEstimates.each { estimate ->
                                         div(class: 'summary-row shipping-detail') {
-                                            span("Shipping (${estimate.vendor})")
+                                            span("Shipping")
                                             span(class: 'summary-value', "\$${String.format('%.2f', estimate.cost)}")
                                         }
                                     }
@@ -191,7 +176,7 @@ layout 'layout.tpl',
                             }
                             div(class: 'checkout-footer') {
                                 span(class: 'spacer') {}
-                                img(src: ImageUrlUtil.resolve('/images/site-images/Roadie UPS Logo Horiz_BROWN.png', imagesBaseUrl), alt: 'Delivery provided by Roadie')
+                                img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl), alt: 'Delivery provided by Celtech General Store')
                                 span(class: 'spacer') {}
                                 img(src: ImageUrlUtil.resolve('/images/site-images/Square_Logo_2025_Black.png', imagesBaseUrl), alt: 'Secure Checkout provided by Square')
                                 span(class: 'spacer') {}

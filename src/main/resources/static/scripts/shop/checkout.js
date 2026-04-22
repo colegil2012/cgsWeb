@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const orderSummary = document.getElementById('order-summary');
     const taxValueEl = document.getElementById('tax-value');
     const totalValueEl = document.getElementById('total-value');
+    const totalCentsInput = document.getElementById('total-cents');
 
     function formatUsd(amount) {
         const num = Number(amount);
@@ -46,6 +47,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (taxValueEl) taxValueEl.textContent = formatUsd(tax);
         if (totalValueEl) totalValueEl.textContent = formatUsd(total);
 
+        // Keep the hidden field Square submits in sync with the visible total
+        if (totalCentsInput) totalCentsInput.value = Math.round(total * 100);
+
         flashGlow(taxValueEl);
         flashGlow(totalValueEl);
     }
@@ -62,6 +66,57 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!nodeList) return;
         nodeList.forEach(flashGlow);
     }
+    function renderShippingEstimates(estimates) {
+        if (!shippingEstimatesContainer) return;
+        shippingEstimatesContainer.innerHTML = '';
+
+        if (!estimates || estimates.length === 0) {
+            const emptyRow = document.createElement('div');
+            emptyRow.className = 'summary-row shipping-detail';
+            emptyRow.innerHTML = `<span>Shipping</span><span class="summary-value">—</span>`;
+            shippingEstimatesContainer.appendChild(emptyRow);
+            return;
+        }
+
+        estimates.forEach(est => {
+            const row = document.createElement('div');
+            row.className = 'summary-row shipping-detail';
+            row.innerHTML =
+                `<span>Shipping</span>` +
+                `<span class="summary-value">${formatUsd(est.cost)}</span>`;
+            shippingEstimatesContainer.appendChild(row);
+        });
+
+        flashGlowAll(shippingEstimatesContainer.querySelectorAll('.summary-value'));
+    }
+
+    async function refreshShippingEstimates() {
+        if (!addressSelect) return;
+        const addressId = addressSelect.value;
+        if (!addressId) {
+            renderShippingEstimates([]);
+            updateTaxAndTotal(0);
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/shipping/estimate?addressId=${encodeURIComponent(addressId)}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!res.ok) throw new Error(`Estimate request failed: ${res.status}`);
+            const data = await res.json();
+
+            renderShippingEstimates(data.estimates || []);
+            updateTaxAndTotal(data.totalShipping || 0);
+        } catch (err) {
+            console.error('Error refreshing shipping estimates:', err);
+        }
+    }
+
+    // Expose so address-update.js can trigger a refresh after save
+    window.CGS = window.CGS || {};
+    window.CGS.refreshShippingEstimates = refreshShippingEstimates;
+
 
     // Sync Address Select with hidden input field and address preview
     function syncAddress() {
@@ -174,48 +229,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             cardButton.disabled = false;
         }
     });
-
-     async function refreshShippingEstimates() {
-         if (!addressSelect || !shippingEstimatesContainer) return;
-
-         const shippingAddressId = addressSelect.value;
-         if (!shippingAddressId) return;
-
-         try {
-             const res = await fetch(`/api/roadie/estimate?shippingAddressId=${encodeURIComponent(shippingAddressId)}`, {
-                 method: 'POST',
-                 headers: { 'Accept': 'application/json' }
-             });
-
-             if (!res.ok) {
-                 console.error('Shipping estimate request failed:', await res.text());
-                 return;
-             }
-
-             const data = await res.json();
-             console.log('estimate data', data);
-             const estimates = Array.isArray(data.shippingEstimates) ? data.shippingEstimates : [];
-
-             shippingEstimatesContainer.innerHTML = estimates.map(e => {
-                 const vendor = e.vendor ?? '';
-                 const costNum = Number(e.cost);
-                 const cost = Number.isFinite(costNum) ? costNum.toFixed(2) : '0.00';
-
-                 return `
-                     <div class="summary-row shipping-detail">
-                         <span class="ship-name">Shipping (${vendor})</span>
-                         <span class="summary-value ship-cost">$${cost}</span>
-                     </div>
-                 `;
-             }).join('');
-
-             // Glow the newly inserted shipping names + costs
-             flashGlowAll(shippingEstimatesContainer.querySelectorAll('.ship-name'));
-             flashGlowAll(shippingEstimatesContainer.querySelectorAll('.ship-cost'));
-
-             updateTaxAndTotal(data.totalShipping);
-         } catch (err) {
-             console.error('Error fetching shipping estimates:', err);
-         }
-     }
 });

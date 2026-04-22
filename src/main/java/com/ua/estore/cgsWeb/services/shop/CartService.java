@@ -1,5 +1,6 @@
 package com.ua.estore.cgsWeb.services.shop;
 
+import com.ua.estore.cgsWeb.config.props.SecurityProperties;
 import com.ua.estore.cgsWeb.models.Cart;
 import com.ua.estore.cgsWeb.models.Product;
 import com.ua.estore.cgsWeb.models.Vendor;
@@ -7,51 +8,116 @@ import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.repositories.CartRepository;
 import com.ua.estore.cgsWeb.services.vendor.VendorService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepository;
+    private final SecurityProperties securityProperties;
 
-    // Get or create Cart by user id
+    /* ---------- User carts ---------- */
+
     public Cart getOrCreateByUserId(String userId) {
         if (userId == null || userId.isBlank()) {
             throw new IllegalArgumentException("User id is required.");
         }
-
         return cartRepository.findByUserId(userId)
                 .orElseGet(() -> cartRepository.save(new Cart(userId)));
     }
 
-    // Add 1 item to Cart
     public Cart addOne(String userId, String productId) {
         Cart cart = getOrCreateByUserId(userId);
         cart.addProduct(productId);
         return cartRepository.save(cart);
     }
 
-    // Remove 1 item from Cart
     public Cart removeOne(String userId, String productId) {
         Cart cart = getOrCreateByUserId(userId);
         cart.removeOne(productId);
         return cartRepository.save(cart);
     }
 
-
-    // Get total quantity of items in Cart
     public int getCartCount(String userId) {
         return getOrCreateByUserId(userId).totalQuantity();
     }
 
+    /* ---------- Guest carts ---------- */
 
-    // Map Cart items to ProductDTOs
+    public Cart getOrCreateByGuestId(String guestId) {
+        if (guestId == null || guestId.isBlank()) {
+            throw new IllegalArgumentException("Guest id is required.");
+        }
+        return cartRepository.findByGuestId(guestId)
+                .map(this::refreshGuestExpiry)
+                .orElseGet(() -> cartRepository.save(Cart.forGuest(guestId, newGuestExpiry())));
+    }
+
+    public Cart addOneGuest(String guestId, String productId) {
+        Cart cart = getOrCreateByGuestId(guestId);
+        cart.addProduct(productId);
+        cart.setExpiresAt(newGuestExpiry());
+        return cartRepository.save(cart);
+    }
+
+    public Cart removeOneGuest(String guestId, String productId) {
+        Cart cart = getOrCreateByGuestId(guestId);
+        cart.removeOne(productId);
+        cart.setExpiresAt(newGuestExpiry());
+        return cartRepository.save(cart);
+    }
+
+    /**
+     * Merge the guest cart into the user's cart. The guest cart is deleted after merging.
+     * If the user has no cart yet, it's created. Safe to call when no guest cart exists.
+     */
+    public Cart mergeGuestCartIntoUser(String guestId, String userId) {
+        if (userId == null || userId.isBlank()) {
+            throw new IllegalArgumentException("User id is required.");
+        }
+        Cart userCart = getOrCreateByUserId(userId);
+
+        if (guestId == null || guestId.isBlank()) return userCart;
+
+        var guestCartOpt = cartRepository.findByGuestId(guestId);
+        if (guestCartOpt.isEmpty()) return userCart;
+
+        Cart guestCart = guestCartOpt.get();
+        if (guestCart.getItems() != null) {
+            for (Cart.Item item : guestCart.getItems()) {
+                if (item == null || item.getProductId() == null || item.getQuantity() == null) continue;
+                userCart.addProduct(item.getProductId(), item.getQuantity());
+            }
+        }
+
+        Cart saved = cartRepository.save(userCart);
+        cartRepository.delete(guestCart);
+        log.info("Merged guest cart {} into user {}'s cart ({} items).",
+                guestId, userId, saved.totalQuantity());
+        return saved;
+    }
+
+    private Instant newGuestExpiry() {
+        int days = securityProperties.guestCart().maxAgeDays();
+        return Instant.now().plus(days, ChronoUnit.DAYS);
+    }
+
+    private Cart refreshGuestExpiry(Cart cart) {
+        cart.setExpiresAt(newGuestExpiry());
+        return cartRepository.save(cart);
+    }
+
+    /* ---------- Mapping helpers (unchanged) ---------- */
+
     public List<ProductDTO> mapToProductDTOs(Cart cart,
                                              ProductService productService,
                                              VendorService vendorService,

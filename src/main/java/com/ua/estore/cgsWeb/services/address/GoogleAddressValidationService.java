@@ -1,4 +1,4 @@
-package com.ua.estore.cgsWeb.services.maps;
+package com.ua.estore.cgsWeb.services.address;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +14,19 @@ import org.springframework.web.client.RestClientResponseException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+/**
+ * Client for Google's Address Validation API. Returns a {@link ValidatedAddress} with
+ * {@code valid=true} only when Google reports a high-certainty premise-level match;
+ * otherwise the result carries a human-readable failure reason for the controller layer
+ * to surface to the user.
+ *
+ * <p>Public surface intentionally mirrors the previous service so {@link AddressDTO} →
+ * {@link ValidatedAddress} is the only contract consumers depend on.</p>
+ *
+ * <p>Auth: API key is passed via the {@code key} query string per Google's docs. We never
+ * log it – every log line uses a redacted URL.</p>
+ */
 
 @Slf4j
 @Service
@@ -33,9 +46,17 @@ public class GoogleAddressValidationService {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Strict, high-certainty validation of a US address.
+     *
+     * @param input street/city/state/zip from the form (zip may be ZIP+4)
+     * @return populated {@link ValidatedAddress} – never {@code null}; check
+     *         {@link ValidatedAddress#valid()} before trusting lat/lng.
+     */
     public ValidatedAddress validateUsHighCertainty(AddressDTO input) {
-        if (props.apiKey() == null || props.apiKey().isBlank() || props.apiKey().contains("<")) {
-            return new ValidatedAddress(false, 0, 0, null, "Google Maps API key is not configured.");
+        if (!apiKeyConfigured()) {
+            return new ValidatedAddress(false, 0, 0, null,
+                    "Google Maps API key is not configured.");
         }
 
         if (input == null
@@ -43,7 +64,8 @@ public class GoogleAddressValidationService {
                 || isBlank(input.city())
                 || isBlank(input.state())
                 || isBlank(input.zip())) {
-            return new ValidatedAddress(false, 0, 0, null, "Address is incomplete (street/city/state/zip required).");
+            return new ValidatedAddress(false, 0, 0, null,
+                    "Address is incomplete (street/city/state/zip required).");
         }
 
         Map<String, Object> address = new LinkedHashMap<>();
@@ -54,7 +76,6 @@ public class GoogleAddressValidationService {
         });
 
         Map<String, Object> body = Map.of("address", address);
-        // Never log API keys; log a "safe" URL without key
         final String safeUrl = "/v1:validateAddress?key=<redacted>";
 
         long startNanos = System.nanoTime();
@@ -63,7 +84,6 @@ public class GoogleAddressValidationService {
                 log.debug("Google Address Validation request -> url={}, body={}",
                         safeUrl, toJsonSafe(body, 1200));
             } else {
-                // Keep INFO concise; you can flip to DEBUG when troubleshooting.
                 log.info("Google Address Validation request -> url={}, street='{}', city='{}', state='{}', zip='{}'",
                         safeUrl, input.street1(), input.city(), input.state(), input.zip());
             }
@@ -92,34 +112,36 @@ public class GoogleAddressValidationService {
 
         } catch (RestClientResponseException ex) {
             long tookMs = (System.nanoTime() - startNanos) / 1_000_000;
-
             String responseBody = ex.getResponseBodyAsString();
             log.warn("Google Address Validation failed <- url={}, tookMs={}, status={} {}, responseBody={}",
-                    safeUrl,
-                    tookMs,
-                    ex.getRawStatusCode(),
-                    ex.getStatusText(),
+                    safeUrl, tookMs, ex.getRawStatusCode(), ex.getStatusText(),
                     truncate(responseBody, 2000));
 
-            String msg = "Google Address Validation failed (" + ex.getRawStatusCode() + " " + ex.getStatusText() + ").";
-
+            String msg = "Google Address Validation failed ("
+                    + ex.getRawStatusCode() + " " + ex.getStatusText() + ").";
             if (responseBody != null && !responseBody.isBlank()) {
                 msg += " Response: " + truncate(responseBody, 600);
             } else {
                 msg += " No response body returned by Google.";
             }
-
             return new ValidatedAddress(false, 0, 0, null, msg);
 
         } catch (Exception ex) {
             long tookMs = (System.nanoTime() - startNanos) / 1_000_000;
-
             log.error("Google Address Validation request error <- url={}, tookMs={}, errorType={}, message={}",
                     safeUrl, tookMs, ex.getClass().getSimpleName(), ex.getMessage(), ex);
 
             return new ValidatedAddress(false, 0, 0, null,
-                    "Google Address Validation request failed: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+                    "Google Address Validation request failed: "
+                            + ex.getClass().getSimpleName() + ": " + ex.getMessage());
         }
+    }
+
+    /* ---------- helpers ---------- */
+
+    private boolean apiKeyConfigured() {
+        String k = props.apiKey();
+        return k != null && !k.isBlank() && !k.contains("<");
     }
 
     private static boolean isBlank(String s) {
@@ -137,7 +159,6 @@ public class GoogleAddressValidationService {
 
     private static String truncate(String s, int maxLen) {
         if (s == null) return null;
-        if (s.length() <= maxLen) return s;
-        return s.substring(0, maxLen) + "...(truncated)";
+        return s.length() <= maxLen ? s : s.substring(0, maxLen) + "...(truncated)";
     }
 }

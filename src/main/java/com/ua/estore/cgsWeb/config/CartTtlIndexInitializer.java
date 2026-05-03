@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.config;
 
-import com.ua.estore.cgsWeb.models.Cart;
+import com.ua.estore.cgsWeb.models.shop.Cart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

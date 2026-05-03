@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.services.user;
 
-import com.ua.estore.cgsWeb.models.User;
-import com.ua.estore.cgsWeb.repositories.UserRepository;
+import com.ua.estore.cgsWeb.models.user.User;
+import com.ua.estore.cgsWeb.repositories.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.controllers.shop;
 
-import com.ua.estore.cgsWeb.models.Product;
-import com.ua.estore.cgsWeb.models.Vendor;
+import com.ua.estore.cgsWeb.models.shop.Product;
+import com.ua.estore.cgsWeb.models.vendor.Vendor;
 import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.services.shop.CategoryService;
 import com.ua.estore.cgsWeb.services.shop.ProductService;

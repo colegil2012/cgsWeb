@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.models.shipping;
 
-import com.ua.estore.cgsWeb.models.Address;
+import com.ua.estore.cgsWeb.models.address.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,8 +27,6 @@ public class Warehouse {
 
     @Id
     private String id;
-
-    /** Display name, e.g. "Celtech General Store". */
     private String name;
 
     /** Short slug for admin URLs, e.g. "celtech-bloomfield". */

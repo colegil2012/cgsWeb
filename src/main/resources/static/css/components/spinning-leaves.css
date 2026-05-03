@@ -1,0 +1,158 @@
+/* /components/spinning-leaves.css
+ *
+ * Two pieces:
+ *   1. .leaf-spinner-bouncing  — three stationary leaves in a row, each gently
+ *      bouncing in place while fading in and out, staggered.
+ *   2. .confirm-status-*       — the modal status panel (loading / success /
+ *      error) used by the checkout confirm modal during submit.
+ */
+
+/* ============================================================================
+ * Bouncing leaves (in-place, fade in / fade out, staggered)
+ * ============================================================================ */
+
+.leaf-spinner-bouncing {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 14px;
+    height: 48px;
+}
+
+.leaf-spinner-bouncing__leaf {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    /* Tear-drop silhouette via asymmetric border-radius. The 45deg rotation
+       makes the stem read at the bottom-right, like a falling leaf. */
+    border-radius: 50% 0 50% 50%;
+    background: linear-gradient(135deg,
+    var(--accent-green, #689f38) 0%,
+    var(--dark-green, #2e7d32) 100%);
+    box-shadow: 0 2px 4px rgba(46, 125, 50, 0.25);
+    transform: rotate(45deg);
+    opacity: 0;
+
+    animation-name: leaf-bounce-fade;
+    animation-duration: 1.4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    will-change: transform, opacity;
+}
+
+.leaf-spinner-bouncing__leaf:nth-child(1) { animation-delay: 0s; }
+.leaf-spinner-bouncing__leaf:nth-child(2) { animation-delay: 0.20s; }
+.leaf-spinner-bouncing__leaf:nth-child(3) { animation-delay: 0.40s; }
+
+@keyframes leaf-bounce-fade {
+    0% {
+        transform: rotate(45deg) translateY(0);
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        transform: rotate(45deg) translateY(-10px);
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(45deg) translateY(0);
+        opacity: 0;
+    }
+}
+
+/* ============================================================================
+ * Confirm-modal status panel
+ * Shown by checkout-submit.js when the user clicks Confirm Order.
+ * ============================================================================ */
+
+.modal-confirm-order .confirm-status {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 28px 20px 20px;
+    min-height: 240px;
+    gap: 6px;
+}
+
+.modal-confirm-order.is-status .confirm-form-view {
+    display: none;
+}
+
+.modal-confirm-order.is-status .confirm-status {
+    display: flex;
+}
+
+/* Default for icon variants: hidden, no forced size. Each variant decides its
+   own dimensions below — the loading icon sizes itself via the leaf row,
+   while success/error are fixed 64×64 round badges. */
+.confirm-status-icon {
+    display: none;
+    margin-bottom: 4px;
+}
+
+/* Loading variant: just a transparent wrapper around the leaf row.
+   Critically: NO fixed width/height/background/border-radius — the leaves'
+   own 22×22 leaves and 48px-tall row dictate the box. */
+.confirm-status.is-loading .confirm-status-icon-loading,
+.confirm-status.is-success .confirm-status-icon-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+}
+
+/* Error variant: round red badge with an exclamation. */
+.confirm-status.is-error .confirm-status-icon-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #c0392b;
+    color: var(--white, #fff);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.30);
+    animation: confirm-status-pop 0.40s ease;
+}
+
+@keyframes confirm-status-pop {
+    0%   { transform: scale(0.6); opacity: 0; }
+    60%  { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.confirm-status-title {
+    margin: 8px 0 4px 0;
+    color: var(--dark-green, #2e7d32);
+    font-size: 1.2rem;
+}
+
+.confirm-status.is-error .confirm-status-title {
+    color: #b91c1c;
+}
+
+.confirm-status-message {
+    margin: 0;
+    color: var(--earth-brown, #5d4037);
+    font-size: 0.95rem;
+    line-height: 1.45;
+    max-width: 32em;
+}
+
+.confirm-status-actions {
+    display: none;
+    margin-top: 14px;
+}
+
+.confirm-status.is-error .confirm-status-actions {
+    display: flex;
+}

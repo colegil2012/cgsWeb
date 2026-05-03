@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.models.dto.shop;
 
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.user.User;
 import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -23,12 +22,6 @@ public class OrderDTO {
     private UUID idempotencyKey;
     private String description;
     private String status;
-
-    //Payment
-    private BigDecimal totalPrice;
-    private BigDecimal shippingPrice;
-    private BigDecimal subtotalPrice;
-    private BigDecimal tax;
 
     //Cart
     private List<ProductDTO> products;

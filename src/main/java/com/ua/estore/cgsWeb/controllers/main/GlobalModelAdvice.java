@@ -1,10 +1,11 @@
 
 package com.ua.estore.cgsWeb.controllers.main;
 
-import com.ua.estore.cgsWeb.models.Cart;
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.shop.Cart;
+import com.ua.estore.cgsWeb.models.user.User;
 import com.ua.estore.cgsWeb.services.shop.CartService;
 import com.ua.estore.cgsWeb.services.user.GuestIdentityService;
+import com.ua.estore.cgsWeb.util.UsStates;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttribute;
+
+import java.util.Map;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -58,6 +61,11 @@ public class GlobalModelAdvice {
     @ModelAttribute("cartCount")
     public int addCartCountToModel(@ModelAttribute("userCart") Cart cart) {
         return cart == null ? 0 : cart.totalQuantity();
+    }
+
+    @ModelAttribute("usStates")
+    public Map<String, String> addUsStatesToModel() {
+        return UsStates.CODE_TO_LABEL;
     }
 
     @ModelAttribute

@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.security;
 
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.user.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

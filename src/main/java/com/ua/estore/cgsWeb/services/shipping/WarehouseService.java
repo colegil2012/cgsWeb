@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.services.shipping;
 
-import com.ua.estore.cgsWeb.models.Address;
+import com.ua.estore.cgsWeb.models.address.Address;
 import com.ua.estore.cgsWeb.models.shipping.Warehouse;
 import com.ua.estore.cgsWeb.repositories.shipping.WarehouseRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
-package com.ua.estore.cgsWeb.models;
+package com.ua.estore.cgsWeb.models.user;
 
+import com.ua.estore.cgsWeb.models.address.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

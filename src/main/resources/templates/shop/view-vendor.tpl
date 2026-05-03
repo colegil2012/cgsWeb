@@ -17,7 +17,7 @@ layout 'layout.tpl',
                 // Vendor Header Section
                 div(class: 'vendor-header-card') {
                     div(class: 'vendor-header-logo') {
-                        img(src: ImageUrlUtil.resolve(vendor?.logo_url, imagesBaseUrl) ?: '/images/site-images/default-vendor.png', alt: vendor?.name)
+                        img(src: ImageUrlUtil.resolve(vendor?.logoUrl, imagesBaseUrl) ?: '/images/site-images/default-vendor.png', alt: vendor?.name)
                     }
                     div(class: 'vendor-header-info') {
                         h1(class: 'vendor-name', vendor?.name)

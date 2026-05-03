@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
         ServiceAreaProperties.class,
         SpacesS3Properties.class,
         SquareProperties.class,
-        SecurityProperties.class
+        SecurityProperties.class,
+        TaxProperties.class,
+        MailProperties.class
 })
 
 public class AppPropertiesConfig {}

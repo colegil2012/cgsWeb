@@ -1,9 +1,9 @@
 package com.ua.estore.cgsWeb.controllers;
 
 import com.ua.estore.cgsWeb.controllers.shop.ShopController;
-import com.ua.estore.cgsWeb.models.Cart;
-import com.ua.estore.cgsWeb.models.Product;
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.shop.Cart;
+import com.ua.estore.cgsWeb.models.shop.Product;
+import com.ua.estore.cgsWeb.models.user.User;
 import com.ua.estore.cgsWeb.services.shop.CartService;
 import com.ua.estore.cgsWeb.services.shop.CategoryService;
 import com.ua.estore.cgsWeb.services.shop.ProductService;

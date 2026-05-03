@@ -9,9 +9,28 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  mail:
+    host: ${MAIL_HOST:smtp.office365.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:cole@celtechgs.com}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: ${MAIL_HOST:smtp.office365.com}
+          timeout: 15000
+          connectiontimeout: 10000
+          writetimeout: 15000
 app:
   upload:
     path: ${IMAGE_UPLOAD_PATH:external-images/}
+  tax:
+    rate: ${TAX_RATE:0.07}
   security:
     bcrypt:
       strength: ${BCRYPT_STRENGTH:12}
@@ -27,6 +46,12 @@ app:
     endpoint: ${SPACES_ENDPOINT:https://nyc3.digitaloceanspaces.com}
     access-key: ${SPACES_ACCESS_KEY:}
     secret-key: ${SPACES_SECRET_KEY:}
+  mail:
+    enabled: ${MAIL_ENABLED:true}
+    from: ${MAIL_FROM:support@celtechgs.com}
+    from-name: ${MAIL_FROM_NAME:Celtech General Store}
+    reply-to: ${MAIL_REPLY_TO:cole@celtechgs.com}
+    public-base-url: ${MAIL_PUBLIC_BASE_URL:http://localhost:8080}
 
 square:
   environment: sandbox

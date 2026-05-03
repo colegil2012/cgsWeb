@@ -1,10 +1,9 @@
-package com.ua.estore.cgsWeb.repositories;
+package com.ua.estore.cgsWeb.repositories.user;
 
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

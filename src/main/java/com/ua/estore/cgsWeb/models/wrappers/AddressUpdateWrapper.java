@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.models.wrappers;
 
-import com.ua.estore.cgsWeb.models.Address;
+import com.ua.estore.cgsWeb.models.address.Address;
 import lombok.Data;
 
 import java.util.ArrayList;

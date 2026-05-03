@@ -1,6 +1,6 @@
-package com.ua.estore.cgsWeb.repositories;
+package com.ua.estore.cgsWeb.repositories.shop;
 
-import com.ua.estore.cgsWeb.models.Category;
+import com.ua.estore.cgsWeb.models.shop.Category;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

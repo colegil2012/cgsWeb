@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb;
 
-import com.ua.estore.cgsWeb.models.Product;
-import com.ua.estore.cgsWeb.repositories.ProductRepository;
+import com.ua.estore.cgsWeb.models.shop.Product;
+import com.ua.estore.cgsWeb.repositories.shop.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

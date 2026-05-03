@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const appId = window.SQUARE_APP_ID;
-    const locationId = window.SQUARE_LOCATION_ID;
+    //const appId = window.SQUARE_APP_ID;
+    //const locationId = window.SQUARE_LOCATION_ID;
     const addresses = window.USER_ADDRESSES;
-
-    console.log(addresses);
 
     const addressSelect = document.getElementById('checkout-address-select');
     const shippingEstimatesContainer = document.getElementById('shipping-estimates');
@@ -24,14 +22,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function getSubtotalAndTaxRate() {
-        if (!orderSummary) return { subtotal: 0, taxRate: 0.07 };
+        if (!orderSummary) return { subtotal: 0, taxRate: 0 };
 
         const subtotal = Number(orderSummary.dataset.subtotal);
         const taxRate = Number(orderSummary.dataset.taxRate);
 
         return {
             subtotal: Number.isFinite(subtotal) ? subtotal : 0,
-            taxRate: Number.isFinite(taxRate) ? taxRate : 0.07
+            taxRate: Number.isFinite(taxRate) ? taxRate : 0
         };
     }
 
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (totalValueEl) totalValueEl.textContent = formatUsd(total);
 
         // Keep the hidden field Square submits in sync with the visible total
-        if (totalCentsInput) totalCentsInput.value = Math.round(total * 100);
+        //if (totalCentsInput) totalCentsInput.value = Math.round(total * 100);
 
         flashGlow(taxValueEl);
         flashGlow(totalValueEl);
@@ -157,6 +155,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         refreshShippingEstimates();
     }
 
+
+    /***********
     // Saved Card Selection
     const savedCards = document.querySelectorAll('.saved-user-card');
     const sourceIdInput = document.getElementById('source-id');
@@ -228,5 +228,5 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Payment error:', e);
             cardButton.disabled = false;
         }
-    });
+    });**/
 });

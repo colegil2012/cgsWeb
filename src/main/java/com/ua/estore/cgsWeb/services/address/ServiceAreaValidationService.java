@@ -1,4 +1,4 @@
-package com.ua.estore.cgsWeb.services.maps;
+package com.ua.estore.cgsWeb.services.address;
 
 import com.ua.estore.cgsWeb.config.props.ServiceAreaProperties;
 import com.ua.estore.cgsWeb.models.dto.address.ValidatedAddress;

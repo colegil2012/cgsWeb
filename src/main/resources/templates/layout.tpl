@@ -15,6 +15,10 @@ html {
         //Global Styles
         link(rel: 'stylesheet', href: '/css/main.css')
 
+        //Global Scripts
+        script(src: '/scripts/_modal.js') {}
+        script(src: '/scripts/_csrf.js') {}
+
         //Component Styles
         link(rel: 'stylesheet', href: '/css/components/nav.css')
         link(rel: 'stylesheet', href: '/css/components/buttons.css')
@@ -26,6 +30,7 @@ html {
         link(rel: 'stylesheet', href: '/css/components/pagination.css')
         link(rel: 'stylesheet', href: '/css/components/mobile.css')
         link(rel: 'stylesheet', href: '/css/components/images.css')
+        link(rel: 'stylesheet', href: '/css/components/spinning-leaves.css')
 
         if(headContent != null) {
             headContent()
@@ -79,7 +84,11 @@ html {
                         // Logout is a POST in Spring Security — wrap in a tiny form
                         li {
                             form(action: '/logout', method: 'post', style: 'display:inline;') {
-                                input(type: 'hidden', name: (csrfParamName ?: '_csrf'), value: (csrfToken ?: ''))
+                                input(
+                                        type: 'hidden',
+                                        name: (csrfParamName ?: '_csrf'),
+                                        value: (csrfToken ?: '')
+                                )
                                 button(type: 'submit', class: 'logout-link',
                                         style: 'background:none;border:none;padding:0;font:inherit;cursor:pointer;color:#c62828;font-weight:bold;',
                                         'Logout')
@@ -94,6 +103,5 @@ html {
         main {
             content()
         }
-        script(src: '/scripts/_csrf.js') {}
     }
 }

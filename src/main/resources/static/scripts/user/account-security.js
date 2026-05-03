@@ -1,48 +1,24 @@
+/**
+ * account-security.js
+ *
+ * Wires the "Change Password" modal on the Account → Security tab.
+ * Modal mechanics (open/close/Escape/overlay-click/form-reset) come from
+ * the shared {@code window.CGS.Modal} helper in /scripts/_modal.js, so this
+ * file only carries the page-specific configuration.
+ */
 (() => {
-  const ADDRESS_TYPES = ["SHIPPING", "BILLING", "ALTERNATE"];
-
-  const initModal = ({ openBtnId, overlayId, closeBtnId, cancelBtnId, focusInputId }) => {
-    const openBtn = document.getElementById(openBtnId);
-    const overlay = document.getElementById(overlayId);
-    const closeBtn = document.getElementById(closeBtnId);
-    const cancelBtn = document.getElementById(cancelBtnId);
-
-    if (!openBtn || !overlay) return null;
-
-    const open = () => {
-      overlay.style.display = "flex";
-      const focusEl = focusInputId ? document.getElementById(focusInputId) : null;
-      if (focusEl) focusEl.focus();
-    };
-
-    const close = () => {
-      overlay.style.display = "none";
-      const form = overlay.querySelector("form");
-      if (form) form.reset();
-    };
-
-    openBtn.addEventListener("click", open);
-    if (closeBtn) closeBtn.addEventListener("click", close);
-    if (cancelBtn) cancelBtn.addEventListener("click", close);
-
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) close();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && overlay.style.display !== "none") close();
-    });
-
-    return { open, close, overlay };
-  };
+  if (!window.CGS || typeof window.CGS.Modal !== 'function') {
+    console.warn('[account-security] window.CGS.Modal not loaded — is /scripts/_modal.js included before this file?');
+    return;
+  }
 
   // Password modal (Security tab)
-  initModal({
-    openBtnId: "openChangePassword",
-    overlayId: "changePasswordOverlay",
-    closeBtnId: "closeChangePassword",
-    cancelBtnId: "cancelChangePassword",
-    focusInputId: "oldPassword",
+  window.CGS.Modal({
+    openBtnId:   'openChangePassword',
+    overlayId:   'changePasswordOverlay',
+    closeBtnId:  'closeChangePassword',
+    cancelBtnId: 'cancelChangePassword',
+    focusInputId: 'oldPassword',
+    dialogLabel: 'Change your password',
   });
-
 })();

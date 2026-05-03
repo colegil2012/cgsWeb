@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.controllers.user;
 
-import com.ua.estore.cgsWeb.models.Order;
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.shop.Order;
+import com.ua.estore.cgsWeb.models.user.User;
 import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
 import com.ua.estore.cgsWeb.services.address.AddressService;
 import com.ua.estore.cgsWeb.services.shop.OrderService;
@@ -40,7 +40,7 @@ public class AccountController  {
     public String accountPage(HttpSession session,
                               Model model,
                               @RequestParam(name = "tab", required = false, defaultValue = "profile") String tab,
-                              @RequestParam(defaultValue = "0") int orderPage) {
+                              @RequestParam(name = "page", defaultValue = "0") int page) {
 
         User user = (User) session.getAttribute("user");
         if (user.getUsername() == null) return "redirect:/login";
@@ -55,14 +55,12 @@ public class AccountController  {
             model.addAttribute("user", vUser);
         });
 
-        Page<Order> orders = orderService.findByUserId(user.getId(), PageRequest.of(orderPage, 5));
-        model.addAttribute("orders", orders);
-
-        //Temporary logging for coding orders logic
-        if (!orders.isEmpty()) {
-            log.info("Found {} orders for user: {}", orders.getTotalElements(), user.getUsername());
-        } else {
-            log.info("No orders found for user: {}", user.getUsername());
+        if ("orders".equals(tab)) {
+            org.springframework.data.domain.Page<Order> orders =
+                    orderService.findByUserPage(user.getId(), page);
+            model.addAttribute("orders", orders);
+            model.addAttribute("ordersPage", orders.getNumber());
+            model.addAttribute("ordersTotalPages", orders.getTotalPages());
         }
 
         return "user/account";

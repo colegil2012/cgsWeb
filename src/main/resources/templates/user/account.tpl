@@ -107,84 +107,38 @@ layout 'layout.tpl',
                     }
 
                     if (activeTab == 'orders') {
-                        div(class: 'info-card') {
-                            h2('Order History')
-                            hr()
+                        div(class: 'account-tab-content') {
+                            div(class: 'account-section-header') {
+                                h2('My Orders')
+                                p(class: 'account-section-sub',
+                                        'Your most recent orders, newest first.')
+                            }
 
-                            if (!orders || orders.content == null || orders.content.isEmpty()) {
-                                p('No orders found yet.')
+                            if (!orders || orders.isEmpty()) {
+                                div(class: 'account-empty-state') {
+                                    p('You haven\'t placed any orders yet.')
+                                    a(href: '/shop', class: 'btn', 'Browse the shop')
+                                }
                             } else {
-                                orders.content.each { o ->
-                                    div(class: 'order-card') {
-                                        div(class: 'order-card-header') {
-                                            div(class: 'order-meta') {
-                                                strong(o?.orderNumber ?: 'Order')
-                                                span(class: 'order-status', o?.status ?: 'UNKNOWN')
-                                            }
-                                            div(class: 'order-date') {
-                                                yield o?.createdAt ? o.createdAt.toString() : ''
-                                            }
-                                        }
-
-                                        if (o?.totals) {
-                                            div(class: 'order-totals') {
-                                                div { span(class: 'label', 'Subtotal: ');
-                                                    span("\$${o.totals.subtotal}") }
-                                                div { span(class: 'label', 'Tax: '); span("\$${o.totals.tax}") }
-                                                div { span(class: 'label', 'Shipping: ');
-                                                    span("\$${o.totals.shipping}") }
-                                                div(class: 'order-total-line') {
-                                                    span(class: 'label', 'Total: ')
-                                                    strong("\$${o.totals.total}")
-                                                }
-                                            }
-                                        }
-
-                                        if (o?.items && !o.items.isEmpty()) {
-                                            div(class: 'order-items') {
-                                                h4('Items')
-                                                table(class: 'order-items-table') {
-                                                    thead {
-                                                        tr {
-                                                            th('Item')
-                                                            th('Qty')
-                                                            th('Price')
-                                                        }
-                                                    }
-                                                    tbody {
-                                                        o.items.each { item ->
-                                                            tr {
-                                                                td(item?.name ?: 'Item')
-                                                                td(item?.quantity ?: 0)
-                                                                td(item?.priceAtPurchase != null ? "\$${item.priceAtPurchase}" : '')
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
+                                div(class: 'order-list') {
+                                    orders.content.each { ord ->
+                                        layout 'partials/order-card.tpl',
+                                                order: ord,
+                                                imagesBaseUrl: imagesBaseUrl
                                     }
                                 }
 
-                                // Pagination
-                                if (orders.totalPages > 1) {
-                                    div(class: 'pagination-container') {
-                                        if (orders.number > 0) {
-                                            a(class: 'page-link',
-                                                    href: "/account?tab=orders&orderPage=${orders.number - 1}",
-                                                    '← Prev')
-                                        }
-
-                                        (0..<orders.totalPages).each { pNum ->
-                                            a(class: pNum == orders.number ? 'page-link active' : 'page-link',
-                                                    href: "/account?tab=orders&orderPage=${pNum}",
-                                                    "${pNum + 1}")
-                                        }
-
-                                        if (orders.number < orders.totalPages - 1) {
-                                            a(class: 'page-link',
-                                                    href: "/account?tab=orders&orderPage=${orders.number + 1}",
-                                                    'Next →')
+                                // Pagination — only renders if there's more than one page.
+                                if (ordersTotalPages > 1) {
+                                    div(class: 'pagination') {
+                                        (0..<ordersTotalPages).each { p ->
+                                            if (p == ordersPage) {
+                                                span(class: 'page-link active', "${p + 1}")
+                                            } else {
+                                                a(href: "/account?tab=orders&page=${p}",
+                                                        class: 'page-link',
+                                                        "${p + 1}")
+                                            }
                                         }
                                     }
                                 }

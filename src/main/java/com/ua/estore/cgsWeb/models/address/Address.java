@@ -1,4 +1,4 @@
-package com.ua.estore.cgsWeb.models;
+package com.ua.estore.cgsWeb.models.address;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,15 +1,13 @@
 package com.ua.estore.cgsWeb.services.address;
 
-import com.ua.estore.cgsWeb.models.Address;
-import com.ua.estore.cgsWeb.models.User;
-import com.ua.estore.cgsWeb.models.Vendor;
+import com.ua.estore.cgsWeb.models.address.Address;
+import com.ua.estore.cgsWeb.models.user.User;
+import com.ua.estore.cgsWeb.models.vendor.Vendor;
 import com.ua.estore.cgsWeb.models.dto.address.AddressDTO;
 import com.ua.estore.cgsWeb.models.dto.address.ValidatedAddress;
 import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
-import com.ua.estore.cgsWeb.repositories.UserRepository;
-import com.ua.estore.cgsWeb.repositories.VendorRepository;
-import com.ua.estore.cgsWeb.services.maps.GoogleAddressValidationService;
-import com.ua.estore.cgsWeb.services.maps.ServiceAreaValidationService;
+import com.ua.estore.cgsWeb.repositories.user.UserRepository;
+import com.ua.estore.cgsWeb.repositories.vendor.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -26,8 +24,8 @@ public class AddressService {
 
     private final UserRepository userRepository;
     private final VendorRepository vendorRepository;
-    private final GoogleAddressValidationService googleAddressValidationService;
     private final ServiceAreaValidationService serviceAreaValidationService;
+    private final GoogleAddressValidationService googleAddressValidationService;
 
     private static final Set<String> ALLOWED_ADDRESS_TYPES = Set.of("SHIPPING", "BILLING", "ALTERNATE");
 
@@ -67,7 +65,7 @@ public class AddressService {
             if (isBlank(a.getAddressId())) { a.setAddressId(new ObjectId().toString()); }
             if (a.getType() != null) a.setType(a.getType().trim().toUpperCase());
             if (a.getStreet1() != null) a.setStreet1(a.getStreet1().trim());
-            a.setStreet2("");
+            if (a.getStreet2() != null) a.setStreet2(a.getStreet2().trim());
             if (a.getCity() != null) a.setCity(a.getCity().trim());
             if (a.getState() != null) a.setState(a.getState().trim());
             if (a.getZip() != null) a.setZip(a.getZip().trim());
@@ -164,7 +162,7 @@ public class AddressService {
         for (Address a : merged) {
             if (isBlank(a.getAddressId())) { a.setAddressId(new ObjectId().toString()); }
             if (a.getStreet1() != null) a.setStreet1(a.getStreet1().trim());
-            a.setStreet2("");
+            if (a.getStreet2() != null) a.setStreet2(a.getStreet2().trim());
             if (a.getCity() != null) a.setCity(a.getCity().trim());
             if (a.getState() != null) a.setState(a.getState().trim());
             if (a.getZip() != null) a.setZip(a.getZip().trim());

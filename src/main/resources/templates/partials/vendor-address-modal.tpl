@@ -27,37 +27,11 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                                 value: (addr?.addressId ?: '')
                         )
 
-                        div(class: 'form-control') {
-                            label("Street")
-                            input(type: 'text', name: "addresses[${i}].street1", value: (addr?.street1 ?: ''))
-                        }
-                        div(class: 'form-control') {
-                            label("City")
-                            input(type: 'text', name: "addresses[${i}].city", value: (addr?.city ?: ''))
-                        }
-                        div(class: 'form-control') {
-                            label("State")
-                            input(
-                                    type: 'text',
-                                    name: "addresses[${i}].state",
-                                    value: (addr?.state ?: ''),
-                                    required: 'required',
-                                    pattern: '^[A-Za-z]{2}$',
-                                    title: 'Use 2-letter state code (e.g., KY)',
-                                    maxlength: '2')
-                        }
-                        div(class: 'form-control') {
-                            label("Zip")
-                            input(
-                                    type: 'text',
-                                    name: "addresses[${i}].zip",
-                                    value: (addr?.zip ?: ''),
-                                    required: 'required',
-                                    pattern: '^\\d{5}(-\\d{4})?$',
-                                    title: 'Use ZIP (12345) or ZIP+4 (12345-6789)',
-                                    inputmode: 'numeric'
-                            )
-                        }
+                        layout 'partials/_address-fields.tpl',
+                                addr: addr,
+                                namePrefix: "addresses[${i}]",
+                                showTypeField: false,
+                                usStates: usStates
 
                         div(class: 'update-address-footer') {
                             div(class: 'form-control') {
@@ -90,4 +64,3 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
         }
     }
 }
-

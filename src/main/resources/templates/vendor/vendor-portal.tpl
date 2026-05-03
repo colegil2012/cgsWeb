@@ -73,7 +73,7 @@ layout 'layout.tpl',
                                 }
 
                                 img(id: 'vendorLogoPreview',
-                                        src: ImageUrlUtil.resolve(vendorDetail?.logo_url, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
+                                        src: ImageUrlUtil.resolve(vendorDetail?.logoUrl, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
                                         alt: 'Logo Preview')
 
                                 button(type: 'button', class: 'btn-small', id: 'changeLogoBtn', 'Change Logo')
@@ -82,6 +82,11 @@ layout 'layout.tpl',
                                         action: '/vendor/portal/update-logo',
                                         method: 'post',
                                         enctype: 'multipart/form-data') {
+                                    input(
+                                            type: 'hidden',
+                                            name: (csrfParamName ?: '_csrf'),
+                                            value: (csrfToken ?: '')
+                                    )
                                     input(type: 'hidden', id: 'vendorId', name: 'vendorId', value: vendorDetail?.id)
                                     input(type: 'file', id: 'vendorLogoUpload', name: 'vendorLogo', style: 'display:none;', accept: 'image/*')
                                 }
@@ -94,6 +99,11 @@ layout 'layout.tpl',
                                 div(class: 'padding-container') {
 
                                     form(id: 'vendorSettingsForm', action: '/vendor/portal/update-settings', method: 'post') {
+                                        input(
+                                                type: 'hidden',
+                                                name: (csrfParamName ?: '_csrf'),
+                                                value: (csrfToken ?: '')
+                                        )
                                         input(type: 'hidden', name: 'vendorId', value: vendorDetail?.id)
 
                                         div(class: 'vendor-settings', 'data-setting': 'lead_time') {
@@ -227,6 +237,11 @@ layout 'layout.tpl',
                                             // ── Edit Form (hidden by default) ──
                                             div(class: 'inventory-item-edit', id: "edit_${prod.id}", style: 'display:none;') {
                                                 form(id: formId, action: '/vendor/portal/update-product', method: 'post') {
+                                                    input(
+                                                            type: 'hidden',
+                                                            name: (csrfParamName ?: '_csrf'),
+                                                            value: (csrfToken ?: '')
+                                                    )
                                                     input(type: 'hidden', name: 'productId', value: prod.id)
 
                                                     div(class: 'inventory-edit-grid') {

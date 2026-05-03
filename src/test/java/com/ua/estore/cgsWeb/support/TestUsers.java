@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.support;
 
-import com.ua.estore.cgsWeb.models.Cart;
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.shop.Cart;
+import com.ua.estore.cgsWeb.models.user.User;
 
 import java.util.List;
 

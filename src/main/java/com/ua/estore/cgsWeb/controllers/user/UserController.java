@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.controllers.user;
 
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.user.User;
 import com.ua.estore.cgsWeb.services.user.CredentialService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.security;
 
-import com.ua.estore.cgsWeb.repositories.UserRepository;
+import com.ua.estore.cgsWeb.repositories.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,8 +1,8 @@
 package com.ua.estore.cgsWeb.controllers.shipping;
 
-import com.ua.estore.cgsWeb.models.Address;
-import com.ua.estore.cgsWeb.models.Cart;
-import com.ua.estore.cgsWeb.models.User;
+import com.ua.estore.cgsWeb.models.address.Address;
+import com.ua.estore.cgsWeb.models.shop.Cart;
+import com.ua.estore.cgsWeb.models.user.User;
 import com.ua.estore.cgsWeb.models.shipping.ShippingEstimate;
 import com.ua.estore.cgsWeb.services.shipping.ShippingEstimateService;
 import com.ua.estore.cgsWeb.services.shop.CartService;

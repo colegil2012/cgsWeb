@@ -1,8 +1,8 @@
 package com.ua.estore.cgsWeb.security;
 
-import com.ua.estore.cgsWeb.models.Cart;
-import com.ua.estore.cgsWeb.models.User;
-import com.ua.estore.cgsWeb.repositories.UserRepository;
+import com.ua.estore.cgsWeb.models.shop.Cart;
+import com.ua.estore.cgsWeb.models.user.User;
+import com.ua.estore.cgsWeb.repositories.user.UserRepository;
 import com.ua.estore.cgsWeb.services.shop.CartService;
 import com.ua.estore.cgsWeb.services.user.GuestIdentityService;
 import jakarta.servlet.ServletException;

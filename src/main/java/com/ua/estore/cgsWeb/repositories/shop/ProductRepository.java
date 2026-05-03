@@ -1,13 +1,13 @@
-package com.ua.estore.cgsWeb.repositories;
+package com.ua.estore.cgsWeb.repositories.shop;
 
-import com.ua.estore.cgsWeb.models.Product;
-import org.bson.types.ObjectId;
+import com.ua.estore.cgsWeb.models.shop.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +19,17 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findByCategoryId(String categoryId);
 
     Optional<Product> findBySlug(String slug);
+
+    List<Product> findByVendorIdInAndIdNotInAndActiveTrue(
+            Collection<String> vendorIds,
+            Collection<String> excludeIds,
+            Pageable pageable
+    );
+
+    List<Product> findByIdNotInAndActiveTrueOrderByCreatedAtDesc(
+            Collection<String> excludeIds,
+            Pageable pageable
+    );
 
     @Query("{ 'vendorId': ?0 }")
     List<Product> findByVendorId(String vendorId);

@@ -1,8 +1,8 @@
 package com.ua.estore.cgsWeb.controllers.vendor;
 
-import com.ua.estore.cgsWeb.models.Product;
-import com.ua.estore.cgsWeb.models.User;
-import com.ua.estore.cgsWeb.models.Vendor;
+import com.ua.estore.cgsWeb.models.shop.Product;
+import com.ua.estore.cgsWeb.models.user.User;
+import com.ua.estore.cgsWeb.models.vendor.Vendor;
 import com.ua.estore.cgsWeb.models.wrappers.AddressUpdateWrapper;
 import com.ua.estore.cgsWeb.models.wrappers.ProductFormWrapper;
 import com.ua.estore.cgsWeb.services.address.AddressService;
@@ -10,13 +10,10 @@ import com.ua.estore.cgsWeb.services.shop.CategoryService;
 import com.ua.estore.cgsWeb.services.shop.ProductService;
 import com.ua.estore.cgsWeb.services.vendor.VendorService;
 import com.ua.estore.cgsWeb.services.storage.ImageStorageService;
-import com.ua.estore.cgsWeb.util.dataUtil;
-import com.ua.estore.cgsWeb.util.requestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.ua.estore.cgsWeb.util.requestUtil.getReferalUrl;

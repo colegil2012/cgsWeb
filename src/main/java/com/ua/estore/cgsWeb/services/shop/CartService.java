@@ -1,11 +1,10 @@
 package com.ua.estore.cgsWeb.services.shop;
 
 import com.ua.estore.cgsWeb.config.props.SecurityProperties;
-import com.ua.estore.cgsWeb.models.Cart;
-import com.ua.estore.cgsWeb.models.Product;
-import com.ua.estore.cgsWeb.models.Vendor;
+import com.ua.estore.cgsWeb.models.shop.Cart;
+import com.ua.estore.cgsWeb.models.shop.Product;
 import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
-import com.ua.estore.cgsWeb.repositories.CartRepository;
+import com.ua.estore.cgsWeb.repositories.shop.CartRepository;
 import com.ua.estore.cgsWeb.services.vendor.VendorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +46,17 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public int getCartCount(String userId) {
+    public int getCartCount(String userId)
+    {
         return getOrCreateByUserId(userId).totalQuantity();
+    }
+
+    public void clearCart(String userId) {
+        if (userId == null || userId.isBlank()) return;
+        cartRepository.findByUserId(userId).ifPresent(cart -> {
+            cartRepository.delete(cart);
+            log.info("Cleared cart for user {} (was {} items)", userId, cart.totalQuantity());
+        });
     }
 
     /* ---------- Guest carts ---------- */

@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.services.shop;
 
-import com.ua.estore.cgsWeb.models.Category;
-import com.ua.estore.cgsWeb.repositories.CategoryRepository;
+import com.ua.estore.cgsWeb.models.shop.Category;
+import com.ua.estore.cgsWeb.repositories.shop.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

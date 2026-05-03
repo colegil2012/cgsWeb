@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.models.wrappers;
 
-import com.ua.estore.cgsWeb.models.Product;
+import com.ua.estore.cgsWeb.models.shop.Product;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -56,8 +56,8 @@ const celtechResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	lead_time: 3,
-    logo_url: '/images/vendors/cgs.jpg',
+	leadTime: 3,
+    logoUrl: '/images/vendors/cgs.jpg',
     active: true,
     createdAt: new Date()
 });
@@ -78,8 +78,8 @@ const newAgeResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	lead_time: 3,
-    logo_url: '/images/vendors/nac.jpg',
+	leadTime: 3,
+    logoUrl: '/images/vendors/nac.jpg',
     active: true,
     createdAt: new Date()
 });
@@ -100,8 +100,8 @@ const organicResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	lead_time: 3,
-    logo_url: '/images/vendors/ogc.jpg',
+	leadTime: 3,
+    logoUrl: '/images/vendors/ogc.jpg',
     active: true,
     createdAt: new Date()
 });
@@ -122,8 +122,8 @@ const nattyResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	lead_time: 3,
-    logo_url: '/images/vendors/np.jpg',
+	leadTime: 3,
+    logoUrl: '/images/vendors/np.jpg',
     active: true,
     createdAt: new Date()
 });
@@ -144,8 +144,8 @@ const munsfordResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	lead_time: 3,
-    logo_url: '/images/vendors/mf.png',
+	leadTime: 3,
+    logoUrl: '/images/vendors/mf.png',
     active: true,
     createdAt: new Date()
 });
@@ -585,7 +585,7 @@ const coleId = db.users.findOne({username: "cole"})._id;
 const dariaId = db.users.findOne({username: "daria"})._id;
 const carterId = db.users.findOne({username: "carter"})._id;
 const brynleeId = db.users.findOne({username: "brynlee"})._id;
-const userId = db.users.findOne({username: "test_user"})._id;
+const testUserId = db.users.findOne({username: "test_user"})._id;
 
 db.rateCards.drop();
 db.createCollection("rateCards");

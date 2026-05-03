@@ -16,11 +16,9 @@ layout 'layout.tpl',
             script(src: 'https://sandbox.web.squarecdn.com/v1/square.js') {}
             link(rel: 'stylesheet', href: '/css/pages/checkout.css') },
         content: {
-            def subtotal = cartItems.collect { it.price * it.quantity }.sum() ?: 0.00
-            def shipping = totalShipping ?: 0.00
-            def tax = ( subtotal + shipping ) * 0.07 // Example 7% tax
-            def finalTotal = subtotal + shipping + tax
-            def totalCents = Math.round(finalTotal * 100) as long
+            def initialShipping = 0.00
+            def initialTax = (subtotal + initialShipping) * (taxRate as BigDecimal)
+            def initialTotal = subtotal + initialShipping + initialTax
 
             div(class: 'checkout-page-container') {
 
@@ -38,7 +36,7 @@ layout 'layout.tpl',
 
                                         div(class: 'checkout-vendor-header') {
                                             div(class: 'checkout-vendor-logo') {
-                                                img(src: ImageUrlUtil.resolve(vendor.logo_url, imagesBaseUrl) ?: '/images/placeholder.jpg')
+                                                img(src: ImageUrlUtil.resolve(vendor.logoUrl, imagesBaseUrl) ?: '/images/placeholder.jpg')
                                             }
 
                                             div(class: 'checkout-vendor-name') {
@@ -137,7 +135,7 @@ layout 'layout.tpl',
                 // ===== RIGHT COLUMN: Order Summary and payment 1/3 =====
                 div(class: 'checkout-summary') {
                         h2('Order Summary')
-                        div(class: 'summary-details', id: 'order-summary', 'data-subtotal': subtotal, 'data-tax-rate': 0.07) {
+                        div(class: 'summary-details', id: 'order-summary', 'data-subtotal': subtotal, 'data-tax-rate': taxRate) {
                             div(class: 'summary-row') {
                                 span('Subtotal')
                                 span(class: 'summary-value', id: 'subtotal-value', "\$${String.format('%.2f', subtotal)}")
@@ -156,23 +154,29 @@ layout 'layout.tpl',
 
                             div(class: 'summary-row') {
                                 span('Estimated Tax')
-                                span(class: 'summary-value', id: 'tax-value', "\$${String.format('%.2f', tax)}")
+                                span(class: 'summary-value', id: 'tax-value', "\$${String.format('%.2f', initialTax)}")
                             }
                             hr()
                             div(class: 'summary-row total') {
                                 span('Total')
-                                span(class: 'summary-value', id: 'total-value', "\$${String.format('%.2f', finalTotal)}")
+                                span(class: 'summary-value', id: 'total-value', "\$${String.format('%.2f', initialTotal)}")
                             }
 
                             // Form Submit, hidden fields for checkout
                             form(id: 'payment-form', method: 'POST', action: '/checkout/submit') {
+                                input(
+                                        type: 'hidden',
+                                        name: (csrfParamName ?: '_csrf'),
+                                        value: (csrfToken ?: '')
+                                )
                                 input(type: 'hidden', name: 'sourceId', id: 'source-id')
                                 input(type: 'hidden', name: 'totalCents', id: 'total-cents', value: totalCents)
                                 input(type: 'hidden', name: 'tipCents', value: '0')
                                 input(type: 'hidden', name: 'selectedAddress', id: 'selected-address-input')
+                                input(type: 'hidden', name: 'deliveryInstructions', id: 'delivery-instructions-input')
+                                input(type: 'hidden', name: 'idempotencyKey', id: 'idempotency-key-input')
 
-                                button(id: 'card-button', type: 'button', class: 'btn-checkout',
-                                        "Checkout")
+                                button(id: 'card-button', type: 'button', class: 'btn-checkout', "Checkout")
                             }
                             div(class: 'checkout-footer') {
                                 span(class: 'spacer') {}
@@ -185,7 +189,11 @@ layout 'layout.tpl',
                     }
                 }
 
+            include template: 'partials/checkout-confirm-modal.tpl'
+
             script(src: '/scripts/shop/checkout.js') {}
+            script(src: '/scripts/shop/checkout-confirm.js') {}
+            script(src: '/scripts/shop/checkout-submit.js') {}
 
             script {
                 yieldUnescaped """

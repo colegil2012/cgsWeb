@@ -43,6 +43,38 @@
     color: var(--earth-brown);
 }
 
+.modal-overlay .form-control select {
+    width: 100%;
+    color: #1f2937;                    /* same body text colour as inputs */
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 10px 36px 10px 12px;      /* extra right padding for the chevron */
+    font: inherit;
+    line-height: 1.4;
+    appearance: none;                  /* drop native chevron so ours is consistent */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Inline SVG chevron, sized to match the rounded look of the text inputs. */
+    background: #ffffff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'><path d='M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z'/></svg>") no-repeat right 12px center;
+    background-size: 16px 16px;
+
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-overlay .form-control select:focus {
+    outline: none;
+    border-color: rgba(37, 99, 235, 0.55);  /* tweak to your brand accent */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.modal-overlay .form-control select:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
 /* Address modal: compact + scrollable */
 #updateAddressOverlay .modal {
     max-width: 860px;              /* wider so 2-column fields fit */
@@ -182,4 +214,88 @@
     width: 16px;
     height: 16px;
     margin: 0;
+}
+
+/* The confirm modal is a touch wider than the address one because we render a
+   full order summary inside. Bump the cap accordingly without affecting other
+   modals. */
+#confirmOrderOverlay .modal {
+    max-width: 560px;
+    width: 100%;
+}
+
+.modal-confirm-order .confirm-section {
+    margin-top: 16px;
+}
+
+.modal-confirm-order .confirm-section h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.95rem;
+    color: var(--dark-green);
+    border: none;
+}
+
+/* ---- Deliver-to readonly preview ------------------------------------------ */
+
+.modal-confirm-order .confirm-deliver-to {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    border-radius: 10px;
+    padding: 10px 14px;
+    line-height: 1.45;
+}
+
+.modal-confirm-order .confirm-line {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.modal-confirm-order .confirm-line#confirm-deliver-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* ---- Delivery instructions textarea --------------------------------------- */
+
+.modal-confirm-order textarea#confirm-delivery-instructions {
+    width: 100%;
+    min-height: 70px;
+    resize: vertical;
+    background: #fff;
+    color: #1f2937;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font: inherit;
+    line-height: 1.4;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-confirm-order textarea#confirm-delivery-instructions:focus {
+    outline: none;
+    border-color: rgba(37, 99, 235, 0.55);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.modal-confirm-order .confirm-instruction-counter {
+    display: block;
+    text-align: right;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- Action button row ----------------------------------------------------- */
+
+.modal-confirm-order .confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.modal-confirm-order .btn-confirm-order {
+    width: auto;            /* override the global .btn 100%-width if any */
+    min-width: 160px;
 }

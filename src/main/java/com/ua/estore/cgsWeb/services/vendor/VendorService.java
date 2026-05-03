@@ -1,7 +1,7 @@
 package com.ua.estore.cgsWeb.services.vendor;
 
-import com.ua.estore.cgsWeb.models.Vendor;
-import com.ua.estore.cgsWeb.repositories.VendorRepository;
+import com.ua.estore.cgsWeb.models.vendor.Vendor;
+import com.ua.estore.cgsWeb.repositories.vendor.VendorRepository;
 import com.ua.estore.cgsWeb.util.dataUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,7 +48,7 @@ public class VendorService {
         Vendor vendor = vendorRepository.findById(cleanId)
                 .orElseThrow(() -> new IllegalArgumentException("Vendor not found"));
 
-        vendor.setLogo_url(logoUrl);
+        vendor.setLogoUrl(logoUrl);
         vendorRepository.save(vendor);
     }
 
@@ -57,7 +57,7 @@ public class VendorService {
         Vendor vendor = vendorRepository.findById(cleanId)
                 .orElseThrow(() -> new IllegalArgumentException("Vendor not found"));
 
-        vendor.setLead_time(leadTime);
+        vendor.setLeadTime(leadTime);
         vendorRepository.save(vendor);
     }
 }

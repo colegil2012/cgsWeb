@@ -1,6 +1,6 @@
 package com.ua.estore.cgsWeb.util;
 
-import com.ua.estore.cgsWeb.models.Product;
+import com.ua.estore.cgsWeb.models.shop.Product;
 import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.services.vendor.VendorService;
 import lombok.experimental.UtilityClass;

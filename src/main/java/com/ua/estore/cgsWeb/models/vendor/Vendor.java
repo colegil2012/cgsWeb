@@ -1,12 +1,10 @@
-package com.ua.estore.cgsWeb.models;
+package com.ua.estore.cgsWeb.models.vendor;
 
-import lombok.AllArgsConstructor;
+import com.ua.estore.cgsWeb.models.address.Address;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ public class Vendor {
     private String slug;
     private String description;
     private List<Address> addresses = new ArrayList<>();
-    private String logo_url;
-    private int lead_time;
+    private String logoUrl;
+    private int leadTime;
     private boolean active;
 }

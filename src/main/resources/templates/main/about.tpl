@@ -13,9 +13,14 @@ layout 'layout.tpl',
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link( rel: 'stylesheet', href: '/css/pages/about.css') },
         content: {
-            div(class: 'about-hero') {
-                h1('Rooted in Louisville, Growing for You.')
-                p('Bringing the heart of the Kentucky farmers market directly to your doorstep.')
+            div(class: 'hero') {
+                div(class: 'hero-content') {
+                    img(
+                            src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl),
+                            alt: 'Celtech General Store',
+                            class: 'hero-logo float-in'
+                    )
+                }
             }
 
             div(class: 'container') {
@@ -45,7 +50,7 @@ layout 'layout.tpl',
                     h2('Looking Ahead')
                     div(class: 'vision-grid') {
                         div(class: 'vision-card') {
-                            h4('Roadie Integration')
+                            h4('Shipping Integration')
                             p('In the process of Prototyping and developing our own delivery management and tracking system, stay tuned!')
                         }
                         div(class: 'vision-card') {

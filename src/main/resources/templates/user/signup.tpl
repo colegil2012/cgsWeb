@@ -1,5 +1,7 @@
 package templates.user
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 layout 'layout.tpl',
         title: 'CGS Web | Sign Up',
         csrfToken: (csrfToken ?: ''),
@@ -7,10 +9,16 @@ layout 'layout.tpl',
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         imagesBaseUrl: imagesBaseUrl,
         content: {
+
             div(class: 'hero') {
-                h1('New User')
-                p('Register now to start purchasing fresh local produce.')
+                div(class: 'hero-content') {
+                    img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl),
+                            alt: 'Celtech Logo',
+                            class: 'hero-logo float-in')
+                    p('Register now to start purchasing fresh local produce.')
+                }
             }
+
             div(class: 'signup-container') {
                 if (error) div(class: 'alert alert-error', error)
                 if (message) div(class: 'alert alert-success', message)

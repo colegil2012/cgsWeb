@@ -16,8 +16,12 @@ layout 'layout.tpl',
     content: {
         div(class: 'vendor-page-container') {
             div(class: 'hero') {
-                h1 'Our Trusted Partners'
-                p 'Discover the local farms and producers bringing fresh organic produce to your door.'
+                div(class: 'hero-content') {
+                    img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo Middle.png', imagesBaseUrl),
+                            alt: 'Celtech Logo',
+                            class: 'hero-logo float-in')
+                    h3("Our Trusted Vendors")
+                }
             }
             div(class: 'wide-container') {
                 div(class: 'vendor-grid') {

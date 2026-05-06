@@ -1,220 +1,250 @@
-/* /components/buttons.css */
+/* /components/buttons.css
+ *
+ * Single source of truth for every clickable thing on the site.
+ *
+ * Hierarchy:
+ *   .btn               — base button. Solid background, primary action.
+ *   .btn-secondary     — outlined variant (lighter visual weight)
+ *   .btn-ghost         — text-only, used inside cards / table rows
+ *   .btn-danger        — destructive actions
+ *   .btn-small         — size modifier; combine with any variant
+ *   .btn-block         — full-width modifier
+ *   .btn-link          — used on <a> elements that should look like text but
+ *                        are still navigation, not actions
+ *
+ * Combine modifiers freely:  class="btn btn-secondary btn-small btn-block"
+ *
+ * State conventions:
+ *   :hover  — darken / fill / etc. depending on variant
+ *   :active — slight scale-down
+ *   :disabled / .is-disabled — desaturated, no pointer events
+ *   :focus-visible — visible focus ring for keyboard navigation
+ */
+
+/* ============================================================================
+ * Base button
+ * ============================================================================ */
 
 .btn {
-    background-color: var(--earth-brown);
-    color: var(--white);
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: 600;
-    border: none;
+    /* Reset native button quirks. */
+    appearance: none;
+    border: 0;
+    background: none;
+    font-family: inherit;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-    text-align: center;
-}
-
-.btn:hover {
-    background-color: var(--dark-green);
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-.btn-search {
-    flex: 1;
-    background-color: var(--accent-green);
-    color: var(--white);
-    padding: 0.9rem 1.3rem;
-    border-radius: 12px;
-    border: none;
-    font-weight: 500;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s;
-    height: 40px;
-}
-
-.btn-search:hover {
-    background-color: var(--dark-green);
-    transform: translateY(-2px);
-}
-
-.btn-small {
-    background-color: var(--accent-green);
-    color: var(--white);
-    border: none;
-    padding: 0.5rem 1rem;
     text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: inline-block;
-    transition: background-color 0.3s;
-}
 
-.btn-search, .btn-small {
-    cursor: pointer;
-    user-select: none;
-}
-
-.btn-small:hover {
-    background-color: var(--dark-green);
-}
-
-/* Cart Summary Buttons */
-.checkout-summary .ship-to-controls #openUpdateAddress.btn-small {
-    border-radius: 30px;      /* matches your pill-ish inputs */
-    padding: 0.8rem 1rem;     /* similar vertical padding to selects */
-}
-
-/* Quantity Buttons */
-.btn-qty {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    line-height: 22px;
-    text-align: center;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-}
-
-.btn-qty:hover {
-    background-color: #e0e0e0;
-}
-
-/************************** Checkout Button **************************/
-
-.btn-checkout {
-    width: 100%;
-    background-color: var(--accent-green);
-    color: var(--white);
-    padding: 1rem;
-    border: none;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    cursor: pointer;
-
-    text-decoration: none;
-    text-align: center;
+    /* Layout / sizing. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    min-height: 42px;
+
+    /* Type. */
+    font-size: var(--font-md);
+    font-weight: var(--weight-bold);
+    line-height: 1;
+    letter-spacing: 0.2px;
+
+    /* Looks. */
+    background: var(--color-brown-warm);
+    color: var(--color-bg);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition-fast),
+    transform   var(--transition-fast),
+    box-shadow  var(--transition-fast);
 }
 
-.btn-checkout:hover {
-    background-color: var(--dark-green);
-    text-decoration: none;
+.btn:hover  {
+    background: var(--color-brown-deep);
+    color: var(--color-brown-cream);
 }
 
-.checkout-summary .btn-checkout {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 12px;
+.btn:active { transform: scale(0.97); }
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-sm), var(--shadow-glow-green);
 }
 
-.btn-add-row {
-    background: var(--accent-green);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s;
+.btn:disabled,
+.btn.is-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
-.btn-add-row:hover {
-    background: var(--dark-green);
-    transform: scale(1.05);
+/* ============================================================================
+ * Variants
+ * ============================================================================ */
+
+.btn-secondary {
+    background: transparent;
+    color: var(--color-green-deep);
+    border: 1px solid var(--color-green-bright);
 }
 
-.btn-remove-row {
-    width: 28px;
-    height: 28px;
-    display: flex;
+.btn-secondary:hover {
+    background: var(--color-green-soft);
+    color: var(--color-green-deep);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-brown-deep);
+    box-shadow: none;
+}
+
+.btn-ghost:hover {
+    background: var(--color-brown-cream);
+}
+
+.btn-danger {
+    background: transparent;
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.08);
+}
+
+/* ============================================================================
+ * Modifiers
+ * ============================================================================ */
+
+.btn-small {
+    padding: var(--space-2) var(--space-4);
+    min-height: 32px;
+    font-size: var(--font-sm);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Pill-shaped variant — used by the Checkout button and similar full-width CTAs. */
+.btn-pill {
+    border-radius: var(--radius-round);
+}
+
+/* ============================================================================
+ * Specialty buttons (kept here so all buttons live in one file)
+ * ============================================================================ */
+
+/* Quantity steppers in cart. Tight, neutral, paired layout. */
+.btn-qty {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--light-red);
-    color: var(--white);
+    width: 22px;
+    height: 22px;
+    background: var(--color-brown-soft);
+    border: 1px solid var(--color-brown-deep);
+    border-radius: var(--radius-round);
+    color: var(--color-brown-deep);
+    font-weight: var(--weight-bold);
     text-decoration: none;
-    border: 1px solid var(--warning-red);
+    transition: background var(--transition-fast);
+}
+
+.btn-qty:hover {
+    background: var(--color-brown-cream);
+}
+
+.btn-qty.minus:hover {
+    color: var(--color-error);
+}
+
+.btn-qty.plus:hover {
+    color: var(--color-green-deep);
+}
+
+/* Round remove-row affordance. */
+.btn-remove {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-error-soft);
+    color: var(--color-bg);
+    border: 1px solid var(--color-warn);
     border-radius: 50%;
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: var(--font-lg);
+    font-weight: var(--weight-bold);
     cursor: pointer;
-    transition: all 0.2s ease;
     user-select: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: background var(--transition-fast),
+    transform   var(--transition-fast);
 }
 
-.btn-remove-row:hover {
-    background-color: var(--error-red);
-    color: var(--white);
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.2);
-}
+.btn-remove:hover  { background: var(--color-error); transform: scale(1.08); }
+.btn-remove:active { transform: scale(0.95); }
 
-.btn-remove-row:active {
-    transform: scale(0.95);
-}
+/* ============================================================================
+* MIGRATION ALIASES — TODO Phase E: delete after every page is migrated.
+*
+* Old class names map onto new ones so we can migrate page-by-page without
+* breaking anything in the meantime.
+* ============================================================================ */
 
-/* Form Submit Button override */
-button.btn {
+.btn-checkout {
+    /* same as .btn .btn-pill .btn-block */
+    display: block;
     width: 100%;
-    font-size: 1rem;
+    background: var(--color-brown-warm);
+    color: var(--color-bg);
+    padding: var(--space-4);
+    border: 0;
+    border-radius: var(--radius-sm);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-lg);
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+   }
+
+.btn-checkout:hover {
+    background: var(--color-brown-deep);
+    color: var(--color-brown-cream);
 }
 
-
-/************************* Signup Button **************************/
 .signup-btn {
-    background-color: var(--accent-green);
-    font-size: 1rem;
-    color: var(--white);
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: 600;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
+    /* used in login.tpl; remap as .btn-secondary in Phase C */
+    background: var(--color-green-deep);
+    color: var(--color-bg);
 }
 
 .signup-btn:hover {
-    background-color: var(--dark-green);
+    background: var(--color-green-darker);
+    color: var(--color-green-bright);
 }
 
+.btn-save {
+    background: var(--color-green-bright);
+    color: var(--color-bg);
+}
 
-/************************* View All Vendors **************************/
+.btn-save:hover { background: var(--color-green-deep); }
+
 .btn-view-vendor {
     display: inline-block;
-    padding: 0.45rem 1.4rem;
-    margin: 0;
-    background-color: var(--accent-green);
-    color: var(--white);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.4px;
+    padding: var(--space-2) var(--space-6);
+    background: var(--color-green-bright);
+    color: var(--color-bg);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
     text-decoration: none;
-    border-radius: 4px;
-    transition: background 0.2s ease, transform 0.15s ease;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast),
+    transform   var(--transition-fast);
 }
 
 .btn-view-vendor:hover {
-    background: var(--dark-green);
+    background: var(--color-green-deep);
     transform: scale(1.04);
-}
-
-.btn-view-vendor:visited,
-.btn-view-vendor:active {
-    color: var(--white);
-    text-decoration: none;
 }

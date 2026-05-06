@@ -1,3 +1,21 @@
+/* /css/components/mobile.css
+ *
+ * SHRINKING. Each component should own its own responsive rules in the
+ * same file as the component. This file is the catch-all for legacy rules
+ * that haven't been migrated yet — when this file is empty, delete it.
+ *
+ * Migrated out:
+ *   .cart-page-container       → pages/cart.css
+ *   .checkout-page-container   → pages/checkout.css
+ *   .checkout-summary          → components/order-summary.css
+ *   .ship-to-controls          → components/order-summary.css
+ *
+ * Still here (TODO migration):
+ *   .vendor-settings-*         → vendor.css when that page is migrated
+ *   .about-section.split       → about.css
+ *   .account-tabs-*            → account.css when that page is migrated
+ */
+
 @media (max-width: 520px) {
     .vendor-settings-wrap {
         padding: 0 1rem;
@@ -8,18 +26,6 @@
     }
 }
 
-@media (max-width: 600px) {
-  .checkout-summary .ship-to-controls {
-    flex-direction: column;
-  }
-
-  .checkout-summary .ship-to-controls #shipping-dropdown,
-  .checkout-summary .ship-to-controls #openUpdateAddress {
-    flex: 1 1 auto;
-    width: 100%;
-  }
-}
-
 @media (max-width: 768px) {
     .about-section.split, .about-section.split.reverse {
         flex-direction: column;
@@ -28,26 +34,6 @@
 }
 
 @media (max-width: 900px) {
-    .cart-page-container {
-        flex-direction: column;
-    }
-
-    .checkout-summary {
-        width: 100%;
-        position: static;
-        box-sizing: border-box;
-    }
-
-    .checkout-page-container {
-        flex-direction: column;
-    }
-
-    .checkout-summary {
-        width: 100%;
-        position: static;
-        box-sizing: border-box;
-    }
-
     .account-tabs-layout {
         grid-template-columns: 1fr;
     }

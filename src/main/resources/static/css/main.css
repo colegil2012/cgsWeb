@@ -1,30 +1,149 @@
-/* /css/main.css */
-/* Global Styles */
+/* /css/main.css
+ *
+ * Design tokens + base resets. Every other stylesheet in the project pulls
+ * from these custom properties. To rebrand or rescale the site, edit this
+ * file and nothing else.
+ *
+ * Naming convention:
+ *   --color-*       palette slot (named by role, not value)
+ *   --space-*       8-point spacing scale (4 / 8 / 12 / 16 / 24 / 32 / 48 / 64)
+ *   --radius-*      corner-radius ramp (sm / md / lg / xl / round)
+ *   --shadow-*      depth ramp (sm / md / lg)
+ *   --font-*        type scale (sm / md / lg / xl / xxl)
+ *   --weight-*      font weights (regular / medium / bold)
+ *   --transition-*  shared timing+easing tuples
+ *   --layer-*       z-index ramp (avoid magic numbers in components)
+ */
 
 :root {
-    --primary-green: #e8f5e9;
-    --secondary-green: #1d4f1e;
-    --accent-green: #689f38;
-    --dark-green: #33691e;
+    /* ---- Brand palette (semantic names — value here, role at use sites) -- */
+    --color-bg:               #ffffff;
+    --color-bg-soft:          #faf6f3;     /* a hair off-white for sections */
+    --color-bg-tinted:        #e8f5e9;     /* light green wash */
+    --color-text:             #2e3440;
+    --color-text-muted:       #6b6258;
 
-    --test-green: #008000;
+    --color-green-soft:       #e8f5e9;     /* was --primary-green */
+    --color-green-mid:        #c8e6c9;
+    --color-green-bright:     #689f38;     /* was --accent-green */
+    --color-green-deep:       #33691e;     /* was --dark-green */
+    --color-green-darker:     #1d4f1e;     /* was --secondary-green */
 
-    --soft-brown: #d7ccc8;
-    --earth-brown: #5A3A1E;
-    --light-brown: #7A4F2A;
-    --accent-brown: #faf6f3;
+    --color-brown-soft:       #d7ccc8;     /* was --soft-brown */
+    --color-brown-cream:      #faf6f3;     /* was --accent-brown */
+    --color-brown-warm:       #7A4F2A;     /* was --light-brown */
+    --color-brown-deep:       #5A3A1E;     /* was --earth-brown */
 
-    --primary-blue: #3366ff;
-    --accent-blue: #809fff;
+    --color-blue-mid:         #3366ff;
+    --color-blue-soft:        #809fff;
 
-    --text-color: #2e3440;
-    --white: #ffffff;
-    --glow: #9dfa78;
+    --color-warn:             #ff6666;
+    --color-warn-soft:        #fff3f3;
+    --color-error:            #ff0000;
+    --color-error-soft:       #f56767;
+    --color-success:          #2e7d32;
+    --color-info:             #1f6feb;
 
-    --warning-red: #ff6666;
-    --warning-bg: #fff3f3;
-    --error-red: #ff0000;
-    --light-red: #f56767;
+    /* Aliases preserved so existing pages don't break during migration. */
+    --primary-green:    var(--color-green-soft);
+    --secondary-green:  var(--color-green-darker);
+    --accent-green:     var(--color-green-bright);
+    --dark-green:       var(--color-green-deep);
+    --soft-brown:       var(--color-brown-soft);
+    --earth-brown:      var(--color-brown-deep);
+    --light-brown:      var(--color-brown-warm);
+    --accent-brown:     var(--color-brown-cream);
+    --primary-blue:     var(--color-blue-mid);
+    --accent-blue:      var(--color-blue-soft);
+    --text-color:       var(--color-text);
+    --white:            var(--color-bg);
+    --warning-red:      var(--color-warn);
+    --warning-bg:       var(--color-warn-soft);
+    --error-red:        var(--color-error);
+    --light-red:        var(--color-error-soft);
+    --glow:             #9dfa78;
+
+    /* ---- Spacing — 8px base, with a 4px micro-step for tight UI ---------- */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+    --space-16: 64px;
+
+    /* ---- Radius ----------------------------------------------------------- */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --radius-round: 999px;
+
+    /* ---- Shadow depth (warm-tinted to fit the palette) -------------------- */
+    --shadow-sm:  0 1px 2px  rgba(45, 30, 20, 0.06);
+    --shadow-md:  0 4px 12px rgba(45, 30, 20, 0.10);
+    --shadow-lg:  0 12px 28px rgba(45, 30, 20, 0.14);
+    --shadow-glow-green: 0 0 0 3px rgba(104, 159, 56, 0.18);
+
+    /* ---- Type scale (rem-based; 1rem == 16px by default) ------------------ */
+    --font-family-base:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-family-display: 'Georgia', 'Times New Roman', serif;
+    --font-sm:    0.85rem;
+    --font-md:    1rem;
+    --font-lg:    1.15rem;
+    --font-xl:    1.5rem;
+    --font-xxl:   2.25rem;
+    --font-hero:  3rem;
+
+    --weight-regular: 400;
+    --weight-medium:  500;
+    --weight-bold:    700;
+
+    --image-sm-width:    100px;
+    --image-md-width:    250px;
+    --image-lg-width:    450px;
+
+    --line-tight:  1.2;
+    --line-base:   1.5;
+    --line-loose:  1.75;
+
+    /* ---- Motion ----------------------------------------------------------- */
+    --transition-fast:   150ms ease;
+    --transition-base:   250ms ease;
+    --transition-slow:   400ms ease;
+    --easing-spring:     cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* ---- Z-index ramp ---------------------------------------------------- */
+    --layer-base:    1;
+    --layer-sticky:  100;
+    --layer-header:  1000;
+    --layer-modal:   5000;
+    --layer-toast:   6000;
+
+    /* ---- Layout widths --------------------------------------------------- */
+    --container-narrow: 720px;
+    --container-base:   1100px;
+    --container-wide:   1400px;
+}
+
+/* ---- Base resets / global typography -------------------------------------- */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-md);
+    line-height: var(--line-base);
+    color: var(--color-text);
+    background: var(--color-bg);
 }
 
 main {
@@ -32,60 +151,126 @@ main {
     display: block;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    background-color: var(--white);
-    color: var(--text-color);
+h1, h2, h3, h4 {
+    margin: 0 0 var(--space-3) 0;
+    color: var(--color-green-deep);
+    font-family: var(--font-family-display);
+    font-weight: var(--weight-bold);
+    line-height: var(--line-tight);
 }
+
+h1 { font-size: var(--font-hero); }
+h2 { font-size: var(--font-xl); }
+h3 { font-size: var(--font-lg); }
+h4 { font-size: var(--font-md); }
+
+p {
+    margin: 0 0 var(--space-3) 0;
+}
+
+a {
+    color: var(--color-green-deep);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-green-bright);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ---- Layout primitives --------------------------------------------------- */
 
 .container {
-    max-width: 1200px;
+    max-width: var(--container-base);
     margin: 0 auto;
-    padding: 2rem;
+    padding: var(--space-6) var(--space-4);
 }
 
-.wide-container {
-    max-width: 1400px;
-    margin: 1rem auto;
-    padding: 0 2rem;
+.container-narrow {
+    max-width: var(--container-narrow);
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-4);
 }
 
-/* Hero Styles */
+.container-wide {
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-4);
+}
+
+/* ---- Hero (used as a page header on home, shop, vendor portal etc.) ------ */
+
 .hero {
-    background: linear-gradient(to bottom, var(--white), var(--primary-green));
-    padding: 4rem 2rem;
+    background: radial-gradient(circle,
+    var(--color-green-deep) 0%,
+    var(--color-green-darker) 100%);
+    padding: var(--space-16) var(--space-4) var(--space-12);
     text-align: center;
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: var(--space-16);
+    border-bottom-right-radius: var(--space-16);
+    border-bottom: var(--space-1) solid var(--color-brown-deep);
 }
 
-.hero h1 {
-    color: var(--dark-green);
-    font-size: 3rem;
-    margin: 0 0 1rem 0;
+.hero-content {
+    max-width: var(--container-narrow);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
 }
 
-/* Typography */
-h2 {
-    color: var(--dark-green);
-    border-bottom: 2px solid var(--primary-green);
-    padding-bottom: 0.5rem;
-    margin-top: 2rem;
+.hero-content h3 {
+    color: var(--color-brown-soft);
+    font-size: var(--font-lg);
+    font-style: italic;
+    font-weight: var(--weight-bold);
+    line-height: var(--line-tight);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+.hero-logo {
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+    filter: drop-shadow(0 8px 18px rgba(46, 125, 50, 0.15));
+}
+
+.hero-tagline {
+    margin: 0;
+    font-size: var(--font-lg);
+    color: var(--color-brown-cream);
+    font-style: italic;
+    max-width: 32em;
+    line-height: var(--line-base);
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+    margin-top: var(--space-2);
+}
+
+/* ---- Read-only text decorations (preserved from your existing main.css) -- */
 
 .readonly-box {
     background: #f4f4f4;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-3);
     color: #333;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    font-size: 0.8rem;
+    font-family: var(--font-family-base);
+    font-size: var(--font-sm);
     display: block;
     width: 100%;
-    box-sizing: border-box;
-    margin-left: 0rem;
 }
 
 .readonly-checkbox {
@@ -95,7 +280,7 @@ h2 {
     height: 16px;
     background: #f4f4f4;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     cursor: default;
     pointer-events: none;
     position: relative;
@@ -110,50 +295,21 @@ h2 {
     transform: translate(-50%, -50%);
     font-size: 0.75rem;
     color: #333;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
-/* Shared Checkout Styles */
-.checkout-summary {
-  flex: 1;
-  background: var(--white);
-  padding: 2rem;
-  border-radius: 16px;
-  border: 1px solid var(--soft-brown);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 100px;
-}
+@media (max-width: 640px) {
+    .hero {
+        padding: var(--space-12) var(--space-3) var(--space-8);
+        border-bottom-left-radius: var(--space-8);
+        border-bottom-right-radius: var(--space-8);
+    }
 
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  color: var(--text-color);
-}
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
 
-.summary-row.total {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: var(--dark-green);
-  margin-top: 1rem;
-}
-
-.spacer {
-  flex: 1;
-  width: 100%;
-}
-
-.checkout-footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  margin-top: 0.5rem;
-}
-
-.checkout-footer img {
-  flex: 1;
-  max-width: 75px;
+    .hero-actions .btn {
+        width: 100%;
+    }
 }

@@ -16,6 +16,11 @@ header {
     z-index: 1000;
 }
 
+.header-image {
+    width: 100%;
+    max-width: var(--image-sm-width);
+}
+
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
@@ -82,7 +87,7 @@ nav ul li.nav-dropdown .nav-dropdown-menu li {
 
 nav ul li.nav-dropdown .nav-dropdown-menu a {
     display: block;
-    color: var(--dark-brown);
+    color: var(--earth-brown);
     padding: 0.6rem 1rem;
     white-space: nowrap;
 }

@@ -11,7 +11,10 @@ layout 'layout.tpl',
         csrfToken: (csrfToken ?: ''),
         csrfParamName: (csrfParamName ?: '_csrf'),
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
-        headContent: { link(rel: 'stylesheet', href: '/css/pages/cart.css') },
+        headContent: {
+            link(rel: 'stylesheet', href: '/css/pages/cart.css')
+            link(rel: 'stylesheet', href: '/css/pages/order-summary.css')
+        },
         content: {
             //Calculate total, subtotal and tax
             def subtotal = cartItems.collect { it.price * it.quantity }.sum() ?: 0.00
@@ -23,9 +26,18 @@ layout 'layout.tpl',
                 div(class: 'empty-cart-message') {
                     h3('Your cart is empty!')
                     p('It looks like you haven\'t added any products to your cart yet.')
-                    a(href: '/shop', class: 'btn-search', 'Start Shopping')
+                    a(href: '/shop', class: 'btn', 'Start Shopping')
                 }
             } else {
+
+                div(class: 'hero') {
+                    div(class: 'hero-content') {
+                        img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo Middle.png', imagesBaseUrl),
+                                alt: 'Celtech Logo',
+                                class: 'hero-logo float-in')
+                        h3("Secure Checkout")
+                    }
+                }
 
                 div(class: 'cart-page-container') {
                     div(class: 'cart-main') {
@@ -37,11 +49,12 @@ layout 'layout.tpl',
                                 cartItems.each { item ->
                                     div(class: 'cart-card') {
                                         div(class: "cart-card-section") {
-                                            img(src: ImageUrlUtil.resolve(item.imageUrl, imagesBaseUrl) ?: '/images/placeholder.jpg', alt: item.name)
+                                            img(src: ImageUrlUtil.resolve(item.imageUrl, imagesBaseUrl) ?: '/images/placeholder.jpg',
+                                                    alt: item.name)
                                         }
                                         div(class: "cart-card-section") {
                                             p(class: 'cart-product-name', item.name)
-                                            p(class: 'cart-product-vendor', "By: ${item.vendorName}")
+                                            p(class: 'cart-product-vendor', "From ${item.vendorName}")
                                         }
                                         div(class: "cart-card-section") {
                                             p(class: 'cart-product-price', item.price)
@@ -57,12 +70,13 @@ layout 'layout.tpl',
                         }
                     }
 
+                    // order-summary.js / share style with checkout
                     div(class: 'checkout-summary') {
                         h2('Order Summary')
-                        div(class: 'summary-details',
-                            id: 'order-summary',
-                            'data-subtotal': subtotal,
-                            'data-tax-rate': 0.07
+                        div(class: 'order-summary summary-details',
+                                id: 'order-summary',
+                                'data-subtotal': subtotal,
+                                'data-tax-rate': 0.07
                         ) {
                             div(class: 'summary-row') {
                                 span('Subtotal')
@@ -91,7 +105,7 @@ layout 'layout.tpl',
                         }
 
                         div(class: 'cart-actions-block') {
-                            div(class: 'filter-group ship-to-row') {
+                            div(class: 'ship-to-row') {
                                 label(for: 'shipping-dropdown', 'Deliver To...')
 
                                 div(class: 'ship-to-controls') {
@@ -114,18 +128,15 @@ layout 'layout.tpl',
                                         }
                                     }
 
-                                    button(type: 'button', class: 'btn-small', id: 'openUpdateAddress', 'Edit')
+                                    button(type: 'button', class: 'btn btn-small', id: 'openUpdateAddress', 'Edit')
                                 }
                             }
 
-                            a(id: 'checkout-link', href: '/checkout', class: 'btn-checkout', 'Proceed to Checkout')
+                            a(id: 'checkout-link', href: '/checkout', class: 'btn btn-pill btn-block', 'Proceed to Checkout')
                         }
                         div(class: 'checkout-footer') {
-                            span(class: 'spacer') {}
-                            img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl), alt: 'Delivery provided by Celtech General Store')
-                            span(class: 'spacer') {}
-                            img(src: ImageUrlUtil.resolve('/images/site-images/Square_Logo_2025_Black.png', imagesBaseUrl), alt: 'Secure Checkout provided by Square')
-                            span(class: 'spacer') {}
+                            img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl),
+                                    alt: 'Delivery provided by Celtech General Store')
                         }
                     }
                     include template: 'partials/user-address-modal.tpl'
@@ -134,4 +145,3 @@ layout 'layout.tpl',
             script(src: '/scripts/shop/cart.js') {}
             script(src: '/scripts/address/address-update.js') {}
         }
-

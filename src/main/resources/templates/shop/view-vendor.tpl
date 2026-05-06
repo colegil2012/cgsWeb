@@ -50,9 +50,9 @@ layout 'layout.tpl',
                                     div(class: 'product-info') {
                                         div(class: 'product-title') {
                                             p(class: 'title-name', product.name)
-                                            span(class: 'category', product.categoryName)
+                                            span(class: 'category-tag', product.categoryName)
                                         }
-                                        p(class: 'description', product.description)
+                                        p(class: 'product-description', product.description)
 
                                     }
 

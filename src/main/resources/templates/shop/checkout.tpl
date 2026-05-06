@@ -14,11 +14,22 @@ layout 'layout.tpl',
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: {
             script(src: 'https://sandbox.web.squarecdn.com/v1/square.js') {}
-            link(rel: 'stylesheet', href: '/css/pages/checkout.css') },
+            link(rel: 'stylesheet', href: '/css/pages/checkout.css')
+            link(rel: 'stylesheet', href: '/css/pages/order-summary.css')
+        },
         content: {
             def initialShipping = 0.00
             def initialTax = (subtotal + initialShipping) * (taxRate as BigDecimal)
             def initialTotal = subtotal + initialShipping + initialTax
+
+            div(class: 'hero') {
+                div(class: 'hero-content') {
+                    img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo Middle.png', imagesBaseUrl),
+                            alt: 'Celtech Logo',
+                            class: 'hero-logo float-in')
+                    h3("Secure Checkout")
+                }
+            }
 
             div(class: 'checkout-page-container') {
 
@@ -68,7 +79,7 @@ layout 'layout.tpl',
                         if (addresses.isEmpty()) {
                             p(class: 'checkout-no-address', 'No saved addresses. Please add one in your account.')
                         } else {
-                            div(class: 'filter-group') {
+                            div(class: 'checkout-address-field') {
                                 label(for: 'checkout-address-select', 'Deliver to:')
                                 select(id: 'checkout-address-select', name: 'selectedAddress', class: 'checkout-select') {
                                     addresses.each { addr ->
@@ -90,14 +101,15 @@ layout 'layout.tpl',
                                     strong("${user.profile.firstName} ${user.profile.lastName}")
                                 }
                                 p(id: 'selected-address-street-1', class: 'address-preview-line', defaultAddr.street1 ?: '')
-                                p(id: 'selected-address-street-2', class: 'address-preview-line',
-                                        style: defaultAddr.street2 ? '' : 'display: none;',
+                                p(id: 'selected-address-street-2',
+                                        class: 'address-preview-line' + (defaultAddr.street2 ? '' : ' is-hidden'),
                                         defaultAddr.street2 ?: '')
                                 p(id: 'selected-address-city-state-zip', class: 'address-preview-line', "${defaultAddr.city}, ${defaultAddr.state} ${defaultAddr.zip}")
                             }
 
                             div(class: 'checkout-section-note') {
-                                img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl), alt: 'Delivery provided by Celtech General Store')
+                                img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl),
+                                        alt: 'Delivery provided by Celtech General Store')
                             }
                         }
                     }
@@ -132,62 +144,59 @@ layout 'layout.tpl',
                     }
                 }
 
-                // ===== RIGHT COLUMN: Order Summary and payment 1/3 =====
+                // order-summary.css / shared styling with cart
                 div(class: 'checkout-summary') {
-                        h2('Order Summary')
-                        div(class: 'summary-details', id: 'order-summary', 'data-subtotal': subtotal, 'data-tax-rate': taxRate) {
-                            div(class: 'summary-row') {
-                                span('Subtotal')
-                                span(class: 'summary-value', id: 'subtotal-value', "\$${String.format('%.2f', subtotal)}")
-                            }
+                    h2('Order Summary')
+                    div(class: 'order-summary summary-details', id: 'order-summary', 'data-subtotal': subtotal, 'data-tax-rate': taxRate) {
+                        div(class: 'summary-row') {
+                            span('Subtotal')
+                            span(class: 'summary-value', id: 'subtotal-value', "\$${String.format('%.2f', subtotal)}")
+                        }
 
-                            div(id: 'shipping-estimates') {
-                                if (shippingEstimates) {
-                                    shippingEstimates.each { estimate ->
-                                        div(class: 'summary-row shipping-detail') {
-                                            span("Shipping")
-                                            span(class: 'summary-value', "\$${String.format('%.2f', estimate.cost)}")
-                                        }
+                        div(id: 'shipping-estimates') {
+                            if (shippingEstimates) {
+                                shippingEstimates.each { estimate ->
+                                    div(class: 'summary-row shipping-detail') {
+                                        span("Shipping")
+                                        span(class: 'summary-value', "\$${String.format('%.2f', estimate.cost)}")
                                     }
                                 }
                             }
+                        }
 
-                            div(class: 'summary-row') {
-                                span('Estimated Tax')
-                                span(class: 'summary-value', id: 'tax-value', "\$${String.format('%.2f', initialTax)}")
-                            }
-                            hr()
-                            div(class: 'summary-row total') {
-                                span('Total')
-                                span(class: 'summary-value', id: 'total-value', "\$${String.format('%.2f', initialTotal)}")
-                            }
+                        div(class: 'summary-row') {
+                            span('Estimated Tax')
+                            span(class: 'summary-value', id: 'tax-value', "\$${String.format('%.2f', initialTax)}")
+                        }
+                        hr()
+                        div(class: 'summary-row total') {
+                            span('Total')
+                            span(class: 'summary-value', id: 'total-value', "\$${String.format('%.2f', initialTotal)}")
+                        }
 
-                            // Form Submit, hidden fields for checkout
-                            form(id: 'payment-form', method: 'POST', action: '/checkout/submit') {
-                                input(
-                                        type: 'hidden',
-                                        name: (csrfParamName ?: '_csrf'),
-                                        value: (csrfToken ?: '')
-                                )
-                                input(type: 'hidden', name: 'sourceId', id: 'source-id')
-                                input(type: 'hidden', name: 'totalCents', id: 'total-cents', value: totalCents)
-                                input(type: 'hidden', name: 'tipCents', value: '0')
-                                input(type: 'hidden', name: 'selectedAddress', id: 'selected-address-input')
-                                input(type: 'hidden', name: 'deliveryInstructions', id: 'delivery-instructions-input')
-                                input(type: 'hidden', name: 'idempotencyKey', id: 'idempotency-key-input')
+                        // Form Submit, hidden fields for checkout
+                        form(id: 'payment-form', method: 'POST', action: '/checkout/submit') {
+                            input(
+                                    type: 'hidden',
+                                    name: (csrfParamName ?: '_csrf'),
+                                    value: (csrfToken ?: '')
+                            )
+                            input(type: 'hidden', name: 'sourceId', id: 'source-id')
+                            input(type: 'hidden', name: 'totalCents', id: 'total-cents', value: totalCents)
+                            input(type: 'hidden', name: 'tipCents', value: '0')
+                            input(type: 'hidden', name: 'selectedAddress', id: 'selected-address-input')
+                            input(type: 'hidden', name: 'deliveryInstructions', id: 'delivery-instructions-input')
+                            input(type: 'hidden', name: 'idempotencyKey', id: 'idempotency-key-input')
 
-                                button(id: 'card-button', type: 'button', class: 'btn-checkout', "Checkout")
-                            }
-                            div(class: 'checkout-footer') {
-                                span(class: 'spacer') {}
-                                img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl), alt: 'Delivery provided by Celtech General Store')
-                                span(class: 'spacer') {}
-                                img(src: ImageUrlUtil.resolve('/images/site-images/Square_Logo_2025_Black.png', imagesBaseUrl), alt: 'Secure Checkout provided by Square')
-                                span(class: 'spacer') {}
-                            }
+                            button(id: 'card-button', type: 'button', class: 'btn btn-pill btn-block', "Checkout")
+                        }
+                        div(class: 'checkout-footer') {
+                            img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl),
+                                    alt: 'Delivery provided by Celtech General Store')
                         }
                     }
                 }
+            }
 
             include template: 'partials/checkout-confirm-modal.tpl'
 

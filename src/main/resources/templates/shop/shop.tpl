@@ -13,19 +13,26 @@ layout 'layout.tpl',
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/shop.css') },
         content: {
-            div(class: 'hero') {
-                img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'logo-image')
-            }
-            div(class: 'filter-container') {
-                form(action: '/shop/filter', method: 'get', class: 'filter-form') {
 
-                    div(class: 'search-container') {
-                        div(class: 'filter-group') {
+            /* ------ Hero -----------------------------------------*/
+            div(class: 'hero') {
+                div(class: 'hero-content') {
+                    img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo Middle.png', imagesBaseUrl),
+                            alt: 'Celtech Logo',
+                            class: 'hero-logo float-in')
+                    }
+            }
+
+            div(class: 'shop-filter') {
+                form(action: '/shop/filter', method: 'get', class: 'shop-filter-form') {
+
+                    div(class: 'shop-filter-container') {
+                        div(class: 'shop-filter-field') {
                             label(for: 'searchInput', 'Search')
                             input(type: 'text', id: 'searchInput', name: 'search', placeholder: 'Find a product...')
                         }
 
-                        div(class: 'filter-group') {
+                        div(class: 'shop-filter-field') {
                             label(for: 'categoryFilter', 'Filter by Category: ')
                             select(id: 'categoryFilter', name: 'category') {
                                 option(value: '', 'All Categories')
@@ -35,7 +42,7 @@ layout 'layout.tpl',
                             }
                         }
 
-                        div(class: 'filter-group') {
+                        div(class: 'shop-filter-field') {
                             label(for: 'vendorFilter', 'Filter by Vendor: ')
                             select(id: 'vendorFilter', name: 'vendor') {
                                 option(value: '', 'All Vendors')
@@ -46,54 +53,51 @@ layout 'layout.tpl',
                         }
                     }
 
-                    div(class: 'btn-container') {
-                        div(class: 'checkbox-group') {
+                    div(class: 'shop-filter-actions') {
+                        div(class: 'shop-filter-toggle') {
                             label(for: 'lowStock', 'Low Stock!')
                             input(type: 'checkbox', id: 'lowStock', name: 'lowStock', value: 'true')
                         }
 
-                        div(class: 'btn-group') {
-                            button(type: 'submit', class: 'btn-search') {
-                                span('Apply')
-                            }
-                        }
+                        button(type: 'submit', class: 'btn btn-pill', 'Apply')
                     }
                 }
             }
 
-            div(class: 'wide-container') {
+            div(class: 'container-wide') {
                 div(class: 'product-grid') {
                     products.each { product ->
                         div(class: 'product-card') {
                             a(href: "/shop/view/${product.id}", class: 'product-image-link') {
-                                img(src: ImageUrlUtil.resolve(product.imageUrl, imagesBaseUrl), alt: product.name)
+                                img(src: ImageUrlUtil.resolve(product.imageUrl, imagesBaseUrl),
+                                        alt: product.name)
                             }
                             div(class: 'product-info') {
                                 div(class: 'product-title') {
                                     span(class: 'title-name', product.name)
-                                    span(class: 'category', product.categoryName)
+                                    span(class: 'category-tag', product.categoryName)
                                 }
                                 div(class: 'product-meta') {
                                     a(href: "/vendor/${product.vendorId}", class: 'vendor-tag') {
                                         span("By: ${product.vendorName}")
                                     }
-                                }
-                                p(class: 'description', product.description)
+                                    p(class: 'product-description', product.description)
 
-                                if(product.stock < product.lowStockThreshold) {
-                                    div(class: 'warning-wrapper') {
-                                        span(class: 'low-stock-warn', "Low Stock! Only ${product.stock} left!")
-                                    }
-                                } else {
-                                    div(class: 'spacing-wrapper') {
+                                    if (product.stock < product.lowStockThreshold) {
+                                        div(class: 'warning-wrapper') {
+                                            span(class: 'low-stock-warn', "Low Stock! Only ${product.stock} left!")
+                                        }
+                                    } else {
+                                        div(class: 'spacing-wrapper') {
 
+                                        }
                                     }
                                 }
                             }
 
-                            div(class: 'product-footer') {
+                            div(class: 'product-card-footer') {
                                 span(class: 'price', "\$${product.price}")
-                                button(class: 'btn-small', onclick: "addToCart('${product.id}')", 'Add to Cart')
+                                button(class: 'btn btn-small', onclick: "addToCart('${product.id}')", 'Add to Cart')
                             }
                         }
                     }

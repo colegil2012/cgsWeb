@@ -91,7 +91,7 @@
 
     if (email && emailFeedback) {
       email.addEventListener('input', () =>
-        updateFeedback(email, emailFeedback, 'Please enter a valid email (e.g., name@example.com).')
+          updateFeedback(email, emailFeedback, 'Please enter a valid email (e.g., name@example.com).')
       );
     }
 
@@ -254,26 +254,14 @@
     async function checkUsernameAvailability(value) {
       const trimmed = value.trim();
 
+      // Empty input: abort any in-flight check, reset state to idle, leave
+      // submit disabled. No fetch — there's nothing to check yet.
       if (!trimmed) {
         lastValueChecked = '';
         lastConfirmedAvailableValue = '';
         if (inFlightController) inFlightController.abort();
         setUsernameStatus(usernameStatus, usernameFeedback, 'idle');
         setSubmitEnabled(false);
-        try {
-          const csrfHeaders = (window.CGS && window.CGS.csrfHeaders) ? window.CGS.csrfHeaders() : {};
-          const res = await fetch('/signup/checkUsername', {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-              ...csrfHeaders,
-              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-            body: new URLSearchParams({ username: trimmed }).toString(),
-            signal: inFlightController.signal,
-          });
-
-          if (!res.ok) throw new Error('Non-OK response');
         return;
       }
 
@@ -289,9 +277,14 @@
       setSubmitEnabled(false);
 
       try {
+        const csrfHeaders = (window.CGS && window.CGS.csrfHeaders) ? window.CGS.csrfHeaders() : {};
         const res = await fetch('/signup/checkUsername', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          credentials: 'same-origin',
+          headers: {
+            ...csrfHeaders,
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
           body: new URLSearchParams({ username: trimmed }).toString(),
           signal: inFlightController.signal,
         });

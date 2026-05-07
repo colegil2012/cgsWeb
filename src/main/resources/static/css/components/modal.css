@@ -1,301 +1,500 @@
-/* /components/modal.css */
+/* /css/components/modal.css
+ *
+ * Site-wide modal system. Shared shell + a few small components, plus
+ * narrow per-modal overrides scoped by ID where the layout genuinely
+ * differs (the address modal is wider with a two-column field grid; the
+ * confirm-order modal has a status panel that takes over the body).
+ *
+ * Visual direction: the modal floats above the page with more pop than a
+ * .checkout-section but still uses the same brand vocabulary — white bg,
+ * brown-soft border, green-soft underline under headers, brand brown for
+ * accents. Heavy popover shadow is preserved on purpose so the modal
+ * reads as floating, not pasted-in.
+ *
+ * Class hierarchy:
+ *   .modal-overlay              — fixed dim backdrop + flex-centered viewport
+ *     .modal                    — the floating panel itself
+ *       .modal-header           — title row with close button
+ *       .modal-section          — one labelled section inside (h4 + body)
+ *       .modal-section-header   — "Add New Addresses" + button row helper
+ *       .modal-actions          — bottom action button row (Cancel + Save)
+ *
+ * Per-modal scoped behavior:
+ *   #updateAddressOverlay       — wider; address-edit-card grid layout
+ *   #confirmOrderOverlay        — confirm-order modal (form view + status view)
+ *
+ * Out of scope: the JS visibility toggling. The overlays open/close by
+ * having their inline `style="display:none;"` flipped by JS. Migrating
+ * that to a class would require touching the JS files; left as-is.
+ */
+
+/* ============================================================================
+ * Overlay backdrop
+ * ============================================================================ */
 
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 18px;
-    z-index: 5000;
+    padding: var(--space-4);
+    background: rgba(0, 0, 0, 0.45);
+    z-index: var(--layer-modal);
 }
+
+/* ============================================================================
+ * Modal panel — floating card
+ *
+ * Heavier shadow than .checkout-section by design — it's a popover, it
+ * should read as elevated. Same border + border-radius + background as
+ * the rest of the design system so it feels like a member of the family.
+ * ============================================================================ */
 
 .modal {
     width: 100%;
     max-width: 520px;
-    background: var(--white);
-    border-radius: 14px;
-    border: 1px solid var(--soft-brown);
-    box-shadow: 0 18px 45px rgba(0,0,0,0.25);
-    padding: 18px 18px 14px;
+    max-height: 85vh;
+    overflow: auto;
+    padding: var(--space-6) var(--space-8);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg), 0 18px 45px rgba(0, 0, 0, 0.20);
 }
+
+/* ---- Header (title + close button) -------------------------------------- */
 
 .modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-green-soft);
 }
 
 .modal-header h3 {
     margin: 0;
-    color: var(--dark-green);
+    color: var(--color-green-deep);
+    font-size: var(--font-xl);
+    border: none;
 }
 
 .modal-close {
     border: none;
     background: transparent;
-    font-size: 28px;
+    font-size: 24px;
     line-height: 1;
     cursor: pointer;
-    color: var(--earth-brown);
+    color: var(--color-brown-deep);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast),
+    color var(--transition-fast);
 }
+
+.modal-close:hover {
+    background: var(--color-brown-cream);
+    color: var(--color-green-deep);
+}
+
+/* ============================================================================
+ * Modal section — one labelled block of content inside the modal.
+ *
+ * Used by the confirm-order modal (Order Summary, Deliver To, Delivery
+ * Instructions). The address modal uses raw <h4>s plus address-edit-cards
+ * directly so we don't force this class on it.
+ * ============================================================================ */
+
+.modal-section {
+    margin-top: var(--space-4);
+}
+
+.modal-section h4 {
+    margin: 0 0 var(--space-2) 0;
+    color: var(--color-green-deep);
+    font-size: var(--font-md);
+    border: none;
+}
+
+/* ============================================================================
+ * Section sub-header — title + inline button (e.g. "Add New Addresses [+]")
+ *
+ * Replaces inline `style="display:flex; justify-content: space-between..."`
+ * blocks scattered through the address modal templates.
+ * ============================================================================ */
+
+.modal-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-2);
+}
+
+.modal-section-header h4 {
+    margin: 0;
+    color: var(--color-green-deep);
+    border: none;
+}
+
+/* ============================================================================
+ * Modal action row — Cancel/Save/Confirm at the bottom of a modal form.
+ *
+ * Always right-aligned. Buttons inside use standard .btn / .btn-small
+ * classes, so we just lay out the row.
+ * ============================================================================ */
+
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-brown-soft);
+}
+
+/* Buttons in the action row size down a bit so two of them don't
+ * overwhelm a small modal. */
+.modal-actions .btn {
+    min-height: 36px;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-sm);
+}
+
+/* ============================================================================
+ * <hr> divider used inside modal forms (between existing addresses and
+ * the "add new" sub-section)
+ * ============================================================================ */
+
+.modal hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px dashed var(--color-brown-soft);
+    margin: var(--space-4) 0;
+}
+
+/* ============================================================================
+ * <select> styling inside any modal — branded chevron + green focus ring
+ *
+ * The deployed forms.css doesn't style native <select> elements, so when
+ * a select shows up inside a modal we override the appearance here. Uses
+ * an inline-SVG chevron tinted to the brand brown.
+ * ============================================================================ */
 
 .modal-overlay .form-control select {
     width: 100%;
-    color: #1f2937;                    /* same body text colour as inputs */
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
-    padding: 10px 36px 10px 12px;      /* extra right padding for the chevron */
+    padding: var(--space-3) calc(var(--space-8) + var(--space-2)) var(--space-3) var(--space-3);
+    background: var(--color-bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%235A3A1E'><path d='M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z'/></svg>") no-repeat right var(--space-3) center;
+    background-size: 16px 16px;
+    color: var(--color-text);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-sm);
     font: inherit;
     line-height: 1.4;
-    appearance: none;                  /* drop native chevron so ours is consistent */
+    cursor: pointer;
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-
-    /* Inline SVG chevron, sized to match the rounded look of the text inputs. */
-    background: #ffffff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'><path d='M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z'/></svg>") no-repeat right 12px center;
-    background-size: 16px 16px;
-
-    cursor: pointer;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .modal-overlay .form-control select:focus {
     outline: none;
-    border-color: rgba(37, 99, 235, 0.55);  /* tweak to your brand accent */
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: var(--color-green-bright);
+    box-shadow: var(--shadow-glow-green);
 }
 
 .modal-overlay .form-control select:disabled {
-    background-color: #f3f4f6;
-    color: #9ca3af;
+    background-color: var(--color-bg-soft);
+    color: var(--color-text-muted);
     cursor: not-allowed;
 }
 
-/* Address modal: compact + scrollable */
+/* ============================================================================
+ * Address modal — wider panel + two-column field grid per address card
+ *
+ * Scoped to #updateAddressOverlay because the layout differs from a
+ * "normal" modal. Both the user-address and vendor-address modals use
+ * this same overlay ID so the rules apply to both.
+ * ============================================================================ */
+
 #updateAddressOverlay .modal {
-    max-width: 860px;              /* wider so 2-column fields fit */
-    width: 100%;
-    max-height: 85vh;              /* keep on screen */
-    overflow: hidden;              /* header stays, body scrolls */
-    padding: 14px;
+    max-width: 860px;
+    padding: var(--space-4);
 }
 
-/* Make the form content scroll, not the entire page */
+/* The form scrolls inside the modal so the header stays put */
 #updateAddressOverlay form.form-group {
-    max-height: calc(85vh - 72px); /* subtract header area */
+    max-height: calc(85vh - 96px);
     overflow: auto;
-    padding-right: 6px;            /* room for scrollbar */
+    padding-right: var(--space-2);
 }
 
-/* Tighter heading inside modal */
 #updateAddressOverlay h4 {
-    margin: 10px 0 8px 0;
+    margin: var(--space-3) 0 var(--space-2) 0;
+    color: var(--color-green-deep);
+    font-size: var(--font-md);
     border: none;
-    color: var(--dark-green);
-    font-size: 1.05rem;
 }
 
-.address-edit-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+/* ---- One address-edit card -------------------------------------------- */
+
+.address-edit-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3) var(--space-4);
+    margin: var(--space-3) 0;
+    padding: var(--space-3);
+    background: var(--color-brown-cream);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
 }
 
-.address-edit-card-header > button{
-  margin-left: auto;
+/* Header row (Address #N + remove button) spans both columns */
+.address-edit-card-header,
+.address-edit-card > div:first-child {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-2);
+    border-bottom: 1px dashed var(--color-brown-soft);
 }
 
-/* Address card: clear separation */
-#updateAddressOverlay .address-edit-card {
-    border: 1px solid rgba(93, 64, 55, 0.20);
-    border-radius: 12px;
-    background: rgba(232, 245, 233, 0.35);
-    padding: 10px 10px 8px;
-    margin: 10px 0;
+.address-edit-card-header > button {
+    margin-left: auto;
 }
 
-/* Header row inside each card */
-#updateAddressOverlay .address-edit-card > div:first-child {
-    padding-bottom: 8px;
-    margin-bottom: 8px;
-    border-bottom: 1px dashed rgba(93, 64, 55, 0.20);
+/* The "Make default" footer row spans both columns */
+.address-edit-card .form-control:last-child,
+.address-edit-card .update-address-footer {
+    grid-column: 1 / -1;
 }
 
-/* Compact inputs inside the modal (don’t affect the rest of the site) */
+/* ---- Compact form-control overrides inside the modal ----------------- */
+
 #updateAddressOverlay .form-control {
-    margin-bottom: 10px;
+    margin-bottom: var(--space-2);
 }
 
 #updateAddressOverlay .form-control label {
-    font-size: 0.75rem;
-    letter-spacing: 0.02em;
+    margin-bottom: var(--space-1);
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
     text-transform: uppercase;
-    color: #666;
-    margin-bottom: 4px;
+    letter-spacing: 0.4px;
 }
 
 #updateAddressOverlay .form-control input[type="text"],
 #updateAddressOverlay .form-control input[type="password"],
 #updateAddressOverlay .form-control input[type="email"],
 #updateAddressOverlay .form-control input[type="tel"] {
-    padding: 0.55rem 0.65rem;
-    border-radius: 8px;
-    font-size: 0.95rem;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-md);
+    border-radius: var(--radius-sm);
 }
 
-/* 2-column compact layout per address card */
-#updateAddressOverlay .address-edit-card {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px 12px;
-}
+/* ---- "Make default" footer row ---------------------------------------- */
 
-/* Force the header row to span full width */
-#updateAddressOverlay .address-edit-card > div:first-child {
-    grid-column: 1 / -1;
-}
-
-/* Make checkbox row span full width (better alignment) */
-#updateAddressOverlay .address-edit-card .form-control:last-child {
-    grid-column: 1 / -1;
-}
-
-/* Buttons row: keep visible and tidy */
-#updateAddressOverlay .modal .btn,
-#updateAddressOverlay .modal .btn-small {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.9rem;
-}
-
-/* Optional: slightly smaller close button */
-#updateAddressOverlay .modal-close {
-    font-size: 24px;
-}
-
-/* Address modal footer row (Make default) */
-#updateAddressOverlay .update-address-footer {
-    grid-column: 1 / -1;          /* spans full width of the address-edit-card grid */
+.update-address-footer {
     display: flex;
-    justify-content: flex-end;     /* right align */
     align-items: center;
-    padding-top: 4px;
-    margin-top: 2px;
-    border-top: 1px dashed rgba(93, 64, 55, 0.18);
+    justify-content: flex-end;
+    padding-top: var(--space-1);
+    margin-top: var(--space-1);
+    border-top: 1px dashed var(--color-brown-soft);
 }
 
-/* Tight row with checkbox + label */
-#updateAddressOverlay .update-address-footer .form-control {
+.update-address-footer .form-control {
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 8px;
-    margin: 0;                    /* override default .form-control spacing */
-    white-space: nowrap;          /* prevent wrapping */
-}
-
-/* Make label smaller and non-wrapping */
-#updateAddressOverlay .update-address-footer label {
+    gap: var(--space-2);
     margin: 0;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #666;
-    text-transform: none;         /* your modal labels are uppercase; this reads better */
-    letter-spacing: 0;
     white-space: nowrap;
 }
 
-/* Make checkbox a bit smaller and aligned */
-#updateAddressOverlay .update-address-footer input[type="checkbox"] {
+.update-address-footer label {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
+    text-transform: none;
+    white-space: nowrap;
+}
+
+.update-address-footer input[type="checkbox"] {
     width: 16px;
     height: 16px;
     margin: 0;
 }
 
-/* The confirm modal is a touch wider than the address one because we render a
-   full order summary inside. Bump the cap accordingly without affecting other
-   modals. */
+/* ============================================================================
+ * Confirm-order modal — slightly wider, internal sections
+ * ============================================================================ */
+
 #confirmOrderOverlay .modal {
     max-width: 560px;
-    width: 100%;
 }
 
 .modal-confirm-order .confirm-section {
-    margin-top: 16px;
+    margin-top: var(--space-4);
 }
 
 .modal-confirm-order .confirm-section h4 {
-    margin: 0 0 8px 0;
-    font-size: 0.95rem;
-    color: var(--dark-green);
+    margin: 0 0 var(--space-2) 0;
+    color: var(--color-green-deep);
+    font-size: var(--font-md);
     border: none;
 }
 
-/* ---- Deliver-to readonly preview ------------------------------------------ */
+/* ---- Order recap inside the confirm modal ------------------------------ */
+
+.modal-confirm-order .confirm-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-brown-cream);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
+}
+
+.modal-confirm-order .confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
+}
+
+.modal-confirm-order .confirm-row.total {
+    margin-top: var(--space-1);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--color-brown-soft);
+    color: var(--color-green-deep);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-lg);
+}
+
+.modal-confirm-order .confirm-value {
+    font-variant-numeric: tabular-nums;
+}
+
+.modal-confirm-order .confirm-summary hr {
+    margin: var(--space-1) 0;
+}
+
+/* ---- Deliver-to readonly preview --------------------------------------- */
 
 .modal-confirm-order .confirm-deliver-to {
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.10);
-    border-radius: 10px;
-    padding: 10px 14px;
-    line-height: 1.45;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-brown-cream);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
+    line-height: var(--line-base);
 }
 
 .modal-confirm-order .confirm-line {
     margin: 0;
-    font-size: 0.95rem;
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
 }
 
 .modal-confirm-order .confirm-line#confirm-deliver-name {
-    font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-1);
+    color: var(--color-green-deep);
+    font-weight: var(--weight-bold);
 }
 
-/* ---- Delivery instructions textarea --------------------------------------- */
+/* ---- Delivery instructions textarea ------------------------------------ */
 
 .modal-confirm-order textarea#confirm-delivery-instructions {
     width: 100%;
     min-height: 70px;
-    resize: vertical;
-    background: #fff;
-    color: #1f2937;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
-    padding: 10px 12px;
+    padding: var(--space-3);
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-sm);
     font: inherit;
-    line-height: 1.4;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    line-height: var(--line-base);
+    resize: vertical;
+    transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .modal-confirm-order textarea#confirm-delivery-instructions:focus {
     outline: none;
-    border-color: rgba(37, 99, 235, 0.55);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: var(--color-green-bright);
+    box-shadow: var(--shadow-glow-green);
 }
 
 .modal-confirm-order .confirm-instruction-counter {
     display: block;
+    margin-top: var(--space-1);
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
     text-align: right;
-    margin-top: 4px;
-    font-size: 0.75rem;
-    color: #6b7280;
     font-variant-numeric: tabular-nums;
 }
 
-/* ---- Action button row ----------------------------------------------------- */
+/* ---- Action button row --------------------------------------------------
+ *
+ * The confirm-order modal uses .confirm-actions for legacy markup reasons,
+ * but the new shared .modal-actions is preferred. Style them identically
+ * so either works.
+ * --------------------------------------------------------------------- */
 
 .modal-confirm-order .confirm-actions {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 18px;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-brown-soft);
 }
 
 .modal-confirm-order .btn-confirm-order {
-    width: auto;            /* override the global .btn 100%-width if any */
+    width: auto;
     min-width: 160px;
+}
+
+/* ============================================================================
+ * Responsive
+ * ============================================================================ */
+
+@media (max-width: 640px) {
+    .modal {
+        padding: var(--space-4) var(--space-4);
+        max-height: 90vh;
+    }
+
+    /* Address modal collapses to a single column on phones — the
+     * compact two-column grid is fine on tablet+ but feels cramped on
+     * smaller screens. */
+    #updateAddressOverlay .address-edit-card {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-actions,
+    .modal-confirm-order .confirm-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .modal-actions .btn,
+    .modal-confirm-order .confirm-actions .btn {
+        width: 100%;
+    }
 }

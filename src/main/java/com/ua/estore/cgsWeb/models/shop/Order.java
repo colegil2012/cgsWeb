@@ -43,15 +43,10 @@ public class Order {
     @Field(targetType = FieldType.OBJECT_ID)
     private String userId;
 
-    /**
-     * Human-friendly order number for emails / driver paperwork. Sequential per year so
-     * staff can read it aloud over the phone, e.g. "2026-00187". Generated server-side
-     * at save time.
-     */
     @Indexed(unique = true, sparse = true)
     private String orderNumber;
 
-    /** Square idempotency key – also doubles as our retry guard for the whole submit flow. */
+    /** idempotency key – also doubles as our retry guard for the whole submit flow. */
     @Indexed(unique = true, sparse = true)
     private String idempotencyKey;
 
@@ -65,17 +60,10 @@ public class Order {
     private OrderTotals totals;
     private List<OrderItem> items = new ArrayList<>();
 
-    /**
-     * Free-form text the user typed at checkout (e.g. "leave at side gate"). Surfaced to
-     * the driver verbatim. Capped at 500 chars by the controller layer.
-     */
     private String deliveryInstructions;
 
     /** Optional user reference; passed straight through to Square if present. */
     private String customerNote;
-
-    /** Optional Square data; null when payment was skipped or never attempted. */
-    private SquareData squareData;
 
     private LocalDateTime placedAt;      // when checkout submit succeeded
     private LocalDateTime updatedAt;
@@ -86,7 +74,6 @@ public class Order {
      * Embedded snapshot types
      * ============================================================================ */
 
-    /** Frozen-at-checkout view of who placed the order. */
     @Data
     @NoArgsConstructor
     public static class CustomerSnapshot {
@@ -99,11 +86,6 @@ public class Order {
         private String phone;
     }
 
-    /**
-     * Frozen-at-checkout copy of an Address plus a GeoJSON Point so we can run
-     * {@code $geoNear} / {@code $geoWithin} for the route planner without touching
-     * the live user/vendor address books.
-     */
     @Data
     @NoArgsConstructor
     public static class AddressSnapshot {
@@ -118,12 +100,6 @@ public class Order {
         private double latitude;
         private double longitude;
 
-        /**
-         * GeoJSON Point – {@code { "type": "Point", "coordinates": [lng, lat] }}.
-         * Indexed via @PostConstruct initializer (see GeoIndexInitializer).
-         * Always populate via {@link #setLatitude(double)}/{@link #setLongitude(double)} +
-         * a follow-up {@link #syncGeoPoint()} call so the two views can never drift.
-         */
         private GeoPoint location;
 
         /** Re-derive {@link #location} from {@link #latitude}/{@link #longitude}. */
@@ -180,18 +156,6 @@ public class Order {
 
         /** Free text from the customer, e.g. "ripe please". Per-line scope. */
         private String itemNote;
-    }
-
-    /** Square-specific bookkeeping. Nullable – payment may not be attempted in tests. */
-    @Data
-    @NoArgsConstructor
-    public static class SquareData {
-        private String idempotencyKey;
-        private String paymentId;
-        private String orderId;          // Square's order id (separate from ours)
-        private String receiptUrl;
-        private String last4;            // for the customer's email
-        private String cardBrand;
     }
 
     /** Financial state machine. */

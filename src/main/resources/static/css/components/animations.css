@@ -1,67 +1,98 @@
-/* css/components/animations.css */
-/* Animation Component Styles */
+/* /components/animations.css
+ *
+ * Shared keyframes + reusable animation utility classes. Components opt in by
+ * adding the class (e.g. .float-in, .glow-green) — no animation runs by
+ * default. This keeps the page-load cost low and lets a11y users with
+ * `prefers-reduced-motion: reduce` see static layouts.
+ */
 
-/* Optional: if you want the shipping vendor label itself (left side) to glow too */
-.shipping-detail span:first-child.glow-green,
-.shipping-detail span:first-child .glow-green {
-  animation: greenGlowFlash 900ms ease-out 1;
+/* ============================================================================
+ * Float-in: gentle drop into place. Used for the home-page logo and any
+ * other "welcome" motif. Pairs `opacity` and a small Y offset so it feels
+ * grounded, not a video-game pop-in.
+ *
+ * IMPORTANT: the element is fully visible by default. The animation is
+ * purely additive — if it runs, it animates *from* hidden *to* visible.
+ * If it doesn't run (reduced-motion, broken @keyframes resolution, IDE
+ * cache, etc.), the element still renders correctly. This avoids the
+ * common "animation-keeps-it-invisible" trap.
+ * ============================================================================ */
+
+@keyframes float-in {
+    0%   { opacity: 0; transform: translateY(20px); }
+    60%  { opacity: 1; transform: translateY(-4px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Dark-green glow flash for newly updated values */
+.float-in {
+    /* Fully visible by default — see comment above. */
+    opacity: 1;
+    animation: float-in 2s var(--easing-spring) both;
+}
+
+.float-in.is-delayed   { animation-delay: 200ms; }
+.float-in.is-delayed-2 { animation-delay: 400ms; }
+
+/* Reduced-motion users: skip the animation entirely. The element is already
+   at opacity:1 / translate:0 thanks to the default rule above, so they see
+   a static layout with no jump. */
+@media (prefers-reduced-motion: reduce) {
+    .float-in,
+    .float-in.is-delayed,
+    .float-in.is-delayed-2 {
+        animation: none;
+    }
+}
+
+/* Manual override — drop the class on an element to disable the animation
+   regardless of the user's motion preference. */
+.float-in.is-static {
+    animation: none;
+}
+
+/************* Checkout animations *****************************************/
+
 @keyframes greenGlowFlash {
-  0% {
-    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
-    filter: brightness(1);
-  }
-  35% {
-    text-shadow:
-      0 0 6px rgba(0, 90, 0, 0.55),
-      0 0 14px rgba(0, 90, 0, 0.35);
-    filter: brightness(1.12);
-  }
-  100% {
-    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
-    filter: brightness(1);
-  }
+    0% {
+        text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        filter: brightness(1);
+    }
+    35% {
+        text-shadow:
+                0 0 6px  rgba(0, 90, 0, 0.55),
+                0 0 14px rgba(0, 90, 0, 0.35);
+        filter: brightness(1.12);
+    }
+    100% {
+        text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        filter: brightness(1);
+    }
 }
 
 .glow-green {
-  animation: greenGlowFlash 900ms ease-out 1;
+    animation: greenGlowFlash 900ms ease-out 1;
 }
 
-/* Assigned in cart.js for flying item animation */
-.flying-item {
-    position: fixed;
-    z-index: 9999;
-    pointer-events: none;
-    transition: all 0.8s cubic-bezier(0.42, 0, 0.58, 1);
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+/************* Cart animations *****************************************/
 
 @keyframes card-select-pop {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 2px 8px rgba(104, 159, 56, 0.1);
-    }
-    50% {
-        transform: scale(1.04);
-        box-shadow: 0 6px 20px rgba(104, 159, 56, 0.4);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 4px 16px rgba(104, 159, 56, 0.3);
-    }
+    0%   { transform: scale(1);     box-shadow: 0 2px 8px  rgba(104, 159, 56, 0.10); }
+    50%  { transform: scale(1.04);  box-shadow: 0 6px 20px rgba(104, 159, 56, 0.40); }
+    100% { transform: scale(1);     box-shadow: var(--shadow-md); }
 }
 
 @keyframes check-fade-in {
-    0% {
-        opacity: 0;
-        transform: translateY(-50%) scale(0.5);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(-50%) scale(1);
-    }
+    0%   { opacity: 0; transform: translateY(-50%) scale(0.5); }
+    100% { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+/* "Flying item" — flies from product card to cart icon. */
+.flying-item {
+    position: fixed;
+    z-index: var(--layer-toast);
+    pointer-events: none;
+    transition: all 800ms var(--easing-spring);
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: var(--shadow-md);
 }

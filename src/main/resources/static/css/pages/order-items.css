@@ -1,0 +1,151 @@
+/* /css/components/order-items.css
+ *
+ * Shared "vendor-grouped items list" component. Used on both:
+ *   - The checkout page (pre-purchase, in a .checkout-section)
+ *   - The order-confirm receipt (post-purchase, in a .confirmation-section)
+ *
+ * Class hierarchy:
+ *   .order-items                 — the outer flex stack, one entry per vendor
+ *     .order-items-vendor-group  — wraps a vendor's header + their items
+ *       .order-items-vendor      — header strip with vendor logo + name
+ *         .order-items-vendor-logo  — logo plate
+ *         .order-items-vendor-name  — vendor display name
+ *       .order-items-row         — single line item row
+ *         .order-items-img       — item thumbnail
+ *         .order-items-details   — name + qty (and optional vendor on shop card)
+ *         .order-items-price     — line total, right-aligned
+ *
+ * Naming: deliberately neutral so the same classes work pre-purchase
+ * (still in cart, in checkout) and post-purchase (already paid, on
+ * receipt). Use this in any future "list items grouped by vendor with a
+ * line total per row" view.
+ */
+
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+/* ============================================================================
+ * Per-vendor group
+ * ============================================================================ */
+
+.order-items-vendor-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.order-items-vendor {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0;
+    padding: var(--space-4);
+    background: linear-gradient(to bottom,
+    var(--color-bg),
+    var(--color-brown-cream));
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.order-items-vendor-logo {
+    flex: 0 0 auto;
+}
+
+.order-items-vendor-logo img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+}
+
+.order-items-vendor-name {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.order-items-vendor-name h3 {
+    margin: 0;
+    color: var(--color-green-deep);
+    font-size: var(--font-lg);
+}
+
+/* ============================================================================
+ * Item row (one line item under a vendor)
+ * ============================================================================ */
+
+.order-items-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border-bottom: 2px solid var(--color-brown-cream);
+}
+
+.order-items-row:last-child {
+    border-bottom: none;
+}
+
+.order-items-img {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.order-items-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.order-items-name {
+    color: var(--color-brown-deep);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-md);
+}
+
+.order-items-qty {
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+}
+
+.order-items-price {
+    flex-shrink: 0;
+    color: var(--color-brown-deep);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-lg);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================================
+ * Responsive — line items collapse to a tighter layout on narrow screens
+ * ============================================================================ */
+
+@media (max-width: 640px) {
+    .order-items-vendor {
+        padding: var(--space-3);
+    }
+
+    .order-items-vendor-logo img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .order-items-row {
+        gap: var(--space-3);
+        padding: var(--space-3);
+    }
+
+    .order-items-price {
+        font-size: var(--font-md);
+    }
+}

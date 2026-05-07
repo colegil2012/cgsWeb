@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    //const appId = window.SQUARE_APP_ID;
-    //const locationId = window.SQUARE_LOCATION_ID;
     const addresses = window.USER_ADDRESSES;
 
     const addressSelect = document.getElementById('checkout-address-select');
@@ -154,79 +152,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         syncAddress();
         refreshShippingEstimates();
     }
-
-
-    /***********
-    // Saved Card Selection
-    const savedCards = document.querySelectorAll('.saved-user-card');
-    const sourceIdInput = document.getElementById('source-id');
-
-    savedCards.forEach(cardEl => {
-
-        if (cardEl.classList.contains('expired')) { return; }
-
-        cardEl.addEventListener('click', () => {
-            const wasSelected = cardEl.classList.contains('selected');
-
-            // Deselect all cards first
-            savedCards.forEach(c => c.classList.remove('selected'));
-
-            if (wasSelected) {
-                // Toggling off — clear the sourceId so the Square card form is used
-                if (sourceIdInput) { sourceIdInput.value = ''; }
-            } else {
-                // Select this card and populate sourceId with the cardId
-                cardEl.classList.add('selected');
-                const cardId = cardEl.getAttribute('data-card-id');
-                if (sourceIdInput) { sourceIdInput.value = cardId; }
-            }
-        });
-    });
-
-    // Square Setup
-    if (!window.Square) {
-        console.error('Square.js failed to load.');
-        return;
-    }
-
-    // Initialize the Square payments object
-    const payments = window.Square.payments(appId, locationId);
-
-    // Attach the card form to the #card-container div
-    const card = await payments.card();
-    await card.attach('#card-container');
-
-    const cardButton = document.getElementById('card-button');
-    const statusContainer = document.getElementById('payment-status-container');
-
-    cardButton.addEventListener('click', async () => {
-        cardButton.disabled = true;
-        statusContainer.textContent = 'Processing payment...';
-
-        try {
-            // Tokenize the card — this is what generates the sourceId (nonce)
-            const result = await card.tokenize();
-
-            if (result.status === 'OK') {
-                // Populate the hidden form fields
-                document.getElementById('source-id').value = result.token;
-                document.getElementById('idempotency-key').value = crypto.randomUUID();
-
-                // Submit the form to the server
-                document.getElementById('payment-form').submit();
-            } else {
-                statusContainer.textContent = 'Tokenization failed. Please check your card details.';
-                statusContainer.classList.add('alert');
-                statusContainer.classList.add('alert-error');
-                console.error('Tokenization errors:', result.errors);
-                cardButton.disabled = false;
-            }
-        } catch (e) {
-            statusContainer.textContent = 'Payment failed. Please try again.';
-            statusContainer.classList.add('alert');
-            statusContainer.classList.add('alert-error');
-            console.error('Payment error:', e);
-            cardButton.disabled = false;
-        }
-    });**/
 });

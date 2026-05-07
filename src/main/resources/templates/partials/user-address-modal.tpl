@@ -41,7 +41,7 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
                                 } else {
                                     input(type: 'checkbox', name: "addresses[${i}].default", value: 'true')
                                 }
-                                label(style: 'margin:0;', 'Make default')
+                                label('Make default')
                             }
                         }
                     }
@@ -50,17 +50,17 @@ div(class: 'modal-overlay', id: 'updateAddressOverlay', style: 'display:none;') 
 
             hr()
 
-            div(style: 'display:flex; justify-content:space-between; align-items:center; gap: 12px;') {
+            div(class: 'modal-section-header') {
                 h4('Add New Addresses')
-                button(type: 'button', class: 'btn-small', id: 'addAddressBlockBtn', '+ Add Address')
+                button(type: 'button', class: 'btn btn-small', id: 'addAddressBlockBtn', '+ Add Address')
             }
             div(id: 'newAddressesContainer') {
                 // JS will append blocks here
             }
 
-            div(style: 'display:flex; gap: 10px; justify-content:flex-end; margin-top: 10px;') {
-                button(type: 'button', class: 'btn-small', id: 'cancelUpdateAddress', 'Cancel')
-                button(type: 'submit', class: 'btn', style: 'width:auto;', 'Save Changes')
+            div(class: 'modal-actions') {
+                button(type: 'button', class: 'btn btn-secondary', id: 'cancelUpdateAddress', 'Cancel')
+                button(type: 'submit', class: 'btn', 'Save Changes')
             }
         }
     }

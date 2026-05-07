@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
         GoogleMapsProperties.class,
         ServiceAreaProperties.class,
         SpacesS3Properties.class,
-        SquareProperties.class,
         SecurityProperties.class,
         TaxProperties.class,
         MailProperties.class

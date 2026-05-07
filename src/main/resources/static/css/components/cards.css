@@ -1,454 +1,446 @@
-/* /css/components/cards.css */
-/* Card Component Styles */
+/* /css/components/cards.css
+ *
+ * Single source of truth for every card-shaped element on the site.
+ *
+ *   .product-card        — shop grid + vendor-page grid product tile
+ *   .vendor-card         — view-all-vendors grid tile
+ *   .specialty-card      — home-page (legacy; .home-specialty-card is its
+ *                          replacement, this stays during migration)
+ *   .address-card        — saved address row (account, vendor portal,
+ *                          inside address-edit modal as a base shape)
+ *
+ * Note: the single-vendor page banner is no longer a card. It uses the
+ * shared .hero component (in main.css) with .hero-vendor-* helpers.
+ *
+ * Removed in this pass:
+ *   .info-card, .info-group       → moved to pages/account.css (page-only)
+ *   .order-card, .order-status    → moved to pages/account.css; the partial
+ *                                   pages/order-confirm.css has its own
+ *                                   confirmation-* equivalents
+ *   .vendor-header-card           → replaced by .hero + .hero-vendor-*
+ *   .vendor-name, .vendor-bio,    → replaced by .hero-vendor-* equivalents
+ *     .vendor-location, .location-label
+ *   .vendor-table                 → unused
+ *   .order-meta, .order-date,     → unused
+ *     .order-totals, .order-items, etc
+ */
 
-
-/*------------- Product Grid ----------------*/
+/* ============================================================================
+ * Product grid — shared layout for any "list of product cards"
+ * ============================================================================ */
 
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-8);
 }
 
 .vendor-products-section .product-grid {
-    margin: 1.8rem;
+    margin: var(--space-6);
 }
 
-/*------------- Product cards ----------------*/
+/* ============================================================================
+ * Product card — the canonical shop tile
+ *
+ * Class map:
+ *   .product-card                  — the tile itself
+ *   .product-image-link            — <a> wrapping the hero image
+ *   .product-info                  — text body (title, vendor, description)
+ *   .product-title                 — title row (name + category pill)
+ *   .product-title .title-name     — product display name
+ *   .category-tag                  — category pill (also used on product view)
+ *   .product-meta                  — wrapper for vendor-tag (shop only;
+ *                                    redundant on a vendor's own page)
+ *   .vendor-tag                    — full-bleed "By: <vendor>" banner link
+ *   .product-card-description      — short description
+ *   .product-card-footer           — price + add-to-cart row
+ *   .low-stock-warn / .warning-wrapper / .spacing-wrapper — stock status
+ * ============================================================================ */
 
 .product-card {
-    background: white;
-    border-radius: 10px;
+    background: var(--color-bg);
+    border: 2px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 100%;
-    border: 2px solid var(--soft-brown);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base),
+    box-shadow var(--transition-base);
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(93, 64, 55, 0.15);
+    box-shadow: var(--shadow-lg);
 }
 
 .product-card img {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-bottom: 2px solid var(--soft-brown);
+    border-bottom: 2px solid var(--color-brown-soft);
 }
 
 .product-image-link {
-  display: block;
-  overflow: hidden;
-  height: 200px;
-  line-height: 0;
-  font-size;
+    display: block;
+    overflow: hidden;
+    height: 200px;
+    line-height: 0;
+    font-size: var(--font-md);
 }
 
 .product-image-link img {
-  display-block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
 }
 
 .product-image-link:hover img {
-  transform: scale(1.05);
-  cursor: pointer;
+    transform: scale(1.05);
+    cursor: pointer;
 }
 
 .product-info {
-  padding: 0.3rem 0;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(to bottom, var(--accent-brown), var(--white));
+    padding: var(--space-1) 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom,
+    var(--color-brown-cream),
+    var(--color-bg));
 }
 
 .product-title {
-  width: 100%;
-  margin: 0 0 0.25rem 0;
-  padding: 0.4rem 0.9rem;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
+    width: 100%;
+    margin: 0 0 var(--space-1) 0;
+    padding: var(--space-2) var(--space-4);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
 }
 
 .product-title .title-name {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--earth-brown);
-  font-family: Georgia, 'Times New Roman', serif;
-  letter-spacing: 0.3px;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    font-size: var(--font-lg);
+    font-weight: var(--weight-bold);
+    margin: 0;
+    color: var(--color-brown-deep);
+    font-family: var(--font-family-display);
+    letter-spacing: 0.3px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.product-title .category {
-  font-size: 0.7rem;
-  border-radius: 4px;
-  background: var(--primary-green);
-  color: var(--accent-green);
-  padding: 0.2rem 0.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  white-space: nowrap;
-  flex-shrink: 0;
-  max-width: 40%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* ---- Category pill (shared with product view page) ----------------------- */
+
+.category-tag {
+    font-size: 0.7rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-green-soft);
+    color: var(--color-green-bright);
+    padding: var(--space-1) var(--space-2);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    max-width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+/* ---- Vendor banner ------------------------------------------------------- */
 
 .product-meta {
-  margin: 0;
+    margin: 0;
 }
 
 .vendor-tag {
     display: block;
     width: 100%;
     box-sizing: border-box;
-    padding: 0.45rem 0.6rem;
-    font-size: 0.8rem;
-    color: #2e7d32;
-    font-style: italic;
-    font-weight: bold;
+    padding: var(--space-2) var(--space-3);
     margin: 0;
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
     text-align: center;
-    border-top: 2px solid var(--dark-green);
-    border-bottom: 2px solid var(--dark-green);
-    background: var(--primary-green);
     text-decoration: none;
+    color: var(--color-brown-deep);
+    background: linear-gradient(to bottom,
+    var(--color-brown-soft),
+    var(--color-brown-cream));
     line-height: 1.4;
     overflow: hidden;
 }
 
-.vendor-tag:hover {
+.vendor-tag:hover,
+.vendor-tag:visited,
+.vendor-tag:active,
+.vendor-tag:focus {
+    color: var(--color-brown-deep);
     text-decoration: none;
-    color: #2e7d32;
+    outline: none;
 }
-
-.vendor-tag:hover > *,
-.vendor-tag:hover {}
 
 .vendor-tag span {
     display: inline-block;
-    transition: transform 0.2s ease;
+    transition: transform var(--transition-base);
 }
 
 .vendor-tag:hover span {
     transform: scale(1.12);
 }
 
-.vendor-tag:visited,
-.vendor-tag:active,
-.vendor-tag:focus {
-    color: #2e7d32;
-    text-decoration: none;
-    outline: none;
+/* ---- Description --------------------------------------------------------- */
+
+.product-card-description {
+    font-size: var(--font-sm);
+    padding: 0 var(--space-4);
+    height: 3em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-bottom: var(--space-4);
 }
 
-.description {
-  font-size: 0.9rem;
-  padding: 0 1.2rem;
-  height: 3em;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
+/* ---- Footer (price + add-to-cart) ---------------------------------------- */
 
-.product-footer {
+.product-card-footer {
     display: flex;
     justify-content: space-between;
-    background: var(--soft-brown);
     align-items: center;
     margin-top: auto;
-    padding: 0.2rem 0.5rem;
-    border-top: 1px solid var(--soft-brown);
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-brown-soft);
+    border-top: 1px solid var(--color-brown-soft);
 }
 
-.product-footer .btn-small {
-    margin: 0.7rem;
+.product-card-footer .btn-small {
+    margin: var(--space-2);
 }
 
-.product-footer .price {
-    margin: 0.5rem;
+.product-card-footer .price {
+    margin: var(--space-2);
 }
+
+/* ---- Price (shared with product view page; product view scales it up) ---- */
 
 .price {
-    font-weight: bold;
-    font-size: 1.25rem;
-    color: var(--earth-brown);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-lg);
+    color: var(--color-brown-deep);
     text-shadow:
-        -1px -1px 0 var(--accent-brown),
-         1px -1px 0 var(--accent-brown),
-        -1px  1px 0 var(--accent-brown),
-         1px  1px 0 var(--accent-brown);
+            -1px -1px 0 var(--color-brown-cream),
+            1px -1px 0 var(--color-brown-cream),
+            -1px  1px 0 var(--color-brown-cream),
+            1px  1px 0 var(--color-brown-cream);
 }
 
+/* ---- Stock-status row helpers -------------------------------------------- */
+
 .spacing-wrapper {
-  background: var(--soft-brown);
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 1.5rem;
+    background: var(--color-brown-soft);
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: var(--space-4);
 }
 
 .warning-wrapper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: var(--space-4) 0;
 }
 
 .low-stock-warn {
-  display: inline-block;
-  background: var(--warning-bg);
-  color: var(--error-red);
-  border: 1px solid var(--warning-red);
-  padding: 6px 15px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-style: italic;
+    display: inline-block;
+    padding: var(--space-1) var(--space-4);
+    border-radius: var(--radius-round);
+    background: var(--color-warn-soft);
+    color: var(--color-error);
+    border: 1px solid var(--color-warn);
+    font-size: var(--font-sm);
+    font-style: italic;
 }
 
-/*------------- Specialty cards ----------------*/
+/* ============================================================================
+ * Vendor card — the view-all-vendors grid tile
+ * ============================================================================ */
+
+.vendor-card {
+    background: var(--color-bg);
+    border: 2px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.vendor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.vendor-logo-container {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    background: var(--color-bg);
+    border-bottom: 2px solid var(--color-brown-soft);
+    line-height: 0;
+}
+
+.vendor-logo-img {
+    max-height: 130px;
+    max-width: 75%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    filter: contrast(1.1);
+    transition: transform var(--transition-base);
+}
+
+.vendor-card:hover .vendor-logo-img {
+    transform: scale(1.05);
+}
+
+.vendor-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background: linear-gradient(to bottom,
+    var(--color-brown-cream),
+    var(--color-bg));
+}
+
+.vendor-card-name {
+    margin: 0;
+    padding: var(--space-3) var(--space-4) var(--space-1);
+    font-family: var(--font-family-display);
+    font-size: var(--font-lg);
+    font-weight: var(--weight-bold);
+    color: var(--color-brown-deep);
+    letter-spacing: 0.3px;
+    text-align: center;
+    border-bottom: none;
+}
+
+.vendor-description {
+    margin: 0 0 var(--space-3) 0;
+    padding: 0 var(--space-4);
+    font-size: var(--font-sm);
+    font-style: italic;
+    color: var(--color-green-deep);
+    line-height: var(--line-base);
+    letter-spacing: 0.2px;
+    text-align: center;
+    height: 2.7em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vendor-address {
+    flex-grow: 1;
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(to bottom,
+    var(--color-brown-cream),
+    var(--color-bg));
+    border-top: 2px solid var(--color-brown-soft);
+    color: var(--color-brown-deep);
+    font-size: var(--font-sm);
+    text-align: center;
+}
+
+.vendor-address strong {
+    display: block;
+    margin-bottom: var(--space-1);
+    color: var(--color-brown-deep);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.vendor-address p {
+    margin: 0;
+    color: var(--color-brown-deep);
+    line-height: var(--line-base);
+}
+
+.vendor-card-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-brown-soft);
+    border-top: 1px solid var(--color-brown-soft);
+}
+
+/* ============================================================================
+ * Specialty cards — kept for legacy templates; .home-specialty-card is the
+ * replacement and lives in pages/home.css.
+ * ============================================================================ */
 
 .specialty-card {
-    background: var(--primary-green);
-    padding: 2rem;
-    border-radius: 10px;
-    border-left: 5px solid var(--earth-brown);
-    transition: background 0.3s;
+    background: var(--color-green-soft);
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    border-left: 5px solid var(--color-brown-deep);
+    transition: background var(--transition-base);
 }
 
 .specialty-card:hover {
-    background: #dcedc8;
+    background: var(--color-green-mid);
 }
 
-/*------------- Info cards ----------------*/
-/*------- Vendor page / account page ------*/
-
-.info-card {
-    background: #fdfdfd;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 25px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.info-group {
-    margin-bottom: 20px;
-}
-
-.info-group label {
-    display: block;
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-/*-------- Vendor Cards --------*/
-
-.vendor-header-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    background: var(--primary-green);
-    color: var(--earth-brown);
-    padding: 3rem 2rem;
-    border-radius: 0 0 20px 20px;
-    margin-bottom: 0;
-}
-
-.vendor-header-logo {
-   padding: 1rem;
-   background: var(--white);
-   border-radius: 10px;
-   margin-bottom: 1.5rem;
-}
-
-.vendor-header-logo img {
-    max-width: 180px;
-    height: auto;
-    mix-blend-mode: multiply;
-    filter: contrast(1.4);
-}
-
-.vendor-name {
-    font-size: 2.5rem;
-    color: var(--dark-green);
-    margin-bottom: 0.5rem;
-}
-
-.vendor-bio {
-    font-style: italic;
-    font-size: 1.1rem;
-    color: var(--earth-brown);
-    max-width: 700px;
-    margin 0 auto 1.5rem auto;
-    line-height: 1.6;
-}
-
-.vendor-location {
-    background: rgba(255,255,255,0.5);
-    padding: 1rem;
-    border-radius: 12px;
-    display: inline-block;
-}
-
-.location-label {
-    display: block;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    color: var(--accent-green);
-    margin-bottom: 0.5rem;
-}
-
-.address-line {
-    margin: 0.2rem 0;
-    font-size: 0.95rem;
-    color: var(--text-color);
-}
-
-.vendor-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.vendor-table th {
-    background: #f8f9fa;
-    text-align: left;
-    padding: 12px 25px;
-    border-bottom: 2px solid #dee2e6;
-}
-
-.vendor-table td {
-    padding: 12px 25px;
-    border-bottom: 1px solid #eee;
-}
-
-.vendor-table tr:hover {
-    background-color: #f1f8e9;
-}
-
-/*------------- Order cards ----------------*/
-
-.order-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 14px;
-    background: var(--white);
-}
-
-.order-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--primary-green);
-    margin-bottom: 10px;
-}
-
-.order-meta {
-    display: flex;
-    gap: 10px;
-    align-items: baseline;
-}
-
-.order-status {
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: var(--primary-green);
-    color: var(--dark-green);
-    border: 1px solid rgba(104, 159, 56, 0.35);
-}
-
-.order-date {
-    font-size: 0.85rem;
-    color: #666;
-    white-space: nowrap;
-}
-
-.order-totals {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px 14px;
-    margin: 10px 0;
-}
-
-.order-totals .label {
-    color: #666;
-    font-weight: 600;
-}
-
-.order-total-line {
-    grid-column: 1 / -1;
-    padding-top: 6px;
-    border-top: 1px dashed #ddd;
-}
-
-.order-items h4 {
-    margin: 12px 0 8px 0;
-    border: none;
-    color: var(--dark-green);
-}
-
-.order-items-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.order-items-table th,
-.order-items-table td {
-    text-align: left;
-    padding: 8px 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.order-items-table th {
-    background: #f8f9fa;
-}
-
-/*------------ Address Cards ---------------*/
+/* ============================================================================
+ * Address cards
+ *
+ * Used by the account page (Addresses tab), vendor portal (Addresses tab),
+ * and the address-edit modal (as a base shape, with overrides in modal.css).
+ * ============================================================================ */
 
 .address-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 14px;
-    background: var(--white);
-    margin-bottom: 12px;
+    padding: var(--space-4);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
 }
 
 .address-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
+}
+
+.address-line {
+    margin: 2px 0;
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
+    line-height: var(--line-base);
+}
+
+.address-line div {
+    margin: 2px 0;
 }
 
 .badge {
-    background: #e8f5e9;
-    color: #2e7d32;
-    padding: 3px 8px;
-    border-radius: 999px;
+    padding: 3px var(--space-2);
+    background: var(--color-green-soft);
+    color: var(--color-success);
+    border-radius: var(--radius-round);
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: var(--weight-bold);
 }

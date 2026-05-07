@@ -149,53 +149,7 @@ public class VendorController {
 
 
     /**********************************************************************************
-     * Update Vendor Settings
-     *********************************************************************************/
-
-    @PostMapping("/vendor/portal/update-settings")
-    public String updateVendorSettings(HttpSession session,
-                                       RedirectAttributes redirectAttributes,
-                                       @RequestParam("vendorId") String vendorId,
-                                       @RequestParam("leadTime") int leadTime) {
-
-        List<String> successes = new ArrayList<>();
-        List<String> errors = new ArrayList<>();
-
-        try {
-            User user = (User) session.getAttribute("user");
-            if (user == null || !user.getRoles().contains("VENDOR")) {
-                errors.add("User not authorized.");
-            } else if (user.getVendorId() == null || user.getVendorId().isBlank()) {
-                errors.add("Vendor not found for user.");
-            } else if (vendorId == null || vendorId.isBlank()) {
-                errors.add("Vendor id is missing.");
-            } else if (!vendorId.equals(user.getVendorId())) {
-                errors.add("You are not allowed to update this vendor.");
-            } else if (leadTime < 0) {
-                errors.add("Lead time cannot be negative.");
-            } else {
-                vendorService.updateSettings(user.getVendorId(), leadTime);
-
-                // refresh vendor detail so UI reflects new values immediately
-                vendorService.getVendorById(user.getVendorId())
-                        .ifPresent(fresh -> session.setAttribute("vendorDetail", fresh));
-
-                successes.add("Vendor settings updated successfully.");
-            }
-        } catch (Exception ex) {
-            log.error("Unexpected error updating vendor settings", ex);
-            errors.add("Failed to update settings. Please try again.");
-        }
-
-        redirectAttributes.addFlashAttribute("message", successes);
-        redirectAttributes.addFlashAttribute("error", errors);
-
-        return "redirect:/vendor/portal";
-    }
-
-
-    /**********************************************************************************
-     * Add Products for a Vendor99999999
+     * Add Products for a Vendor
      *********************************************************************************/
 
     @PostMapping("/vendor/portal/add-products")

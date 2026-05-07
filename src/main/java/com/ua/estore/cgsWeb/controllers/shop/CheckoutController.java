@@ -40,7 +40,6 @@ public class CheckoutController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final VendorService vendorService;
-    //private final SquareService squareService;
     private final ShippingRateService shippingRateService;
     private final ShippingEstimateService shippingEstimateService;
     private final OrderConfirmationMailer orderConfirmationMailer;
@@ -62,19 +61,6 @@ public class CheckoutController {
                     "Please login to checkout.");
             return "redirect:/login";
         }
-
-        //Validate Square profile created for user and Get Saved Payment Methods
-        /*if(user.getSquareProfile() != null) {
-            if (squareService.squareCustomerExists(user)) {
-                List<PaymentCard> savedUserCards = squareService.getUserCards(user);
-                model.addAttribute("savedUserCards", savedUserCards != null ? savedUserCards : new ArrayList<>());
-                model.addAttribute("squareCustomerExists", true);
-            } else {
-                model.addAttribute("squareCustomerExists", false);
-            }
-        } else {
-            model.addAttribute("squareCustomerExists", false);
-        }*/
 
         //Retrieve user cart to recalc total
         List<ProductDTO> cartItems = cartService.mapToProductDTOs(cartService.getOrCreateByUserId(user.getId()),
@@ -115,10 +101,6 @@ public class CheckoutController {
         model.addAttribute("cartVendors", cartVendors);
         model.addAttribute("subtotal", subtotal);
         model.addAttribute("taxRate", orderService.getTaxRate());
-
-        //Square Model attributes
-        //model.addAttribute("squareAppId", squareService.getApplicationId());
-        //model.addAttribute("squareLocationId", squareService.getLocationId());
 
         return "shop/checkout";
     }
@@ -183,7 +165,6 @@ public class CheckoutController {
             }
 
             cartService.clearCart(user.getId());
-
             Order saved = orderService.getOrderById(orderId);  // re-read so we have orderNumber
 
             if(saved != null) {

@@ -1,35 +1,23 @@
-/* /css/pages/vendor.css */
-/* Vendor Page styles */
+/* /css/pages/vendor.css
+ *
+ * Single-vendor page. The banner is now the shared .hero (see main.css
+ * for .hero plus .hero-vendor-* helpers). This file owns only the
+ * products-section wrapper and its empty-state message.
+ *
+ * Class map (in sync with view-vendor.tpl):
+ *   .hero / .hero-vendor-*       — banner header (component, main.css)
+ *   .vendor-products-section     — wrapper around the product grid
+ *   .no-products                 — empty-state message
+ */
 
 .vendor-products-section {
-    background: var(--white);
-    border-radius: 0 0 20px 20px;
-    padding-top: 1rem;
+    padding: var(--space-2) var(--space-4);
 }
 
-.product-header-container {
-    max-width: fit-content;
-    margin: -40px auto 2rem;
-    padding: 0.5rem 3rem;
-    background: var(--white);
-    border-radius: 50px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    border: 1.5px solid var(--dark-green);
-    position: relative;
-    z-index: 10;
-    text-align: center;
-}
-
-
-.vendor-products-section h2 {
-    margin: 0.7rem 7rem;
-    padding: 0.5rem 0;
-    border-bottom: none;
-    font-size: 1.7rem;
+.no-products {
+    grid-column: 1 / -1;
+    padding: var(--space-12) var(--space-4);
+    color: var(--color-text-muted);
     font-style: italic;
-}
-
-.vendor-profile-container {
-    border-radius: 0 0 20px 20px;
-    overflow: hidden;
+    text-align: center;
 }

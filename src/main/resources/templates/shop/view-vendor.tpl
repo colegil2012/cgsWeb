@@ -13,33 +13,34 @@ layout 'layout.tpl',
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/vendor.css') },
         content: {
-            div(class: 'vendor-profile-container') {
-                // Vendor Header Section
-                div(class: 'vendor-header-card') {
-                    div(class: 'vendor-header-logo') {
-                        img(src: ImageUrlUtil.resolve(vendor?.logoUrl, imagesBaseUrl) ?: '/images/site-images/default-vendor.png', alt: vendor?.name)
+
+            // Vendor banner (uses shared .hero with .hero-vendor-* helpers)
+            div(class: 'hero') {
+                div(class: 'hero-content') {
+                    div(class: 'hero-vendor-logo') {
+                        img(src: ImageUrlUtil.resolve(vendor?.logoUrl, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
+                                alt: vendor?.name)
                     }
-                    div(class: 'vendor-header-info') {
-                        h1(class: 'vendor-name', vendor?.name)
-                        p(class: 'vendor-bio', vendor?.description)
-                        div(class: 'vendor-location') {
-                            span(class: 'location-label', 'Find us at:')
-                            def displayAddr = vendor?.addresses?.find { it.isDefault } ?: vendor?.addresses?.getAt(0)
-                            if (displayAddr) {
-                                p(class: 'address-line', "${displayAddr.street1 ?: ''}")
-                                p(class: 'address-line', "${displayAddr.city ?: ''}, ${displayAddr.state ?: ''} ${displayAddr.zip ?: ''}")
-                            } else {
-                                p(class: 'address-line', 'No address listed.')
-                            }
+                    h1(class: 'hero-vendor-name', vendor?.name)
+                    if (vendor?.description) {
+                        p(class: 'hero-vendor-bio', vendor.description)
+                    }
+                    div(class: 'hero-vendor-location') {
+                        span(class: 'hero-vendor-location-label', 'Find us at:')
+                        def displayAddr = vendor?.addresses?.find { it.isDefault } ?: vendor?.addresses?.getAt(0)
+                        if (displayAddr) {
+                            p(class: 'hero-vendor-address-line', "${displayAddr.street1 ?: ''}")
+                            p(class: 'hero-vendor-address-line', "${displayAddr.city ?: ''}, ${displayAddr.state ?: ''} ${displayAddr.zip ?: ''}")
+                        } else {
+                            p(class: 'hero-vendor-address-line', 'No address listed.')
                         }
                     }
                 }
+            }
 
-                // Products Section
-                div(class: 'vendor-products-section') {
-                    div(class: 'product-header-container') {
-                        h2 "Products from ${vendor?.name}"
-                    }
+            // Products grid
+            div(class: 'vendor-products-section') {
+                div(class: 'container-wide') {
                     div(class: 'product-grid') {
                         if (products) {
                             products.each { product ->
@@ -49,16 +50,23 @@ layout 'layout.tpl',
                                     }
                                     div(class: 'product-info') {
                                         div(class: 'product-title') {
-                                            p(class: 'title-name', product.name)
-                                            span(class: 'category', product.categoryName)
+                                            span(class: 'title-name', product.name)
+                                            span(class: 'category-tag', product.categoryName)
                                         }
-                                        p(class: 'description', product.description)
+                                        p(class: 'product-card-description', product.description)
 
+                                        if (product.stock != null && product.stock < (product.lowStockThreshold ?: 0)) {
+                                            div(class: 'warning-wrapper') {
+                                                span(class: 'low-stock-warn', "Low Stock! Only ${product.stock} left!")
+                                            }
+                                        } else {
+                                            div(class: 'spacing-wrapper') {}
+                                        }
                                     }
 
-                                    div(class: 'product-footer') {
+                                    div(class: 'product-card-footer') {
                                         span(class: 'price', "\$${product.price}")
-                                        button(class: 'btn-small', onclick: "addToCart('${product.id}')", 'Add to Cart')
+                                        button(class: 'btn btn-small', onclick: "addToCart('${product.id}')", 'Add to Cart')
                                     }
                                 }
                             }
@@ -66,8 +74,9 @@ layout 'layout.tpl',
                             p(class: 'no-products', 'This vendor has no products listed yet.')
                         }
                     }
-                    div(class: 'pagination-container') {
-                        if (totalPages > 1) {
+
+                    if (totalPages > 1) {
+                        div(class: 'pagination-container') {
                             (0..<totalPages).each { i ->
                                 a(href: "/vendor/${vendor.id}?page=${i}",
                                         class: "page-link ${i == currentPage ? 'active' : ''}", i + 1)
@@ -76,5 +85,6 @@ layout 'layout.tpl',
                     }
                 }
             }
+
             script(src: '/scripts/shop/cart-update.js') {}
         }

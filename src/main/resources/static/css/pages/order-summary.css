@@ -1,0 +1,204 @@
+/* /css/components/order-summary.css
+ *
+ * Shared right-column "Order Summary" panel used on the cart and checkout
+ * pages. The order-confirmation page renders an equivalent panel in
+ * confirmation-prefixed classes for now; when that page is migrated, its
+ * .confirmation-totals rules will be deleted and it will adopt these
+ * classes too.
+ *
+ * Class hierarchy:
+ *   .checkout-summary       — the sticky right-column card (wrapper)
+ *     .order-summary        — totals panel inside the card
+ *       .summary-row        — one labelled row (e.g. "Subtotal" + "$12.00")
+ *       .summary-row.total  — emphasized final-row variant
+ *       .summary-value      — the numeric value cell (right-aligned, tabular)
+ *   .cart-actions-block     — wrapper around the action area below totals
+ *                             (used on cart for ship-to + checkout button)
+ *   .checkout-footer        — bottom logo strip (CGS)
+ *
+ * Layout helpers:
+ *   .ship-to-row, .ship-to-controls — used on cart only; live here because
+ *   they are part of the summary panel's vocabulary, even though only one
+ *   page renders them.
+ */
+
+/* ============================================================================
+ * Wrapper card
+ * ============================================================================ */
+
+.checkout-summary {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6) var(--space-8);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 100px;
+    box-sizing: border-box;
+}
+
+.checkout-summary h2 {
+    margin: 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-green-soft);
+    font-size: var(--font-xl);
+    color: var(--color-green-deep);
+}
+
+/* ============================================================================
+ * Totals panel
+ *
+ * Note: templates render `<div class="summary-details" id="order-summary">`
+ * today. New markup should add `order-summary` as the class for clarity, but
+ * we keep `.summary-details` working so we don't have to touch JS hooks.
+ * ============================================================================ */
+
+.order-summary,
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.order-summary hr,
+.summary-details hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px dashed var(--color-brown-soft);
+    margin: var(--space-1) 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: var(--font-md);
+    color: var(--color-brown-deep);
+}
+
+.summary-row.total {
+    margin-top: var(--space-1);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--color-brown-soft);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-lg);
+    color: var(--color-green-deep);
+}
+
+.summary-value {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================================
+ * Cart action block (ship-to selector + Proceed-to-Checkout button)
+ *
+ * Lives on the cart page only, but the styling is part of the summary
+ * panel's vocabulary, so it lives here.
+ * ============================================================================ */
+
+.cart-actions-block {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.ship-to-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.ship-to-row label {
+    font-size: 0.7rem;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--color-brown-deep);
+    margin-left: var(--space-3);
+}
+
+.ship-to-controls {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    gap: var(--space-2);
+    align-items: stretch;
+    padding: var(--space-2) 0;
+}
+
+.ship-to-controls #shipping-dropdown {
+    flex: 1 1 auto;
+    width: 73%;
+    margin-bottom: 0;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-round);
+    background: var(--color-bg);
+    color: var(--color-brown-deep);
+    font-weight: var(--weight-medium);
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.ship-to-controls #shipping-dropdown:focus {
+    border-color: var(--color-green-bright);
+    box-shadow: var(--shadow-glow-green);
+}
+
+.ship-to-controls #openUpdateAddress {
+    flex: 0 0 auto;
+    width: 25%;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* ============================================================================
+ * Footer logos (CGS + Square)
+ * ============================================================================ */
+
+.checkout-footer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-brown-soft);
+}
+
+.checkout-footer img {
+    max-height: 28px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* ============================================================================
+ * Responsive — when the page stacks (cart at 900px, checkout at 900px),
+ * the sticky right column drops to a static full-width block so it doesn't
+ * stick mid-scroll on a single-column layout.
+ * ============================================================================ */
+
+@media (max-width: 900px) {
+    .checkout-summary {
+        width: 100%;
+        position: static;
+    }
+}
+
+@media (max-width: 600px) {
+    .ship-to-controls {
+        flex-direction: column;
+    }
+
+    .ship-to-controls #shipping-dropdown,
+    .ship-to-controls #openUpdateAddress {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+}

@@ -1,19 +1,45 @@
-/* /css/pages/product.css */
-/* Product Page Styles */
+/* /css/pages/product.css
+ *
+ * Single-product detail view. Visually shares its language with the product
+ * card (category-tag, vendor link styling, price treatment) but the layout
+ * is its own — image left, details right, full-width footer at the bottom.
+ *
+ * Class map (in sync with product.tpl):
+ *   .product-view-container      — outer flex wrapper (image + details)
+ *   .product-view-image          — left column
+ *   .product-view-details        — right column
+ *   .category-tag                — shared with product card (cards.css)
+ *   .name-tag                    — large product title
+ *   .vendor-text                 — "Supplied by <Vendor>" byline
+ *   .product-description         — body copy
+ *   .product-footer              — price + add-to-cart row (page-scoped)
+ *   .price-large                 — XL price treatment
+ */
+
+/* ============================================================================
+ * Layout
+ * ============================================================================ */
 
 .product-view-container {
     display: flex;
-    gap: 60px;
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     align-items: flex-start;
+    gap: var(--space-12);
+    padding: var(--space-8);
+    margin-top: var(--space-4);
+    background: var(--color-bg);
+    border: 2px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
 .product-view-image {
     flex: 1;
     max-width: 500px;
+}
+
+.product-view-image img {
+    width: 100%;
+    border-radius: var(--radius-md);
 }
 
 .product-view-details {
@@ -23,44 +49,111 @@
     min-height: 400px;
 }
 
+/* ============================================================================
+ * Header block
+ *
+ * .category-tag is defined in cards.css (shared with the product card) — we
+ * only override what the larger context needs.
+ * ============================================================================ */
+
 .product-view-details .category-tag {
     display: inline-block;
-    text-transform: uppercase;
+    width: fit-content;
+    margin-bottom: var(--space-4);
+    /* a touch larger and rounder than the card version */
+    border-radius: var(--radius-round);
+    padding: var(--space-1) var(--space-3);
     font-size: 0.75rem;
     letter-spacing: 1px;
-    border-radius: 20px;
-    background: var(--primary-green);
-    color: var(--accent-green);
-    padding: 4px 12px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    width: fit-content;
+    /* override card's truncation — full label on the detail page */
+    max-width: none;
+    overflow: visible;
 }
 
 .product-view-details .name-tag {
     display: block;
-    font-size: 2.5rem;
-    color: var(--dark-green);
+    margin-bottom: var(--space-1);
     padding: 0;
-    font-weight: 700;
-    margin-bottom: 5px;
-    line-height: 1.2;
+    font-family: var(--font-family-display);
+    font-size: 2.5rem;
+    font-weight: var(--weight-bold);
+    line-height: var(--line-tight);
+    color: var(--color-green-deep);
     white-space: normal;
 }
 
 .vendor-text {
-    margin: 0;
-    color: var(--earth-brown);
+    margin: 0 0 var(--space-6) 0;
+    color: var(--color-brown-deep);
     font-style: italic;
+}
+
+.vendor-text a {
+    color: var(--color-green-deep);
+}
+
+.vendor-text a:hover {
+    color: var(--color-green-bright);
+}
+
+/* ============================================================================
+ * Body copy
+ * ============================================================================ */
+
+.product-description {
+    margin: 0 0 var(--space-6) 0;
+    color: var(--color-text);
+    line-height: var(--line-loose);
+}
+
+/* ============================================================================
+ * Footer (price + CTA)
+ *
+ * Scoped to .product-view-details so it doesn't bleed into anything else
+ * that might still use a generic .product-footer class.
+ * ============================================================================ */
+
+.product-view-details .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: auto;
+    padding: var(--space-4) 0 0;
+    border-top: 1px solid var(--color-brown-soft);
 }
 
 .price-large {
     font-size: 2.2rem;
-    font-weight: bold;
-    color: var(--earth-brown);
-    margin-right: 0;
+    font-weight: var(--weight-bold);
+    color: var(--color-brown-deep);
 }
 
-.product-footer .warning-wrapper {
-    width: 33%;
+.product-view-details .product-footer .warning-wrapper {
+    flex: 1;
+    margin: 0;
+}
+
+/* ============================================================================
+ * Responsive
+ * ============================================================================ */
+
+@media (max-width: 768px) {
+    .product-view-container {
+        flex-direction: column;
+        padding: var(--space-4);
+        gap: var(--space-6);
+    }
+
+    .product-view-image {
+        max-width: 100%;
+    }
+
+    .product-view-details .name-tag {
+        font-size: 2rem;
+    }
+
+    .product-view-details .product-footer {
+        flex-wrap: wrap;
+    }
 }

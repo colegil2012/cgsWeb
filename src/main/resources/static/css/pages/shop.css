@@ -1,2 +1,195 @@
-/* /css/pages/shop.css */
-/* Shop Page Styles */
+/* /css/pages/shop.css
+ *
+ * Shop page only. Owns the filter bar that sits below the hero, the
+ * product-grid spacing for this page, and any shop-specific responsive
+ * tweaks. The product card itself is a shared component and lives in
+ * components/cards.css.
+ *
+ * Naming: every filter class is prefixed with `shop-filter-` so it's
+ * unmistakable that these belong to one feature on one page. They are
+ * intentionally NOT named like form-submission classes — the filter is a
+ * GET-with-querystring search UI, not a record-editing form, and shouldn't
+ * inherit the visual language of signup/login/account forms.
+ */
+
+/* ============================================================================
+ * Filter bar
+ *
+ *   .shop-filter            — the rounded pill bar wrapper (sits below hero)
+ *   .shop-filter-form       — the <form> element
+ *   .shop-filter-fields     — left cluster: search + the two select dropdowns
+ *   .shop-filter-actions    — right cluster: low-stock toggle + apply button
+ *   .shop-filter-field      — one label + control pair
+ *   .shop-filter-toggle     — the pill-shaped checkbox-as-toggle ("Low Stock!")
+ * ============================================================================ */
+
+.shop-filter {
+    max-width: var(--container-wide);
+    margin: calc(var(--space-8) * -1) auto var(--space-8);
+    padding: var(--space-4) var(--space-8);
+    background: linear-gradient(to bottom,
+    var(--color-brown-cream),
+    var(--color-bg));
+    border: 2px solid var(--color-brown-soft);
+    border-radius: var(--radius-round);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: var(--layer-sticky);
+}
+
+.shop-filter-form {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-6);
+}
+
+.shop-filter-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+}
+
+.shop-filter-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    flex: 0 0 auto;
+    gap: var(--space-6);
+}
+
+/* ---- Field: one label + one control --------------------------------------- */
+
+.shop-filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.shop-filter-field label {
+    font-size: 0.7rem;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--color-brown-deep);
+    margin-left: var(--space-3);
+}
+
+.shop-filter-field select,
+.shop-filter-field input[type="text"] {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-round);
+    background: var(--color-bg);
+    color: var(--color-brown-deep);
+    font-weight: var(--weight-medium);
+    font-size: 0.88rem;
+    min-width: 180px;
+    outline: none;
+    transition: border-color var(--transition-fast),
+    box-shadow   var(--transition-fast);
+}
+
+.shop-filter-field select:focus,
+.shop-filter-field input[type="text"]:focus {
+    border-color: var(--color-green-bright);
+    box-shadow: var(--shadow-glow-green);
+}
+
+/* ---- Toggle: pill-shaped checkbox ---------------------------------------- */
+/*
+ * The whole pill is the click target. The native checkbox is hidden (not
+ * removed — keyboard + screen-reader access still work) and the pill itself
+ * shows the checked state via :has().
+ */
+
+.shop-filter-toggle {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-round);
+    background: var(--color-bg);
+    cursor: pointer;
+    transition: border-color var(--transition-fast),
+    box-shadow   var(--transition-fast),
+    background   var(--transition-fast);
+}
+
+.shop-filter-toggle:hover {
+    border-color: var(--color-brown-deep);
+}
+
+.shop-filter-toggle:has(input:checked) {
+    border-color: var(--color-green-bright);
+    background: var(--color-green-soft);
+    box-shadow: var(--shadow-glow-green);
+}
+
+.shop-filter-toggle:has(input:checked) label {
+    color: var(--color-green-deep);
+}
+
+.shop-filter-toggle label {
+    font-size: 0.72rem;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--color-brown-deep);
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.shop-filter-toggle input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ============================================================================
+ * Responsive — keep shop's responsive rules with shop
+ * ============================================================================ */
+
+@media (max-width: 768px) {
+    .shop-filter {
+        margin-top: calc(var(--space-4) * -1);
+        padding: var(--space-4);
+        border-radius: var(--radius-xl);
+    }
+
+    .shop-filter-form,
+    .shop-filter-fields,
+    .shop-filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-3);
+    }
+
+    .shop-filter-field select,
+    .shop-filter-field input[type="text"] {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .shop-filter-actions .btn {
+        width: 100%;
+    }
+}

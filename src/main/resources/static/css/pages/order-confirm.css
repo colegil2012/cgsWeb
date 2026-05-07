@@ -1,77 +1,104 @@
-/* /pages/order-confirm.css
+/* /css/pages/order-confirm.css
  *
- * Receipt page rendered after /checkout/submit. Self-contained — does NOT
- * inherit from pages/checkout.css. The vendor-grouping shapes mirror the
- * checkout page visually so the customer sees a familiar layout, but the
- * class names are confirmation-prefixed to keep the two pages decoupled.
+ * Receipt page rendered at /checkout/confirmation/{orderId}.
+ *
+ * Adopts shared components for the things it shares with the checkout
+ * page and the cart:
+ *   - .order-summary / .summary-row    (components/order-summary.css)
+ *   - .order-items / .order-items-*    (components/order-items.css)
+ *
+ * What lives here:
+ *   - .confirmation-page              — outer wrapper
+ *   - .confirmation-banner            — celebratory block at top with the
+ *                                       Celtech text logo and order info
+ *   - .confirmation-grid              — two-column layout (items+address | totals+actions)
+ *   - .confirmation-section           — section wrapper inside the grid
+ *   - .confirmation-address-block     — deliver-to display
+ *   - .confirmation-instructions      — the "Instructions:" callout
+ *   - .confirmation-actions           — button stack on the right column
+ *   - .confirmation-cancel-help       — help text under the cancel button
+ *   - .confirmation-next-steps        — what's-next strip below the grid
+ *   - .confirmation-recommendations   — "More from the makers" panel
+ *
+ * Visual direction: matches the rest of the post-cart-checkout flow.
+ * Sections are flat (no card chrome), separated by their green-soft
+ * underlined headers. The banner is an exception — it gets a soft green
+ * tint to feel celebratory without being heavy.
  */
 
+/* ============================================================================
+ * Page wrapper
+ * ============================================================================ */
+
 .confirmation-page {
-    max-width: 1100px;
-    margin: 1.5rem auto;
-    padding: 0 1rem;
+    max-width: var(--container-base);
+    margin: var(--space-6) auto;
+    padding: 0 var(--space-4);
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: var(--space-6);
 }
 
-/* ---- Header banner -------------------------------------------------------- */
+/* ============================================================================
+ * Banner — centered text logo + thank-you + order info
+ *
+ * Soft green gradient (slightly darker than the original to make it feel
+ * a little more celebratory). Logo is centered above the text. Drops the
+ * separate green check badge — the logo is the focal point now.
+ * ============================================================================ */
 
 .confirmation-banner {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, var(--primary-green), #c8e6c9);
-    border: 1px solid var(--soft-brown);
-    border-radius: 16px;
-    box-shadow: 0 5px 18px rgba(46, 125, 50, 0.18);
-}
-
-.confirmation-check {
-    flex-shrink: 0;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent-green, #689f38);
-    color: var(--white);
-    font-size: 1.9rem;
-    font-weight: 700;
-    line-height: 56px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.30);
-    animation: confirm-check-pop 0.45s ease;
+    gap: var(--space-3);
+    padding: var(--space-8) var(--space-6);
+    background: linear-gradient(135deg,
+    var(--color-green-mid),
+    var(--color-green-soft));
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
 }
 
-@keyframes confirm-check-pop {
-    0%   { transform: scale(0.6); opacity: 0; }
-    60%  { transform: scale(1.08); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
+.confirmation-banner-logo {
+    margin: 0 auto var(--space-2);
+}
+
+.confirmation-banner-logo img {
+    display: block;
+    max-width: 280px;
+    width: 100%;
+    height: auto;
 }
 
 .confirmation-banner-text h1 {
     margin: 0;
-    color: var(--dark-green);
+    color: var(--color-green-deep);
     font-size: 1.7rem;
 }
 
 .confirmation-banner-text p {
-    margin: 0.25rem 0 0;
-    color: var(--earth-brown);
+    margin: var(--space-1) 0 0;
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
 }
 
 .confirmation-order-number {
-    font-weight: 700;
-    color: var(--dark-green);
+    color: var(--color-green-deep);
+    font-weight: var(--weight-bold);
     letter-spacing: 0.5px;
 }
 
-/* ---- Two-column layout ---------------------------------------------------- */
+/* ============================================================================
+ * Two-column layout (items + delivery on left, totals + actions on right)
+ * ============================================================================ */
 
 .confirmation-grid {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
-    gap: 1.25rem;
+    gap: var(--space-6);
     align-items: flex-start;
 }
 
@@ -81,266 +108,184 @@
     }
 }
 
+/* ============================================================================
+ * Section wrapper (no card chrome — flat with green-soft underlined header)
+ * ============================================================================ */
+
 .confirmation-section {
-    background: var(--white);
-    padding: 1.25rem 1.5rem;
-    border-radius: 16px;
-    border: 1px solid var(--soft-brown);
-    box-shadow: 0 5px 15px rgba(0,0,0, 0.05);
+    margin-bottom: var(--space-6);
 }
 
 .confirmation-section h2 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1.15rem;
-    color: var(--dark-green);
-    border-bottom: 2px solid var(--primary-green);
-    padding-bottom: 0.4rem;
+    margin: 0 0 var(--space-4) 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-green-soft);
+    color: var(--color-green-deep);
+    font-size: var(--font-xl);
 }
 
-/* ---- Vendor groups + items (ported from checkout.css with own prefix) ----- */
-
-.confirmation-items {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+/* "No items recorded" empty state — centered + muted */
+.confirmation-empty {
+    color: var(--color-text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: var(--space-8) 0;
 }
 
-.confirmation-vendor-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.confirmation-vendor-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: linear-gradient(to bottom, var(--white), var(--primary-green));
-    border: 1px solid var(--soft-brown);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.confirmation-vendor-logo {
-    flex: 0 0 auto;
-}
-
-.confirmation-vendor-logo img {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.confirmation-vendor-name h3 {
-    margin: 0;
-    font-size: 1.05rem;
-    color: var(--dark-green);
-}
-
-.confirmation-item-row {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 0.6rem 0.75rem;
-    border-bottom: 1px solid var(--soft-brown);
-}
-
-.confirmation-item-row:last-child {
-    border-bottom: none;
-}
-
-.confirmation-item-img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-}
-
-.confirmation-item-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    min-width: 0;
-}
-
-.confirmation-item-name {
-    font-weight: 600;
-    color: var(--earth-brown);
-    font-size: 0.95rem;
-}
-
-.confirmation-item-qty {
-    font-size: 0.82rem;
-    color: var(--text-color, #5d4037);
-}
-
-.confirmation-item-price {
-    font-weight: 700;
-    color: var(--earth-brown);
-    font-size: 1rem;
-    flex-shrink: 0;
-    font-variant-numeric: tabular-nums;
-}
-
-/* ---- Right column (sticky totals) ----------------------------------------- */
+/* ============================================================================
+ * Right column — sticky on desktop so the totals stay visible while the
+ * customer scrolls through the items list
+ * ============================================================================ */
 
 .confirmation-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
     position: sticky;
     top: 90px;
-}
-
-.confirmation-totals {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: var(--space-4);
 }
 
-.confirmation-totals .summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.95rem;
-    color: var(--earth-brown);
+@media (max-width: 860px) {
+    .confirmation-right {
+        position: static;
+    }
 }
 
-.confirmation-totals .summary-row.total {
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px dashed rgba(93, 64, 55, 0.30);
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--dark-green);
-}
-
-.confirmation-totals .summary-value {
-    font-variant-numeric: tabular-nums;
-}
+/* ============================================================================
+ * Action buttons stack
+ *
+ * Buttons stack vertically on the receipt page (Continue shopping, View
+ * orders, optionally Cancel). Uses .btn variants from components/buttons.css.
+ * ============================================================================ */
 
 .confirmation-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
 }
 
-.confirmation-actions .btn-secondary {
-    background: transparent;
-    color: var(--dark-green);
-    border: 1px solid var(--accent-green);
-}
-
-.confirmation-actions .btn-secondary:hover {
-    background: var(--primary-green);
-}
-
+/* The "Cancel this order" button is destructive — outlined red, hover
+ * fills with light red. Disabled / expired state desaturates. */
 .confirmation-actions .btn-cancel-order {
+    margin-top: var(--space-2);
     background: transparent;
-    color: #b91c1c;
-    border: 1px solid #b91c1c;
-    margin-top: 0.4rem;
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
 }
 
 .confirmation-actions .btn-cancel-order:hover:not(:disabled) {
-    background: #fde9e7;
+    background: var(--color-warn-soft);
 }
 
 .confirmation-actions .btn-cancel-order.is-expired,
 .confirmation-actions .btn-cancel-order:disabled {
-    background: #f3f4f6;
-    color: #9ca3af;
-    border-color: #e5e7eb;
+    background: var(--color-bg-soft);
+    color: var(--color-text-muted);
+    border-color: var(--color-brown-soft);
     cursor: not-allowed;
 }
 
 .confirmation-cancel-help {
-    margin: 0.4rem 0 0;
-    font-size: 0.78rem;
-    color: var(--earth-brown, #5d4037);
+    margin: var(--space-2) 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
     font-style: italic;
     text-align: center;
 }
 
 .confirmation-cancel-help.is-error {
-    color: #b91c1c;
+    color: var(--color-error);
     font-style: normal;
 }
 
-/* ---- Address panel + instructions ---------------------------------------- */
+/* ============================================================================
+ * Delivering-to address block + instructions callout
+ * ============================================================================ */
+
+.confirmation-address-block {
+    padding: var(--space-4);
+    background: var(--color-brown-cream);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
+}
 
 .confirmation-address-block p {
-    margin: 0.15rem 0;
-    color: var(--earth-brown);
+    margin: 2px 0;
+    color: var(--color-brown-deep);
 }
 
 .confirmation-instructions {
-    margin: 0.6rem 0 0;
-    padding: 0.75rem 1rem;
-    background: rgba(232, 245, 233, 0.45);
-    border-left: 3px solid var(--accent-green);
-    border-radius: 8px;
-    color: var(--earth-brown);
+    margin: var(--space-3) 0 0;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-green-soft);
+    border-left: 3px solid var(--color-green-bright);
+    border-radius: var(--radius-sm);
+    color: var(--color-brown-deep);
     font-style: italic;
-    line-height: 1.45;
+    line-height: var(--line-base);
 }
 
-/* ---- "What's next" strip -------------------------------------------------- */
+/* ============================================================================
+ * What's next strip
+ * ============================================================================ */
 
 .confirmation-next-steps {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    background: var(--white);
-    border: 1px solid var(--soft-brown);
-    border-radius: 16px;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-lg);
 }
 
 .confirmation-next-step h4 {
-    margin: 0 0 0.25rem 0;
-    color: var(--dark-green);
-    font-size: 1rem;
+    margin: 0 0 var(--space-1) 0;
+    color: var(--color-green-deep);
+    font-size: var(--font-md);
 }
 
 .confirmation-next-step p {
     margin: 0;
-    color: var(--earth-brown);
-    font-size: 0.9rem;
-    line-height: 1.4;
+    color: var(--color-brown-deep);
+    font-size: var(--font-sm);
+    line-height: var(--line-base);
+}
+
+/* ============================================================================
+ * Recommendations grid ("More from the makers")
+ * ============================================================================ */
+
+.confirmation-recommendations {
+    grid-column: 1 / -1;
 }
 
 .confirmation-recommendations h2 {
-    margin-bottom: 0.4rem;
+    margin-bottom: var(--space-1);
 }
 
 .confirmation-recs-sub {
-    margin: 0 0 1rem;
-    color: var(--earth-brown);
-    font-size: 0.9rem;
+    margin: 0 0 var(--space-4);
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
     font-style: italic;
 }
 
 .confirmation-recs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.85rem;
+    gap: var(--space-3);
 }
 
 @media (max-width: 540px) {
-    /* On phones, switch to horizontal scroll so the recommendations don't
-       push the receipt's footer way off-screen. */
+    /* On phones, switch to horizontal scroll so recommendations don't
+     * push the receipt's footer way off-screen. */
     .confirmation-recs-grid {
         display: flex;
         flex-wrap: nowrap;
         overflow-x: auto;
-        padding-bottom: 0.5rem;
+        padding-bottom: var(--space-2);
         scroll-snap-type: x mandatory;
     }
     .confirmation-recs-grid > .confirmation-rec-card {
@@ -352,46 +297,49 @@
 .confirmation-rec-card {
     display: flex;
     flex-direction: column;
-    text-decoration: none;
-    background: var(--white);
-    border: 1px solid var(--soft-brown);
-    border-radius: 12px;
     overflow: hidden;
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
     color: inherit;
-    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    text-decoration: none;
+    transition: box-shadow var(--transition-base),
+    transform var(--transition-base);
 }
 
 .confirmation-rec-card:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
 }
 
 .confirmation-rec-image {
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--primary-green), #c8e6c9);
+    background: linear-gradient(135deg,
+    var(--color-green-mid),
+    var(--color-green-soft));
 }
 
 .confirmation-rec-image img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
 }
 
 .confirmation-rec-body {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    padding: 0.6rem 0.7rem 0.75rem;
+    gap: var(--space-1);
+    padding: var(--space-3);
 }
 
 .confirmation-rec-name {
-    font-weight: 600;
-    color: var(--earth-brown);
-    font-size: 0.92rem;
-    line-height: 1.3;
-    /* Clamp to two lines so card heights stay aligned. */
+    color: var(--color-brown-deep);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-md);
+    line-height: var(--line-tight);
+    /* Two-line clamp so card heights stay aligned. */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -399,29 +347,32 @@
 }
 
 .confirmation-rec-price {
-    font-weight: 700;
-    color: var(--dark-green);
-    font-size: 0.95rem;
+    color: var(--color-green-deep);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-md);
     font-variant-numeric: tabular-nums;
 }
 
 .rec-price-sale {
-    color: #b91c1c;
-    margin-right: 0.35rem;
+    margin-right: var(--space-1);
+    color: var(--color-error);
 }
 
 .rec-price-original {
-    color: var(--earth-brown);
-    font-weight: 500;
+    color: var(--color-text-muted);
+    font-weight: var(--weight-medium);
+    font-size: var(--font-sm);
     text-decoration: line-through;
-    font-size: 0.82rem;
     opacity: 0.75;
 }
 
-/* ---- Print stylesheet ----------------------------------------------------- */
+/* ============================================================================
+ * Print stylesheet
+ * ============================================================================ */
 
 @media print {
-    header, footer, .confirmation-actions, .confirmation-next-steps {
+    header, footer, .confirmation-actions, .confirmation-next-steps,
+    .confirmation-recommendations {
         display: none !important;
     }
     .confirmation-page {
@@ -435,15 +386,13 @@
         position: static;
     }
     body {
-        background: #fff;
+        background: var(--color-bg);
     }
-    .confirmation-section,
     .confirmation-banner {
         box-shadow: none;
-        border-color: #ddd;
+        border-color: var(--color-brown-soft);
     }
-}
-
-@media print {
-    .confirmation-recommendations { display: none !important; }
+    .confirmation-next-steps {
+        box-shadow: none;
+    }
 }

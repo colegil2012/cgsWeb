@@ -22,13 +22,14 @@ layout 'layout.tpl',
             div(class: 'container') {
                 a(
                         href: (backLinkHref ?: '/shop'),
-                        class: 'btn-small',
+                        class: 'btn btn-small',
                         (backLinkText ?: '← Back to Shop')
                 )
 
                 div(class: 'product-view-container') {
                     div(class: 'product-view-image') {
-                        img(src: ImageUrlUtil.resolve(selected_product.imageUrl, imagesBaseUrl) ?: '/images/placeholder.jpg', alt: selected_product.name, style: 'width: 100%; border-radius: 8px;')
+                        img(src: ImageUrlUtil.resolve(selected_product.imageUrl, imagesBaseUrl) ?: '/images/placeholder.jpg',
+                                alt: selected_product.name)
                     }
 
                     div(class: 'product-view-details') {
@@ -51,7 +52,7 @@ layout 'layout.tpl',
                                 }
                             }
 
-                            button(class: 'btn-small', onclick: "addToCart('${selected_product.id}')", 'Add to Cart')
+                            button(class: 'btn btn-small', onclick: "addToCart('${selected_product.id}')", 'Add to Cart')
                         }
                     }
                 }

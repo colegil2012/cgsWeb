@@ -28,8 +28,6 @@ html {
         link(rel: 'stylesheet', href: '/css/components/alerts.css')
         link(rel: 'stylesheet', href: '/css/components/animations.css')
         link(rel: 'stylesheet', href: '/css/components/pagination.css')
-        link(rel: 'stylesheet', href: '/css/components/mobile.css')
-        link(rel: 'stylesheet', href: '/css/components/images.css')
         link(rel: 'stylesheet', href: '/css/components/spinning-leaves.css')
 
         if(headContent != null) {
@@ -39,7 +37,9 @@ html {
     body {
         header {
             div(class: 'logo') {
-                img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo.png', imagesBaseUrl), alt: 'Celtech Logo', class: 'header-image')
+                img(src: ImageUrlUtil.resolve('/images/site-images/CGS Logo.png', imagesBaseUrl),
+                        alt: 'Celtech Logo',
+                        class: 'header-image')
             }
             nav {
                 ul {
@@ -103,5 +103,7 @@ html {
         main {
             content()
         }
+
+        include template: 'partials/footer.tpl'
     }
 }

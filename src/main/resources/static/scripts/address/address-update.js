@@ -93,7 +93,7 @@
     wrapper.innerHTML = `
       <div class="address-edit-card-header">
         <strong>New Address #${index + 1}</strong>
-        <button type="button" class="btn-small" data-remove="1">Remove</button>
+        <button type="button" class="btn btn-small" data-remove="1">Remove</button>
       </div>
 
       <div class="form-control">
@@ -134,7 +134,7 @@
       <div class="update-address-footer">
         <div class="form-control">
           <input type="checkbox" name="newAddresses[${index}].default" value="true" />
-          <label style="margin:0;">Make default</label>
+          <label>Make default</label>
         </div>
       </div>
     `;

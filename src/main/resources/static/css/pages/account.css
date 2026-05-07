@@ -1,125 +1,243 @@
-/* /css/pages/account.css */
-/* My Account Page Styles */
+/* /css/pages/account.css
+ *
+ * User account page. Tabbed layout mirroring the vendor portal:
+ *   - Personal Info  — read-only profile data
+ *   - Addresses      — list of saved addresses + edit modal trigger
+ *   - Order History  — paginated order-card list
+ *   - Security       — change-password modal trigger
+ *
+ * Visual direction: matches /vendor/portal exactly. Hero at the top, then
+ * a centered tab-nav strip with a full-width bottom border, then
+ * container-wide content. No nested cards — sections are separated by
+ * the section header's green underline rather than card borders.
+ *
+ * Class hierarchy (parallel to .vendor-portal-* in vendor-portal.css):
+ *   .account-portal-container        — outer wrapper (container-base + padding)
+ *   .account-portal-tabs             — centered tab nav strip
+ *     .account-portal-tab            — single tab
+ *   .account-portal-panel            — content panel below tabs
+ *     .account-portal-section        — one section (info, addresses, etc)
+ *     .account-portal-section-header — title strip (centered, green underline)
+ *     .account-portal-empty-state    — friendly "nothing here yet" panel
+ *
+ * Page-scoped (used only here):
+ *   .info-group                      — labelled read-only field display
+ *   .order-list                      — vertical stack of order cards
+ *   .order-card                      — one row in the order history
+ *   .order-status-pill / .order-status-* — order status indicators
+ *   .account-portal-actions          — button row under a section
+ */
 
-/* Account Tabs Layout */
-.account-tabs-layout {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 30px;
-    align-items: start;
+/* ============================================================================
+ * Page wrapper
+ * ============================================================================ */
+
+.account-portal-container {
+    max-width: var(--container-base);
+    margin: var(--space-8) auto;
+    padding: 0 var(--space-4);
 }
 
-.account-tabs-nav {
-    background: linear-gradient(to bottom,var(--accent-brown), var(--white));
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 110px; /* keeps it visible under your sticky header */
+/* ============================================================================
+ * Tab navigation — full-width border, centered tabs
+ * (Same treatment as vendor-portal-tabs)
+ * ============================================================================ */
+
+.account-portal-tabs {
+    border-bottom: 2px solid var(--color-brown-soft);
+    margin-bottom: var(--space-6);
 }
 
-.account-tabs-nav h2 {
-    margin-top: 0;
+.account-portal-tabs ul {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.account-portal-tab {
+    flex: 0 0 auto;
+}
+
+.account-portal-tab a {
+    display: block;
+    padding: var(--space-3) var(--space-6);
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    margin-bottom: -2px;
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.account-portal-tab a:hover {
+    color: var(--color-green-deep);
+}
+
+.account-portal-tab.active a {
+    color: var(--color-green-deep);
+    font-weight: var(--weight-bold);
+    border-bottom-color: var(--color-green-bright);
+}
+
+/* ============================================================================
+ * Content panel + sections
+ * ============================================================================ */
+
+.account-portal-panel {
+    min-height: 400px;
+}
+
+.account-portal-section {
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-brown-soft);
+}
+
+.account-portal-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
     border-bottom: none;
 }
 
-.tabs-list {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 0 0;
+.account-portal-section-header {
+    margin-bottom: var(--space-6);
+    text-align: center;
+}
+
+.account-portal-section-header h2 {
+    display: inline-block;
+    margin: 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-green-soft);
+    color: var(--color-green-deep);
+    font-size: var(--font-xl);
+}
+
+.account-portal-section-sub {
+    margin: var(--space-2) auto 0;
+    max-width: 36em;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    text-align: center;
+}
+
+/* ============================================================================
+ * Section actions — button row sitting below the content of a section
+ *
+ * Replaces the inline `style="display:flex; gap:12px; ..."` blocks on the
+ * Edit Addresses and Change Password buttons.
+ * ============================================================================ */
+
+.account-portal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+}
+
+/* ============================================================================
+ * Profile & security — labelled read-only data display
+ *
+ * Vertical stack of "label above readonly value" pairs. Centered and
+ * width-constrained so it doesn't sprawl across the full container.
+ * ============================================================================ */
+
+.info-group-list {
+    max-width: 600px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-4);
 }
 
-.tab-item a {
-    display: block;
-    padding: 10px 12px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--earth-brown);
-    border: 1px solid transparent;
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
 }
 
-.tab-item a:hover {
-    background: var(--primary-green);
-    border-color: var(--soft-brown);
+.info-group label {
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
-.tab-item.active a {
-    background: var(--primary-green);
-    border-color: var(--accent-green);
-    color: var(--dark-green);
-    font-weight: 700;
+/* Helper text below a readonly-box (e.g. "Password hidden for security"). */
+.info-group small {
+    margin-top: var(--space-1);
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    font-style: italic;
 }
 
-.account-tabs-panel {
-    min-width: 0;
-}
-/* ─── Section headers (reused across tabs) ───────────────────────────── */
+/* ============================================================================
+ * Address list (uses .address-card from cards.css; this is just layout)
+ * ============================================================================ */
 
-.account-section-header h2 {
-    margin: 0 0 0.25rem 0;
-    color: var(--dark-green);
-    font-size: 1.3rem;
-    border-bottom: 2px solid var(--primary-green);
-    padding-bottom: 0.4rem;
-}
-
-.account-section-sub {
-    margin: 0.5rem 0 1rem;
-    color: var(--earth-brown);
-    font-size: 0.9rem;
+.account-address-list {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
 }
 
-.account-empty-state {
-    padding: 2rem;
+.account-address-list-empty {
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--color-text-muted);
+    font-style: italic;
     text-align: center;
-    background: var(--white);
-    border: 1px dashed var(--soft-brown);
-    border-radius: 14px;
-    color: var(--earth-brown);
 }
 
-.account-empty-state .btn {
-    display: inline-block;
-    margin-top: 0.75rem;
-}
-
-/* ─── Order list ─────────────────────────────────────────────────────── */
+/* ============================================================================
+ * Order list & order cards
+ *
+ * Container-wide grid — thumb / body / side. With the wider container the
+ * card needs more breathing room than before; thumb and side both grow,
+ * typography scales up so the card doesn't feel empty.
+ * ============================================================================ */
 
 .order-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
 }
 
 .order-card {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: 1rem;
+    gap: var(--space-6);
     align-items: center;
-    padding: 0.85rem 1rem;
-    background: var(--white);
-    border: 1px solid var(--soft-brown);
-    border-radius: 14px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    padding: var(--space-6) var(--space-8);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base),
+    transform var(--transition-base);
 }
 
 .order-card:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
 }
+
+/* ---- Thumbnail (bigger now to balance the wider card) ----------------- */
 
 .order-card-thumb {
     position: relative;
-    width: 64px;
-    height: 64px;
+    width: 96px;
+    height: 96px;
     flex-shrink: 0;
 }
 
@@ -127,83 +245,88 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid var(--soft-brown);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
 }
 
 .order-card-extra-count {
     position: absolute;
-    right: -6px;
-    bottom: -6px;
-    min-width: 22px;
-    padding: 1px 6px;
-    background: var(--accent-green);
-    color: var(--white);
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
+    right: -8px;
+    bottom: -8px;
+    min-width: 28px;
+    padding: 2px var(--space-2);
+    background: var(--color-green-bright);
+    color: var(--color-bg);
+    border-radius: var(--radius-round);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
     text-align: center;
     line-height: 1.5;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow-sm);
 }
+
+/* ---- Body (middle column) --------------------------------------------- */
 
 .order-card-body {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: var(--space-2);
     min-width: 0;
 }
 
 .order-card-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-3);
     flex-wrap: wrap;
 }
 
 .order-card-number {
-    color: var(--dark-green);
-    font-size: 1rem;
+    color: var(--color-green-deep);
+    font-size: var(--font-lg);
+    font-weight: var(--weight-bold);
 }
 
 .order-card-meta {
     display: flex;
-    gap: 0.75rem;
-    color: var(--earth-brown);
-    font-size: 0.85rem;
+    gap: var(--space-4);
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
 }
+
+/* ---- Side actions (right column) -------------------------------------- */
 
 .order-card-side {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.4rem;
+    gap: var(--space-3);
     flex-shrink: 0;
 }
 
 .order-card-total {
-    font-weight: 700;
-    color: var(--dark-green);
-    font-size: 1.05rem;
+    color: var(--color-green-deep);
+    font-size: var(--font-xl);
+    font-weight: var(--weight-bold);
     font-variant-numeric: tabular-nums;
 }
 
 .order-card-link {
-    /* Inherits .btn-small from buttons.css; just a little tightening. */
-    padding: 0.25rem 0.7rem;
-    font-size: 0.8rem;
+    /* Inherits .btn .btn-small from buttons.css. */
 }
 
-/* ─── Status pills ──────────────────────────────────────────────────── */
+/* ============================================================================
+ * Order status pills — color-keyed by state
+ * ============================================================================ */
 
 .order-status-pill {
     display: inline-block;
-    padding: 2px 10px;
-    font-size: 0.7rem;
-    font-weight: 700;
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-round);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 999px;
+    letter-spacing: 0.3px;
     line-height: 1.5;
 }
 
@@ -214,42 +337,114 @@
 }
 
 .order-status-paid {
-    background: rgba(46, 125, 50, 0.18);
-    color: var(--dark-green);
-    border: 1px solid rgba(46, 125, 50, 0.30);
+    background: var(--color-green-soft);
+    color: var(--color-green-deep);
+    border: 1px solid var(--color-green-bright);
 }
 
 .order-status-cancelled {
     background: rgba(120, 120, 120, 0.18);
-    color: #555;
+    color: var(--color-text-muted);
     border: 1px solid rgba(120, 120, 120, 0.30);
 }
 
 .order-status-refunded {
-    background: rgba(192, 57, 43, 0.18);
-    color: #b91c1c;
-    border: 1px solid rgba(192, 57, 43, 0.30);
+    background: var(--color-warn-soft);
+    color: var(--color-error);
+    border: 1px solid var(--color-warn);
 }
 
-/* ─── Responsive ────────────────────────────────────────────────────── */
+/* ============================================================================
+ * Empty state — "no orders yet" / "no addresses yet"
+ * (Same vocabulary as vendor-portal-empty-state, page-scoped here.)
+ * ============================================================================ */
+
+.account-portal-empty-state {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-6);
+    background: var(--color-brown-cream);
+    border: 1px dashed var(--color-brown-soft);
+    border-radius: var(--radius-md);
+    color: var(--color-brown-deep);
+    text-align: center;
+}
+
+.account-portal-empty-state p {
+    margin: 0 0 var(--space-4) 0;
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
+    font-style: italic;
+    line-height: var(--line-base);
+}
+
+.account-portal-empty-state p:last-child {
+    margin-bottom: 0;
+}
+
+.account-portal-empty-state .btn {
+    margin-top: var(--space-2);
+}
+
+/* ============================================================================
+ * Responsive
+ * ============================================================================ */
+
+@media (max-width: 768px) {
+    .account-portal-container {
+        margin-top: var(--space-4);
+    }
+
+    /* Same horizontal-scrolling treatment as vendor-portal-tabs */
+    .account-portal-tabs {
+        overflow-x: auto;
+    }
+
+    .account-portal-tabs ul {
+        flex-wrap: nowrap;
+        min-width: max-content;
+        justify-content: flex-start;
+    }
+
+    .account-portal-tab a {
+        padding: var(--space-3) var(--space-4);
+        white-space: nowrap;
+    }
+
+    .account-portal-section-header h2 {
+        font-size: var(--font-lg);
+    }
+}
 
 @media (max-width: 640px) {
+    /* Order cards collapse to two-row layout: thumb+body on top, side
+     * actions below, separated by a dashed divider so the price/CTA
+     * still feel anchored. */
     .order-card {
         grid-template-columns: auto 1fr;
         grid-template-areas:
             "thumb body"
             "side  side";
+        padding: var(--space-4);
+        gap: var(--space-4);
     }
-    .order-card-thumb { grid-area: thumb; }
-    .order-card-body  { grid-area: body; }
-    .order-card-side  {
+
+    .order-card-thumb {
+        grid-area: thumb;
+        width: 72px;
+        height: 72px;
+    }
+
+    .order-card-body { grid-area: body; }
+
+    .order-card-side {
         grid-area: side;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        margin-top: 0.5rem;
-        padding-top: 0.5rem;
-        border-top: 1px dashed rgba(93, 64, 55, 0.30);
+        margin-top: var(--space-2);
+        padding-top: var(--space-3);
+        border-top: 1px dashed var(--color-brown-soft);
         width: 100%;
     }
 }

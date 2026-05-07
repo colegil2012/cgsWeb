@@ -1,34 +1,39 @@
-/* /components/alerts.css */
-/* Alert Component Styles */
+/* /css/components/alerts.css
+ *
+ * Banner-style notifications used at the top of forms (signup error
+ * summary, success messages after account updates, etc.). Keyed by
+ * variant class: .alert-error, .alert-success.
+ */
 
 .alert {
-    padding: 1rem;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
     display: block;
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-medium);
 }
 
 .alert-error {
-    background: var(--warning-bg);
-    color: var(--error-red);
-    border: 1px solid var(--warning-red);
+    background: var(--color-warn-soft);
+    color: var(--color-error);
+    border: 1px solid var(--color-warn);
 }
 
 .alert-success {
-    background: #c8e6c9;
-    color: #2e7d32;
-    border: 1px solid #a5d6a7;
+    background: var(--color-green-mid);
+    color: var(--color-success);
+    border: 1px solid var(--color-green-mid);
 }
 
 .alert ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 .alert li {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-2);
 }
 
 .alert li:last-child {

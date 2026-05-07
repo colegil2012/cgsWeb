@@ -20,6 +20,5 @@ public class Vendor {
     private String description;
     private List<Address> addresses = new ArrayList<>();
     private String logoUrl;
-    private int leadTime;
     private boolean active;
 }

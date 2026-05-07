@@ -41,7 +41,6 @@ public class Product {
     private String vendorId;
 
     private ProductAttributes attributes;
-    private int readyTime;
 
     @Data
     public static class ProductAttributes {

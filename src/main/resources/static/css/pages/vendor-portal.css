@@ -1,343 +1,340 @@
-/* /css/pages/vendor-portal.css */
-/* Vendor Portal Page Styles — Tabbed Layout */
+/* /css/pages/vendor-portal.css
+ *
+ * Vendor self-service portal. Tabbed page with four sections:
+ *   - Profile:   logo (left half) + read-only status (right half)
+ *   - Addresses: centered list of saved addresses + edit button
+ *   - Inventory: placeholder (admin-managed in current model)
+ *   - Orders:    placeholder (no vendor-facing orders in current model)
+ *
+ * Visual direction: every interactive block on the page sits in a
+ * narrowed, centered column so the portal feels like a focused settings
+ * page rather than a full-width dashboard. The tab nav strip's border
+ * runs full-width but the tab labels themselves group in the middle.
+ *
+ * Class hierarchy:
+ *   .vendor-portal-container          — outer wrapper (max-width + padding)
+ *   .vendor-portal-tabs               — tab nav strip
+ *     .vendor-portal-tab              — single tab
+ *   .vendor-portal-panel              — content panel below the tabs
+ *     .vendor-portal-section          — one section inside a tab
+ *     .vendor-portal-section-header   — section title strip
+ *     .vendor-portal-empty-state      — friendly "nothing here yet" message
+ *
+ * Profile-tab specifics:
+ *   .vendor-portal-profile-row        — 50/50 flex (logo | status)
+ *     .vendor-portal-profile-logo     — left half, content centered
+ *     .vendor-portal-profile-status   — right half, content centered
+ *
+ * Address-tab specifics:
+ *   .vendor-portal-address-block      — centered, narrowed wrapper
+ */
 
-/* ─── Container ─── */
+/* ============================================================================
+ * Page wrapper
+ * ============================================================================ */
+
 .vendor-portal-container {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
+    max-width: var(--container-base);
+    margin: var(--space-8) auto;
+    padding: 0 var(--space-4);
 }
 
-/* Padding helper */
-.padding-container {
-    padding: 1.2rem;
+.vendor-portal-container .alert-wrapper {
+    margin-bottom: var(--space-4);
 }
 
-/* ─── Tab Navigation (horizontal bar) ─── */
-.vendor-tabs-nav {
-    background: linear-gradient(to bottom, var(--soft-brown), var(--accent-brown));
-    border: 1px solid var(--soft-brown);
-    border-radius: 10px;
-    padding: 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-    margin-top: -50px;
+/* ============================================================================
+ * Tab navigation — full-width border, centered tabs
+ *
+ * The <ul> is centered inside the nav so the tab labels sit in the middle
+ * of the page; the bottom border still spans full width to keep the
+ * separation between nav and panel reading clearly.
+ * ============================================================================ */
+
+.vendor-portal-tabs {
+    border-bottom: 2px solid var(--color-brown-soft);
+    margin-bottom: var(--space-6);
 }
 
-.vendor-tabs-list {
-    list-style: none;
+.vendor-portal-tabs ul {
+    display: flex;
+    justify-content: center;
+    gap: 0;
     margin: 0;
     padding: 0;
-    display: flex;
-    gap: 0;
+    list-style: none;
 }
 
-.vendor-tab {
-    flex: 1;
-    text-align: center;
+.vendor-portal-tab {
+    flex: 0 0 auto;
 }
 
-.vendor-tab a {
+.vendor-portal-tab a {
     display: block;
-    padding: 14px 20px;
+    padding: var(--space-3) var(--space-6);
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
+    font-weight: var(--weight-medium);
     text-decoration: none;
-    color: var(--earth-brown);
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: background 0.2s, border-color 0.2s, color 0.2s;
-    border-radius: 10px;
+    margin-bottom: -2px;
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
-.vendor-tab a:hover {
-    background: var(--accent-brown);
-    color: var(--accent-green);
+.vendor-portal-tab a:hover {
+    color: var(--color-green-deep);
 }
 
-.vendor-tab.active a {
-    background: var(--white);
-    color: var(--dark-green);
-    font-weight: 700;
+.vendor-portal-tab.active a {
+    color: var(--color-green-deep);
+    font-weight: var(--weight-bold);
+    border-bottom-color: var(--color-green-bright);
 }
 
-/* ─── Tab Content Panel ─── */
-.vendor-tabs-panel {
-    margin-top: 1rem;
-    border: 1px solid var(--soft-brown);
-    border-radius: 10px;
-    background: linear-gradient(to bottom, var(--accent-brown), var(--white));
+/* ============================================================================
+ * Content panel + sections
+ * ============================================================================ */
+
+.vendor-portal-panel {
     min-height: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
 }
 
-.vendor-tab-content h2 {
-    margin-top: 0;
+.vendor-portal-section {
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-brown-soft);
+}
+
+.vendor-portal-section:last-child {
     margin-bottom: 0;
     padding-bottom: 0;
+    border-bottom: none;
 }
 
-/* ─── Profile Tab / Logo Section ─── */
-.vendor-logo-section {
+.vendor-portal-section-header {
+    margin-bottom: var(--space-4);
+    text-align: center;
+}
+
+.vendor-portal-section-header h2 {
+    display: inline-block;
+    margin: 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-green-soft);
+    color: var(--color-green-deep);
+    font-size: var(--font-xl);
+}
+
+/* ============================================================================
+ * Profile tab — 50/50 columns
+ *
+ * Each column reserves an equal half of the row and centers its content
+ * inside that half. Logo plate sits dead-center on the left; status pill
+ * + help text sit dead-center on the right. Vertical alignment runs to
+ * the middle of the row so the status reads as anchored to the logo.
+ * ============================================================================ */
+
+.vendor-portal-profile-row {
     display: flex;
+    align-items: center;
+    gap: var(--space-12);
+}
+
+.vendor-portal-profile-logo,
+.vendor-portal-profile-status {
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
     text-align: center;
-    gap: 10px;
+    display: flex;
 }
 
-.vendor-logo-section img {
-    width: 160px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 2px solid var(--soft-brown);
+.vendor-portal-profile-logo {
+    flex: 1;
+    align-items: center;
 }
 
-/* ─── Profile Tab / Settings Section ─── */
-
-.vendor-settings-section {
-    border-top: 1px solid var(--soft-brown);
-    width: 100%;
+.vendor-portal-profile-status {
+    flex: 1;
+    min-width: 0;
+    align-items: flex-start;
 }
 
-.vendor-section-header {
-    width: 100%;
-    background: var(--primary-green);
-    border-top: 2px solid var(--dark-green);
-    border-bottom: 2px solid var(--dark-green);
-    text-align: center;
-    margin: 1rem 0;
-    padding: 0.5rem 0;
+/* ---- Logo plate ---------------------------------------------------------- */
+
+.vendor-logo-preview-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-md);
 }
 
-.settings-header h2 {
-    color: var(--dark-green);
-}
-
-.vendor-settings {
-    margin-bottom: 1rem;
-}
-
-.vendor-settings label {
+.vendor-logo-preview {
     display: block;
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: var(--accent-green);
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
+    max-width: 200px;
+    max-height: 140px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
-.vendor-settings .vendor-setting-input {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid var(--soft-brown);
-    border-radius: 8px;
-    background: #fdfdfd;
-    box-sizing: border-box;
-    font-size: 0.9rem;
-}
+/* ---- Status pill --------------------------------------------------------- */
 
-.vendor-settings-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-
-/* ─── Inventory Management ─── */
-
-.inventory-item-card {
-    background: var(--white);
-    border: 2px solid var(--soft-brown);
-    border-radius: 10px;
-    margin-bottom: 1rem;
-    transition: box-shadow 0.2s;
-}
-
-.inventory-item-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-}
-
-.inventory-item-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: var(--soft-brown);
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 1.25rem 1.5rem;
-    border-bottom: 2px solid var(--soft-brown);
-}
-
-.inventory-item-title {
+.vendor-status-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: var(--white);
-    font-size: 1.05rem;
+    gap: var(--space-3);
 }
 
-.badge {
-    font-size: 0.7rem;
-    padding: 2px 10px;
-    border-radius: 4px;
-    font-weight: 600;
+.vendor-status-row .label {
+    color: var(--color-brown-deep);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
     text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
-.badge-active {
-    background: var(--primary-green);
-    color: var(--dark-green);
+.vendor-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-round);
+    font-size: var(--font-sm);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
-.badge-inactive {
-    background: var(--warning-bg);
-    color: var(--warning-red);
+.vendor-status-pill.is-active {
+    background: var(--color-green-soft);
+    color: var(--color-green-deep);
+    border: 1px solid var(--color-green-bright);
 }
 
-.inventory-item-details {
-    display: grid;
-    padding: 1.25rem 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
+.vendor-status-pill.is-inactive {
+    background: var(--color-brown-cream);
+    color: var(--color-brown-deep);
+    border: 1px solid var(--color-brown-soft);
 }
 
-.inventory-detail-group {
+.vendor-status-help {
+    margin: 0;
+    max-width: 36em;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    font-style: italic;
+}
+
+/* ============================================================================
+ * Address section — centered, narrowed
+ *
+ * The address cards span 100% of their (narrowed) wrapper rather than
+ * 100% of the page, so they read as a focused list rather than a giant
+ * full-width strip. The Edit-Addresses button sits centered below.
+ * ============================================================================ */
+
+.vendor-portal-address-block {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.vendor-address-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
 }
 
-.inventory-detail-group.full-width {
-    grid-column: 1 / -1;
-    margin-top: 0.5rem;
-}
-
-.inventory-detail-group label {
-    font-size: 0.72rem;
-    font-weight: bold;
-    color: var(--accent-green);
-    text-transform: uppercase;
-}
-
-.low-stock {
-    color: var(--error-red) !important;
-    font-weight: 700;
-}
-
-/* ── Edit Form ── */
-.inventory-edit-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-}
-
-.inventory-edit-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.inventory-edit-group.full-width {
-    grid-column: 1 / -1;
-}
-
-.inventory-edit-group label {
-    font-size: 0.72rem;
-    font-weight: bold;
-    color: var(--accent-green);
-    text-transform: uppercase;
-}
-
-.inventory-edit-group input[type="text"],
-.inventory-edit-group input[type="number"],
-.inventory-edit-group textarea {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid var(--soft-brown);
-    border-radius: 8px;
-    background: #fdfdfd;
-    box-sizing: border-box;
-    font-size: 0.9rem;
-    font-family: inherit;
-}
-
-.inventory-edit-group textarea {
-    resize: vertical;
-}
-
-.checkbox-wrapper {
+.vendor-address-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
 }
 
-.checkbox-wrapper input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+/* Empty-list "No addresses saved" copy — keep centered with the rest */
+.vendor-portal-address-block > p {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
 }
 
-.checkbox-wrapper label {
-    font-size: 0.85rem;
-    text-transform: none;
-    font-weight: normal;
-    color: var(--text-color);
+/* ============================================================================
+ * Empty-state panel — Inventory and Orders tabs
+ * ============================================================================ */
+
+.vendor-portal-empty-state {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-6);
+    background: var(--color-brown-cream);
+    border: 1px dashed var(--color-brown-soft);
+    border-radius: var(--radius-md);
+    color: var(--color-brown-deep);
+    text-align: center;
 }
 
-.inventory-edit-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--soft-brown);
+.vendor-portal-empty-state h3 {
+    margin: 0 0 var(--space-2) 0;
+    color: var(--color-green-deep);
+    font-size: var(--font-xl);
+    border: none;
 }
 
-.btn-save {
-    background: var(--accent-green) !important;
-    color: var(--white) !important;
+.vendor-portal-empty-state p {
+    margin: 0;
+    color: var(--color-brown-deep);
+    font-size: var(--font-md);
+    font-style: italic;
+    line-height: var(--line-base);
 }
 
-.btn-save:hover {
-    background: var(--dark-green) !important;
+.vendor-portal-empty-state p + p {
+    margin-top: var(--space-2);
 }
 
-/* ─── Responsive ─── */
+/* ============================================================================
+ * Responsive
+ * ============================================================================ */
+
 @media (max-width: 768px) {
-    .vendor-tabs-list {
+    .vendor-portal-container {
+        margin-top: var(--space-4);
+    }
+
+    /* Tabs become a horizontally-scrolling strip on narrow screens. The
+     * justify-content:center stops applying naturally when the items
+     * overflow the row, so they end up left-aligned at the scroll origin. */
+    .vendor-portal-tabs {
+        overflow-x: auto;
+    }
+
+    .vendor-portal-tabs ul {
+        flex-wrap: nowrap;
+        min-width: max-content;
+        justify-content: flex-start;
+    }
+
+    .vendor-portal-tab a {
+        padding: var(--space-3) var(--space-4);
+        white-space: nowrap;
+    }
+
+    .vendor-portal-section-header h2 {
+        font-size: var(--font-lg);
+    }
+
+    /* Profile columns stack; both already center their content so this
+     * mostly just reorders them top/bottom. */
+    .vendor-portal-profile-row {
         flex-direction: column;
-    }
-
-    .vendor-tabs-nav {
-        border-radius: 10px;
-    }
-
-    .vendor-tab a {
-        border-bottom: none;
-        border-left: 3px solid transparent;
-        border-radius: 0;
-        text-align: left;
-        padding: 12px 16px;
-    }
-
-    .vendor-tab.active a {
-        border-bottom: none;
-        border-left: 3px solid var(--accent-green);
-    }
-
-    .vendor-tabs-panel {
-        border-radius: 0 0 10px 10px;
-        padding: 20px 16px;
-    }
-
-    .inventory-item-details {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .inventory-edit-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .inventory-item-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        gap: var(--space-6);
     }
 }

@@ -28,7 +28,6 @@ html {
         link(rel: 'stylesheet', href: '/css/components/alerts.css')
         link(rel: 'stylesheet', href: '/css/components/animations.css')
         link(rel: 'stylesheet', href: '/css/components/pagination.css')
-        link(rel: 'stylesheet', href: '/css/components/mobile.css')
         link(rel: 'stylesheet', href: '/css/components/spinning-leaves.css')
 
         if(headContent != null) {
@@ -104,5 +103,7 @@ html {
         main {
             content()
         }
+
+        include template: 'partials/footer.tpl'
     }
 }

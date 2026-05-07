@@ -28,7 +28,6 @@ public class User {
     private String vendorId;
 
     private UserProfile profile;
-    private SquareProfile squareProfile;
     private List<Address> addresses = new ArrayList<>();
 
     @Data

@@ -12,110 +12,126 @@ layout 'layout.tpl',
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: { link(rel: 'stylesheet', href: '/css/pages/account.css') },
         content: {
-            div(class: 'account-tabs-layout') {
 
-                // Left: Tab list
-                div(class: 'account-tabs-nav') {
-                    h2('My Account')
-                    ul(class: 'tabs-list') {
-                        li(class: activeTab == 'profile' ? 'tab-item active' : 'tab-item') {
+            // Hero header (parallel to vendor-portal's hero)
+            div(class: 'hero') {
+                div(class: 'hero-content') {
+                    h1(class: 'hero-vendor-name', "${user?.username?.toUpperCase()}\'s Account")
+                }
+            }
+
+            div(class: 'account-portal-container') {
+
+                // ---- Tab nav -----------------------------------------------
+                nav(class: 'account-portal-tabs') {
+                    ul {
+                        li(class: activeTab == 'profile' ? 'account-portal-tab active' : 'account-portal-tab') {
                             a(href: '/account?tab=profile', 'Personal Info')
                         }
-                        li(class: activeTab == 'addresses' ? 'tab-item active' : 'tab-item') {
+                        li(class: activeTab == 'addresses' ? 'account-portal-tab active' : 'account-portal-tab') {
                             a(href: '/account?tab=addresses', 'Addresses')
                         }
-                        li(class: activeTab == 'orders' ? 'tab-item active' : 'tab-item') {
+                        li(class: activeTab == 'orders' ? 'account-portal-tab active' : 'account-portal-tab') {
                             a(href: '/account?tab=orders', 'Order History')
                         }
-                        li(class: activeTab == 'security' ? 'tab-item active' : 'tab-item') {
+                        li(class: activeTab == 'security' ? 'account-portal-tab active' : 'account-portal-tab') {
                             a(href: '/account?tab=security', 'Security')
                         }
                     }
                 }
 
-                // Right: Tab content
-                div(class: 'account-tabs-panel') {
+                // ---- Tab content panel -------------------------------------
+                div(class: 'account-portal-panel') {
 
+                    // ════════ PERSONAL INFO TAB ══════════════════════════
                     if (activeTab == 'profile') {
-                        div(class: 'info-card') {
-                            h2('Personal Info')
-                            hr()
-
-                            div(class: 'info-group') {
-                                label('Username')
-                                span(class: 'readonly-box', user?.username ?: 'N/A')
+                        div(class: 'account-portal-section') {
+                            div(class: 'account-portal-section-header') {
+                                h2('Personal Info')
                             }
 
-                            div(class: 'info-group') {
-                                label('Email')
-                                span(class: 'readonly-box', user?.email ?: 'N/A')
-                            }
-
-                            div(class: 'info-group') {
-                                label('Account Role')
-                                span(class: 'readonly-box') { yield user?.roles ?: 'USER' }
-                            }
-
-                            if (user?.profile) {
+                            div(class: 'info-group-list') {
                                 div(class: 'info-group') {
-                                    label('First Name')
-                                    span(class: 'readonly-box', user.profile?.firstName ?: 'N/A')
+                                    label('Username')
+                                    span(class: 'readonly-box', user?.username ?: 'N/A')
                                 }
+
                                 div(class: 'info-group') {
-                                    label('Last Name')
-                                    span(class: 'readonly-box', user.profile?.lastName ?: 'N/A')
+                                    label('Email')
+                                    span(class: 'readonly-box', user?.email ?: 'N/A')
                                 }
+
                                 div(class: 'info-group') {
-                                    label('Phone')
-                                    span(class: 'readonly-box', user.profile?.phoneNumber ?: 'N/A')
+                                    label('Account Role')
+                                    span(class: 'readonly-box') { yield user?.roles ?: 'USER' }
+                                }
+
+                                if (user?.profile) {
+                                    div(class: 'info-group') {
+                                        label('First Name')
+                                        span(class: 'readonly-box', user.profile?.firstName ?: 'N/A')
+                                    }
+                                    div(class: 'info-group') {
+                                        label('Last Name')
+                                        span(class: 'readonly-box', user.profile?.lastName ?: 'N/A')
+                                    }
+                                    div(class: 'info-group') {
+                                        label('Phone')
+                                        span(class: 'readonly-box', user.profile?.phoneNumber ?: 'N/A')
+                                    }
                                 }
                             }
                         }
                     }
 
+                    // ════════ ADDRESSES TAB ══════════════════════════════
                     if (activeTab == 'addresses') {
-                        div(class: 'info-card') {
+                        div(class: 'account-portal-section') {
+                            div(class: 'account-portal-section-header') {
+                                h2('Addresses')
+                            }
 
-                            if(message) div(class: 'alert alert-success', message)
-                            if(error) div(class: 'alert alert-error', error)
-
-                            h2('Addresses')
-                            hr()
+                            if (message) div(class: 'alert alert-success', message)
+                            if (error) div(class: 'alert alert-error', error)
 
                             if (user?.addresses && !user.addresses.isEmpty()) {
-                                user.addresses.each { addr ->
-                                    div(class: 'address-card') {
-                                        div(class: 'address-title') {
-                                            strong(addr?.type ?: 'ADDRESS')
-                                            if (addr?.isDefault) span(class: 'badge', 'Default')
-                                        }
-                                        div(class: 'address-line') {
-                                            div(addr?.street1 ?: '')
-                                            div("${addr?.city ?: ''}, ${addr?.state ?: ''} ${addr?.zip ?: ''}".toString())
+                                div(class: 'account-address-list') {
+                                    user.addresses.each { addr ->
+                                        div(class: 'address-card') {
+                                            div(class: 'address-title') {
+                                                strong(addr?.type ?: 'ADDRESS')
+                                                if (addr?.isDefault) span(class: 'badge', 'Default')
+                                            }
+                                            div(class: 'address-line') {
+                                                div(addr?.street1 ?: '')
+                                                div("${addr?.city ?: ''}, ${addr?.state ?: ''} ${addr?.zip ?: ''}".toString())
+                                            }
                                         }
                                     }
                                 }
                             } else {
-                                p('No addresses saved yet.')
+                                p(class: 'account-address-list-empty', 'No addresses saved yet.')
                             }
 
-                            div(style: 'display:flex; gap: 12px; align-items:center; margin-top: 14px;') {
-                                button(type: 'button', class: 'btn-small', id: 'openUpdateAddress', 'Edit Addresses')
+                            div(class: 'account-portal-actions') {
+                                button(type: 'button', class: 'btn btn-small', id: 'openUpdateAddress', 'Edit Addresses')
                             }
                         }
+
                         include template: 'partials/user-address-modal.tpl'
                     }
 
+                    // ════════ ORDER HISTORY TAB ══════════════════════════
                     if (activeTab == 'orders') {
-                        div(class: 'account-tab-content') {
-                            div(class: 'account-section-header') {
+                        div(class: 'account-portal-section') {
+                            div(class: 'account-portal-section-header') {
                                 h2('My Orders')
-                                p(class: 'account-section-sub',
+                                p(class: 'account-portal-section-sub',
                                         'Your most recent orders, newest first.')
                             }
 
                             if (!orders || orders.isEmpty()) {
-                                div(class: 'account-empty-state') {
+                                div(class: 'account-portal-empty-state') {
                                     p('You haven\'t placed any orders yet.')
                                     a(href: '/shop', class: 'btn', 'Browse the shop')
                                 }
@@ -128,9 +144,8 @@ layout 'layout.tpl',
                                     }
                                 }
 
-                                // Pagination — only renders if there's more than one page.
                                 if (ordersTotalPages > 1) {
-                                    div(class: 'pagination') {
+                                    div(class: 'pagination-container') {
                                         (0..<ordersTotalPages).each { p ->
                                             if (p == ordersPage) {
                                                 span(class: 'page-link active', "${p + 1}")
@@ -146,68 +161,34 @@ layout 'layout.tpl',
                         }
                     }
 
+                    // ════════ SECURITY TAB ═══════════════════════════════
                     if (activeTab == 'security') {
-                        div(class: 'info-card') {
-                            h2('Security')
-                            hr()
-
-                            if (message) { div(class: 'alert alert-success', message) }
-                            if (error) { div(class: 'alert alert-error', error) }
-
-                            div(class: 'info-group') {
-                                label('Password')
-                                span(class: 'readonly-box', '••••••••••••')
-                                small(class: 'text-muted', 'Password hidden for security')
+                        div(class: 'account-portal-section') {
+                            div(class: 'account-portal-section-header') {
+                                h2('Security')
                             }
 
-                            div(style: 'display:flex; gap: 12px; align-items:center; margin-top: 14px;') {
-                                button(type: 'button', class: 'btn-small', id: 'openChangePassword', 'Change Password')
-                            }
+                            if (message) div(class: 'alert alert-success', message)
+                            if (error) div(class: 'alert alert-error', error)
 
-                            // Modal (hidden by default; toggled by JS)
-                            div(class: 'modal-overlay', id: 'changePasswordOverlay', style: 'display:none;') {
-                                div(class: 'modal') {
-                                    div(class: 'modal-header') {
-                                        h3('Change Password')
-                                        button(type: 'button', class: 'modal-close', id: 'closeChangePassword', '×')
-                                    }
-
-                                    form(action: '/account/password', method: 'post', class: 'form-group') {
-
-                                        // CSRF support (works when Spring Security exposes _csrf in request)
-                                        input(
-                                                type: 'hidden',
-                                                name: (csrfParamName ?: '_csrf'),
-                                                value: (csrfToken ?: '')
-                                        )
-
-                                        div(class: 'form-control') {
-                                            label(for: 'oldPassword', 'Old Password')
-                                            input(type: 'password', name: 'oldPassword', id: 'oldPassword', required: 'required')
-                                        }
-
-                                        div(class: 'form-control') {
-                                            label(for: 'newPassword', 'New Password')
-                                            input(type: 'password', name: 'newPassword', id: 'newPassword', required: 'required', minlength: '10')
-                                        }
-
-                                        div(class: 'form-control') {
-                                            label(for: 'confirmNewPassword', 'Confirm New Password')
-                                            input(type: 'password', name: 'confirmNewPassword', id: 'confirmNewPassword', required: 'required', minlength: '10')
-                                        }
-
-                                        div(style: 'display:flex; gap: 10px; justify-content:flex-end;') {
-                                            button(type: 'button', class: 'btn-small', id: 'cancelChangePassword', 'Cancel')
-                                            button(type: 'submit', class: 'btn', style: 'width:auto;', 'Update Password')
-                                        }
-                                    }
+                            div(class: 'info-group-list') {
+                                div(class: 'info-group') {
+                                    label('Password')
+                                    span(class: 'readonly-box', '••••••••••••')
+                                    small('Password hidden for security')
                                 }
                             }
-                        }
-                    }
 
-                    script(src: '/scripts/user/account-security.js') {}
-                    script(src: '/scripts/address/address-update.js') {}
+                            div(class: 'account-portal-actions') {
+                                button(type: 'button', class: 'btn btn-small', id: 'openChangePassword', 'Change Password')
+                            }
+                        }
+
+                        include template: 'partials/change-password-modal.tpl'
+                    }
                 }
             }
+
+            script(src: '/scripts/user/account-security.js') {}
+            script(src: '/scripts/address/address-update.js') {}
         }

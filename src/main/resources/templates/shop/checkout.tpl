@@ -13,9 +13,9 @@ layout 'layout.tpl',
         csrfParamName: (csrfParamName ?: '_csrf'),
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: {
-            script(src: 'https://sandbox.web.squarecdn.com/v1/square.js') {}
             link(rel: 'stylesheet', href: '/css/pages/checkout.css')
             link(rel: 'stylesheet', href: '/css/pages/order-summary.css')
+            link(rel: 'stylesheet', href: '/css/pages/order-items.css')
         },
         content: {
             def initialShipping = 0.00
@@ -38,32 +38,32 @@ layout 'layout.tpl',
 
                     div(class: 'checkout-section') {
                         h2("Checkout | ${user?.username?.toUpperCase()}\'s Cart (${cartCount})")
-                        div(class: 'checkout-items') {
+                        div(class: 'order-items') {
 
                             cartVendors.each { vendorId, vendor ->
                                 def vendorItems = cartItems.findAll { it.vendorId == vendorId }
                                 if (!vendorItems.isEmpty()) {
-                                    div(class: 'checkout-vendor-group') {
+                                    div(class: 'order-items-vendor-group') {
 
-                                        div(class: 'checkout-vendor-header') {
-                                            div(class: 'checkout-vendor-logo') {
+                                        div(class: 'order-items-vendor') {
+                                            div(class: 'order-items-vendor-logo') {
                                                 img(src: ImageUrlUtil.resolve(vendor.logoUrl, imagesBaseUrl) ?: '/images/placeholder.jpg')
                                             }
 
-                                            div(class: 'checkout-vendor-name') {
+                                            div(class: 'order-items-vendor-name') {
                                                 h3(vendor.name)
                                             }
                                         }
 
                                         vendorItems.each { item ->
-                                            div(class: 'checkout-item-row') {
+                                            div(class: 'order-items-row') {
                                                 img(src: ImageUrlUtil.resolve(item.imageUrl, imagesBaseUrl) ?: '/images/placeholder.jpg',
-                                                        alt: item.name, class: 'checkout-item-img')
-                                                div(class: 'checkout-item-details') {
-                                                    span(class: 'checkout-item-name', item.name)
-                                                    span(class: 'checkout-item-qty', "Qty: ${item.quantity}")
+                                                        alt: item.name, class: 'order-items-img')
+                                                div(class: 'order-items-details') {
+                                                    span(class: 'order-items-name', item.name)
+                                                    span(class: 'order-items-qty', "Qty: ${item.quantity}")
                                                 }
-                                                span(class: 'checkout-item-price', "\$${String.format('%.2f', item.price * item.quantity)}")
+                                                span(class: 'order-items-price', "\$${String.format('%.2f', item.price * item.quantity)}")
                                             }
                                         }
                                     }
@@ -206,8 +206,6 @@ layout 'layout.tpl',
 
             script {
                 yieldUnescaped """
-                    window.SQUARE_APP_ID = '${squareAppId}';
-                    window.SQUARE_LOCATION_ID = '${squareLocationId}';
                     window.USER_ADDRESSES = ${jsonAddresses};
             """
             }

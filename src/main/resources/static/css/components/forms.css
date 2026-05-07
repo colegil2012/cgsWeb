@@ -1,4 +1,4 @@
-/* /components/forms.css
+/* /css/components/forms.css
  *
  * Form-submission UI only — signup, login, account edit, etc. Search and
  * filter UIs are NOT forms in the CRUD sense; the shop's filter bar lives
@@ -7,24 +7,24 @@
 
 .auth-container {
     max-width: 400px;
-    margin: 3rem auto;
-    padding-top: 2rem;
+    margin: var(--space-12) auto;
+    padding-top: var(--space-8);
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
 }
 
 .form-control {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-4);
 }
 
 .auth-actions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    gap: var(--space-3);
     align-items: center;
 }
 
@@ -36,49 +36,63 @@
 
 .signup-container {
     max-width: 520px;
-    margin: 2.5rem auto;
-    padding: 2.25rem 2rem;
-    border-radius: 20px;
-    border: 1px solid var(--soft-brown);
-    background: var(--white);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin: var(--space-8) auto;
+    padding: var(--space-8) var(--space-8);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
 }
 
 .signup-container .alert {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-4);
 }
 
 .signup-container .form-control input {
-    background: var(--white);
+    background: var(--color-bg);
 }
 
-.signup-conainer .btn {
-    margin-top: 0.25rem;
+.signup-container .btn {
+    margin-top: var(--space-1);
 }
 
 .hero + .signup-container {
-    margin-top: -1.5rem;
+    margin-top: calc(var(--space-6) * -1);
 }
+
+/************** Form controls (label + input pair) **************/
 
 .form-control label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--earth-brown);
+    margin-bottom: var(--space-2);
+    color: var(--color-brown-deep);
+    font-weight: var(--weight-medium);
 }
 
 .form-control input {
     width: 100%;
-    padding: 0.8rem;
-    border: 1px solid var(--soft-brown);
-    border-radius: 5px;
-    box-sizing: border-box; /* Ensures padding doesn't break layout */
+    padding: var(--space-3);
+    background: var(--color-bg);
+    border: 1px solid var(--color-brown-soft);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+}
+
+.form-control input:focus {
+    outline: none;
+    border-color: var(--color-green-bright);
+    box-shadow: var(--shadow-glow-green);
+}
+
+.form-control input.invalid {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.12);
 }
 
 .form-control .input-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 .form-control .input-row input {
@@ -86,29 +100,19 @@
     min-width: 0; /* prevents overflow in flex layouts */
 }
 
+/* Inline status indicators (✓ / ✗ next to validated inputs) */
 #usernameStatus,
 #passwordStatus {
     flex: 0 0 auto;
-    margin-left: -30px;               /* gap handles spacing now */
-    min-width: 1.25rem;           /* keeps layout stable when empty */
+    margin-left: -30px;
+    min-width: 1.25rem;
     text-align: center;
     line-height: 1;
 }
 
-.form-control input:focus {
-    outline: none;
-    border-color: var(--accent-green);
-    box-shadow: 0 0 0 2px var(--primary-green);
-}
-
 .field-feedback {
-    margin-top: 0.35rem;
-    font-size: 0.85rem;
-    color: var(--error-red);
+    margin-top: var(--space-1);
+    color: var(--color-error);
+    font-size: var(--font-sm);
     min-height: 1em; /* prevents layout jump when message appears */
-}
-
-.form-control input.invalid {
-    border-color: var(--error-red);
-    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.12);
 }

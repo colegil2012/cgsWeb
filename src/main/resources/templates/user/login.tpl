@@ -39,8 +39,8 @@ layout 'layout.tpl',
                         label(for: 'remember-me', style: 'margin:0; font-weight:500;', 'Keep me signed in')
                     }
                     div(class: 'auth-actions-grid') {
-                        a(href: '/signup', class: 'btn signup-btn', 'Sign Up')
-                        button(type: 'submit', class: 'btn', 'Sign In')
+                        a(href: '/signup', class: 'btn', 'Sign Up')
+                        button(type: 'submit', class: 'btn btn-brown', 'Sign In')
                     }
                 }
             }

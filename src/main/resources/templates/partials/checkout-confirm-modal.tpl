@@ -60,6 +60,9 @@ div(class: 'modal-overlay', id: 'confirmOrderOverlay', style: 'display:none;') {
                 div(class: 'confirm-deliver-to', id: 'confirm-deliver-to') {
                     p(class: 'confirm-line', id: 'confirm-deliver-name', '—')
                     p(class: 'confirm-line', id: 'confirm-deliver-street1', '')
+                    // Inline display:none preserved here — checkout-submit.js
+                    // toggles this via el.style.display directly. Migrating to
+                    // a class would require updating the JS.
                     p(class: 'confirm-line', id: 'confirm-deliver-street2', style: 'display:none;', '')
                     p(class: 'confirm-line', id: 'confirm-deliver-citystatezip', '')
                 }
@@ -84,7 +87,7 @@ div(class: 'modal-overlay', id: 'confirmOrderOverlay', style: 'display:none;') {
 
             // ---- Action buttons --------------------------------------------------------
             div(class: 'confirm-actions') {
-                button(type: 'button', class: 'btn-small', id: 'cancelConfirmOrder', 'Cancel')
+                button(type: 'button', class: 'btn btn-secondary', id: 'cancelConfirmOrder', 'Cancel')
                 button(type: 'button', class: 'btn btn-confirm-order', id: 'confirmOrderBtn',
                         'Confirm Order')
             }
@@ -119,7 +122,7 @@ div(class: 'modal-overlay', id: 'confirmOrderOverlay', style: 'display:none;') {
             // Retry button — only visible in error state. JS calls .click() on cancel
             // when "Try again" is hit, which restores the form view.
             div(class: 'confirm-status-actions') {
-                button(type: 'button', class: 'btn-small', id: 'retryConfirmOrder',
+                button(type: 'button', class: 'btn btn-small', id: 'retryConfirmOrder',
                         'Try again')
             }
         }

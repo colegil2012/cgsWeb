@@ -81,7 +81,7 @@ layout 'layout.tpl',
                                     a(href: "/vendor/${product.vendorId}", class: 'vendor-tag') {
                                         span("By: ${product.vendorName}")
                                     }
-                                    p(class: 'product-description', product.description)
+                                    p(class: 'product-card-description', product.description)
 
                                     if (product.stock < product.lowStockThreshold) {
                                         div(class: 'warning-wrapper') {

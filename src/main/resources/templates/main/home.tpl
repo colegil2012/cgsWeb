@@ -34,46 +34,22 @@ layout 'layout.tpl',
                     p(class: 'hero-tagline float-in is-delayed',
                             'Louisville\'s online farmers market — local, hand made, delivered.')
                     div(class: 'hero-actions float-in is-delayed-2') {
-                        a(href: '/shop',    class: 'btn btn-pill', 'Shop')
+                        a(href: '/shop',    class: 'btn btn-brown btn-pill', 'Shop Now')
                     }
                 }
             }
 
             /* ---- Specialties -------------------------------------------- */
             section(class: 'container') {
-                h2(class: 'home-section-title', 'What we\'re known for')
-                p(class: 'home-section-sub',
-                        'Curated picks from the small farms and crafters in our circle.')
-
                 div(class: 'home-specialties') {
                     [
-                            [title: 'Fresh Herbs',         body: 'Cut-this-morning basil, mint, chamomile, and more — grown at small Kentucky farms.'],
-                            [title: 'Organic Vegetables',  body: 'Heirloom tomatoes, salad greens, root veg — sourced within 50 miles of Louisville.'],
-                            [title: 'Hand-ground Spices', body: 'Dried, milled, and blended in small batches — Aleppo, ashwagandha, and house seasonings.'],
+                            [title: 'Locally Grown',         body: 'Sourced from Kentucky Farmers, Transparently Labeled. You know who grew or raised everything in-store and online.'],
+                            [title: 'Reliably Sourced',  body: 'Celtech partners with Kentucky Farmers we trust, and if you don\'t trust us you can meet them for yourself.'],
+                            [title: 'Affordable & Convenient', body: 'Available in store all week, or delivered to your door.'],
                     ].each { item ->
                         div(class: 'home-specialty-card') {
                             h3(item.title)
                             p(item.body)
-                        }
-                    }
-                }
-            }
-
-            /* ---- How it works ------------------------------------------- */
-            section(class: 'container') {
-                h2(class: 'home-section-title', 'How it works')
-                div(class: 'home-steps') {
-                    [
-                            [num: '1', title: 'Browse',  body: 'Shop products from local farms, crafters, and specialty makers.'],
-                            [num: '2', title: 'Order',   body: 'Pick a delivery day and address — we batch routes to keep shipping low.'],
-                            [num: '3', title: 'Receive', body: 'A driver delivers within our 50-mile zone, usually next-day.'],
-                    ].each { step ->
-                        div(class: 'home-step') {
-                            span(class: 'home-step-number', step.num)
-                            div(class: 'home-step-body') {
-                                h4(step.title)
-                                p(step.body)
-                            }
                         }
                     }
                 }

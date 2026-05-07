@@ -2,14 +2,14 @@
  *
  * Checkout page only. The right-column "Order Summary" panel and footer
  * are shared with the cart page; both live in components/order-summary.css.
+ * The vendor-grouped item list is shared with the order-confirm page; it
+ * lives in components/order-items.css.
  *
  * Class hierarchy:
  *   .checkout-page-container       — outer flex wrapper
  *     .checkout-page-data          — left column (sections stack)
  *       .checkout-section          — one card-wrapped section
- *         .checkout-vendor-group   — per-vendor subgrouping inside items list
- *         .checkout-vendor-header  — logo + name strip
- *         .checkout-item-row       — single line item row
+ *         [.order-items / -vendor / -row]   (component, see order-items.css)
  *         .checkout-address-field  — labelled select (was .filter-group)
  *         .checkout-select         — themed <select>
  *         .address-preview         — preview block under the select
@@ -126,109 +126,10 @@
 
 /* ============================================================================
  * Vendor header + line items
- * (TODO: promote to components/order-items.css when order-confirm migrates)
+ * Migrated to components/order-items.css. Templates now use .order-items,
+ * .order-items-vendor, .order-items-row, etc. instead of .checkout-vendor-*
+ * and .checkout-item-*.
  * ============================================================================ */
-
-.checkout-vendor-header {
-    display: flex;
-    flex-direction: row;
-    margin: 0;
-    padding: var(--space-4);
-    gap: var(--space-3);
-    background: linear-gradient(to bottom,
-    var(--color-bg),
-    var(--color-brown-cream));
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-}
-
-.checkout-vendor-logo {
-    flex: 0 0 auto;
-}
-
-.checkout-vendor-logo img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: var(--radius-md);
-}
-
-.checkout-vendor-name {
-    flex: 1;
-    display: flex;
-    align-items: center;
-}
-
-.checkout-vendor-name h3 {
-    margin: 0;
-    font-size: var(--font-lg);
-}
-
-.checkout-items {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-}
-
-.checkout-vendor-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-}
-
-.checkout-item-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    border-bottom: 2px solid var(--color-brown-cream);
-}
-
-.checkout-item-row:last-child {
-    border-bottom: none;
-}
-
-.checkout-item-img {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-}
-
-.checkout-item-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-}
-
-.checkout-item-name {
-    color: var(--color-brown-deep);
-    font-weight: var(--weight-bold);
-    font-size: var(--font-md);
-}
-
-.checkout-item-vendor {
-    color: var(--color-green-deep);
-    font-size: var(--font-sm);
-    font-style: italic;
-}
-
-.checkout-item-qty {
-    color: var(--color-text);
-    font-size: var(--font-sm);
-}
-
-.checkout-item-price {
-    flex-shrink: 0;
-    color: var(--color-brown-deep);
-    font-weight: var(--weight-bold);
-    font-size: var(--font-lg);
-    font-variant-numeric: tabular-nums;
-}
 
 /* ============================================================================
  * Square card container + payment status

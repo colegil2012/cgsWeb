@@ -56,8 +56,7 @@ const celtechResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	leadTime: 3,
-    logoUrl: '/images/vendors/cgs.jpg',
+    logoUrl: '/images/vendors/1776540877177_Celtech Logo.jpg',
     active: true,
     createdAt: new Date()
 });
@@ -78,7 +77,6 @@ const newAgeResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	leadTime: 3,
     logoUrl: '/images/vendors/nac.jpg',
     active: true,
     createdAt: new Date()
@@ -100,7 +98,6 @@ const organicResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	leadTime: 3,
     logoUrl: '/images/vendors/ogc.jpg',
     active: true,
     createdAt: new Date()
@@ -122,7 +119,6 @@ const nattyResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	leadTime: 3,
     logoUrl: '/images/vendors/np.jpg',
     active: true,
     createdAt: new Date()
@@ -144,7 +140,6 @@ const munsfordResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-	leadTime: 3,
     logoUrl: '/images/vendors/mf.png',
     active: true,
     createdAt: new Date()
@@ -190,8 +185,7 @@ db.products.insertMany([
         lowStockThreshold: 10,
         imageUrl: "/images/products/grapes.jpg",
         active: true,
-        attributes: { length: 10, width: 8, height: 7, weight: 0.5 }, 
-		readyTime: 1,
+        attributes: { length: 10, width: 8, height: 7, weight: 0.5 },
         createdAt: new Date()
     },
     {
@@ -207,8 +201,7 @@ db.products.insertMany([
         lowStockThreshold: 15,
         imageUrl: "/images/products/alpo_slsa.jpg",
         active: true,
-        attributes: { length: 3, width: 3, height: 5, weight: 0.5 }, 
-		readyTime: 1,
+        attributes: { length: 3, width: 3, height: 5, weight: 0.5 },
         createdAt: new Date()
     },
 	{
@@ -224,8 +217,7 @@ db.products.insertMany([
         lowStockThreshold: 15,
         imageUrl: "/images/products/alpo_spce.jpg",
         active: true,
-        attributes: { length: 3, width: 3, height: 5, weight: 0.5 }, 
-		readyTime: 1,
+        attributes: { length: 3, width: 3, height: 5, weight: 0.5 },
         createdAt: new Date()
     },
 	{
@@ -241,8 +233,7 @@ db.products.insertMany([
         lowStockThreshold: 20,
         imageUrl: "/images/products/bb_jam.jpg",
         active: true,
-        attributes: { length: 3, width: 3, height: 5, weight: 0.5 }, 
-		readyTime: 1,
+        attributes: { length: 3, width: 3, height: 5, weight: 0.5 },
         createdAt: new Date()
     },
     {
@@ -258,7 +249,6 @@ db.products.insertMany([
         imageUrl: "/images/products/cham_tea.jpg",
         active: true,
         attributes: { length: 4, width: 2, height: 6, weight: 0.2 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -274,7 +264,6 @@ db.products.insertMany([
         imageUrl: "/images/products/cham_lmngrs_mnt_t.jpg",
         active: true,
         attributes: { length: 4, width: 2, height: 6, weight: 0.2 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -290,7 +279,6 @@ db.products.insertMany([
         imageUrl: "/images/products/crstms_orn.jpg",
         active: true,
         attributes: { length: 4, width: 4, height: 4, weight: 0.1 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -306,7 +294,6 @@ db.products.insertMany([
         imageUrl: "/images/products/fox_orn.jpg",
         active: true,
         attributes: { length: 4, width: 4, height: 4, weight: 0.1 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -322,7 +309,6 @@ db.products.insertMany([
         imageUrl: "/images/products/candles.jpg",
         active: true,
         attributes: { length: 3, width: 3, height: 4, weight: 0.8 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -338,7 +324,6 @@ db.products.insertMany([
         imageUrl: "/images/products/natty_protein.jpg",
         active: true,
         attributes: { length: 6, width: 6, height: 10, weight: 2 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -354,7 +339,6 @@ db.products.insertMany([
         imageUrl: "/images/products/ashwa.jpg",
         active: true,
         attributes: { length: 3, width: 3, height: 5, weight: 0.5 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -370,7 +354,6 @@ db.products.insertMany([
         imageUrl: "/images/products/kale.jpg",
         active: true,
         attributes: { length: 3, width: 3, height: 5, weight: 0.5 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -386,7 +369,6 @@ db.products.insertMany([
         imageUrl: "/images/products/tom_sauce.jpg",
         active: true,
         attributes: { length: 4, width: 4, height: 6, weight: 1.5 },
-		readyTime: 1,
         createdAt: new Date()
     },
     {
@@ -402,7 +384,6 @@ db.products.insertMany([
         imageUrl: "/images/products/eggs.jpg",
         active: true,
         attributes: { length: 12, width: 4, height: 3, weight: 1.5 },
-		readyTime: 1,
         createdAt: new Date()
     },
 	{
@@ -418,7 +399,6 @@ db.products.insertMany([
         imageUrl: "/images/products/srdgh.jpg",
         active: true,
         attributes: { length: 12, width: 4, height: 7, weight: 1.5 },
-		readyTime: 2,
         createdAt: new Date()
     }, 
 	{
@@ -434,7 +414,6 @@ db.products.insertMany([
         imageUrl: "/images/products/half_cow.jpg",
         active: true,
         attributes: { length: 36, width: 30, height: 12, weight: 300 },
-		readyTime: 1,
         createdAt: new Date()
     }
 ]);
@@ -451,10 +430,6 @@ db.users.insertMany([
             firstName: "Cole",
             lastName: "Gilbert",
             phone: "539-9605"
-        },
-        squareProfile: {
-            squareCustomerId: "13SCT2RBH6EMKQERFQ31V24AZ4",
-            idempotencyKey: "546e5295-d860-4927-bd75-0bc1956102e5"
         },
         addresses: [
             {

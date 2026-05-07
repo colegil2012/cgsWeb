@@ -3,16 +3,16 @@
  * Single source of truth for every clickable thing on the site.
  *
  * Hierarchy:
- *   .btn               — base button. Solid background, primary action.
+ *   .btn               — base button. Solid green, primary action.
  *   .btn-secondary     — outlined variant (lighter visual weight)
  *   .btn-ghost         — text-only, used inside cards / table rows
+ *   .btn-brown         — solid brown variant (used on home + login CTAs)
  *   .btn-danger        — destructive actions
  *   .btn-small         — size modifier; combine with any variant
  *   .btn-block         — full-width modifier
- *   .btn-link          — used on <a> elements that should look like text but
- *                        are still navigation, not actions
+ *   .btn-pill          — fully-rounded modifier (used on Checkout CTA)
  *
- * Combine modifiers freely:  class="btn btn-secondary btn-small btn-block"
+ * Combine modifiers freely:  class="btn btn-brown btn-small btn-block"
  *
  * State conventions:
  *   :hover  — darken / fill / etc. depending on variant
@@ -49,7 +49,7 @@
     letter-spacing: 0.2px;
 
     /* Looks. */
-    background: var(--color-brown-warm);
+    background: var(--color-green-deep);
     color: var(--color-bg);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
@@ -59,7 +59,7 @@
 }
 
 .btn:hover  {
-    background: var(--color-brown-deep);
+    background: var(--color-green-darker);
     color: var(--color-brown-cream);
 }
 
@@ -100,6 +100,18 @@
 
 .btn-ghost:hover {
     background: var(--color-brown-cream);
+}
+
+/* Solid brown variant — used for warm-toned CTAs on the home and login
+ * pages. This is a real variant, not a migration alias. */
+.btn-brown {
+    background: var(--color-brown-warm);
+    color: var(--color-bg);
+}
+
+.btn-brown:hover {
+    background: var(--color-brown-deep);
+    color: var(--color-brown-cream);
 }
 
 .btn-danger {
@@ -184,67 +196,3 @@
 
 .btn-remove:hover  { background: var(--color-error); transform: scale(1.08); }
 .btn-remove:active { transform: scale(0.95); }
-
-/* ============================================================================
-* MIGRATION ALIASES — TODO Phase E: delete after every page is migrated.
-*
-* Old class names map onto new ones so we can migrate page-by-page without
-* breaking anything in the meantime.
-* ============================================================================ */
-
-.btn-checkout {
-    /* same as .btn .btn-pill .btn-block */
-    display: block;
-    width: 100%;
-    background: var(--color-brown-warm);
-    color: var(--color-bg);
-    padding: var(--space-4);
-    border: 0;
-    border-radius: var(--radius-sm);
-    font-weight: var(--weight-bold);
-    font-size: var(--font-lg);
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-   }
-
-.btn-checkout:hover {
-    background: var(--color-brown-deep);
-    color: var(--color-brown-cream);
-}
-
-.signup-btn {
-    /* used in login.tpl; remap as .btn-secondary in Phase C */
-    background: var(--color-green-deep);
-    color: var(--color-bg);
-}
-
-.signup-btn:hover {
-    background: var(--color-green-darker);
-    color: var(--color-green-bright);
-}
-
-.btn-save {
-    background: var(--color-green-bright);
-    color: var(--color-bg);
-}
-
-.btn-save:hover { background: var(--color-green-deep); }
-
-.btn-view-vendor {
-    display: inline-block;
-    padding: var(--space-2) var(--space-6);
-    background: var(--color-green-bright);
-    color: var(--color-bg);
-    font-size: var(--font-sm);
-    font-weight: var(--weight-bold);
-    text-decoration: none;
-    border-radius: var(--radius-sm);
-    transition: background var(--transition-fast),
-    transform   var(--transition-fast);
-}
-
-.btn-view-vendor:hover {
-    background: var(--color-green-deep);
-    transform: scale(1.04);
-}

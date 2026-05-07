@@ -35,14 +35,19 @@ layout 'layout.tpl',
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
         headContent: {
             link(rel: 'stylesheet', href: '/css/pages/order-confirm.css')
+            link(rel: 'stylesheet', href: '/css/pages/order-items.css')
+            link(rel: 'stylesheet', href: '/css/pages/order-summary.css')
         },
         content: {
 
             div(class: 'confirmation-page') {
 
-                /* ---- Banner --------------------------------------------------- */
+                /* ---- Banner: centered text logo + thank-you ---------------- */
                 div(class: 'confirmation-banner') {
-                    div(class: 'confirmation-check', '✓')
+                    div(class: 'confirmation-banner-logo') {
+                        img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Text Logo Middle.png', imagesBaseUrl),
+                                alt: 'Celtech General Store')
+                    }
                     div(class: 'confirmation-banner-text') {
                         h1("Thank you, ${order?.customer?.firstName ?: 'friend'}!")
                         p {
@@ -55,7 +60,7 @@ layout 'layout.tpl',
                     }
                 }
 
-                /* ---- Two-column layout --------------------------------------- */
+                /* ---- Two-column layout ------------------------------------ */
                 div(class: 'confirmation-grid') {
 
                     /* Left: items + delivery */
@@ -68,39 +73,39 @@ layout 'layout.tpl',
                                 p(class: 'confirmation-empty',
                                         'No items recorded for this order.')
                             } else {
-                                div(class: 'confirmation-items') {
+                                div(class: 'order-items') {
                                     orderVendors.each { vendorId, vendor ->
                                         def vendorItems = order.items.findAll {
                                             it.vendorId == vendorId
                                         }
                                         if (vendorItems.isEmpty()) return
 
-                                        div(class: 'confirmation-vendor-group') {
-                                            div(class: 'confirmation-vendor-header') {
-                                                div(class: 'confirmation-vendor-logo') {
+                                        div(class: 'order-items-vendor-group') {
+                                            div(class: 'order-items-vendor') {
+                                                div(class: 'order-items-vendor-logo') {
                                                     img(src: ImageUrlUtil.resolve(
                                                             vendor.logoUrl,
                                                             imagesBaseUrl) ?: '/images/placeholder.jpg',
                                                             alt: vendor.name)
                                                 }
-                                                div(class: 'confirmation-vendor-name') {
+                                                div(class: 'order-items-vendor-name') {
                                                     h3(vendor.name)
                                                 }
                                             }
 
                                             vendorItems.each { item ->
-                                                div(class: 'confirmation-item-row') {
+                                                div(class: 'order-items-row') {
                                                     img(src: ImageUrlUtil.resolve(
                                                             item.imageUrl,
                                                             imagesBaseUrl) ?: '/images/placeholder.jpg',
                                                             alt: item.name,
-                                                            class: 'confirmation-item-img')
-                                                    div(class: 'confirmation-item-details') {
-                                                        span(class: 'confirmation-item-name', item.name)
-                                                        span(class: 'confirmation-item-qty',
+                                                            class: 'order-items-img')
+                                                    div(class: 'order-items-details') {
+                                                        span(class: 'order-items-name', item.name)
+                                                        span(class: 'order-items-qty',
                                                                 "Qty: ${item.quantity}")
                                                     }
-                                                    span(class: 'confirmation-item-price',
+                                                    span(class: 'order-items-price',
                                                             "\$${fmt(item.lineTotal)}")
                                                 }
                                             }
@@ -141,13 +146,15 @@ layout 'layout.tpl',
                         }
                     }
 
-                    /* Right: totals + actions (sticky) */
+                    /* Right: totals + actions (sticky)
+                     * Adopts the shared .checkout-summary + .order-summary
+                     * components from order-summary.css. */
                     div(class: 'confirmation-right') {
 
-                        div(class: 'confirmation-section') {
+                        div(class: 'checkout-summary') {
                             h2('Order Summary')
                             def t = order?.totals
-                            div(class: 'confirmation-totals') {
+                            div(class: 'order-summary') {
                                 div(class: 'summary-row') {
                                     span('Subtotal')
                                     span(class: 'summary-value', "\$${fmt(t?.subtotal)}")

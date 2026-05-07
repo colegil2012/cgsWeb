@@ -1,11 +1,14 @@
-/* /css/pages/about.css */
-/* About page Styles */
+/* /css/pages/about.css
+ *
+ * About page only. Split-image-and-text sections, the "future vision"
+ * green panel with a card grid below.
+ */
 
 .about-section {
-    padding: 4rem 0;
     display: flex;
     align-items: center;
-    gap: 4rem;
+    gap: var(--space-16);
+    padding: var(--space-16) 0;
 }
 
 .about-section.split.reverse {
@@ -17,16 +20,16 @@
 }
 
 .about-text h2 {
-    font-size: 2.5rem;
-    border-bottom: 4px solid var(--accent-green);
     display: inline-block;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-6);
+    border-bottom: 4px solid var(--color-green-bright);
+    font-size: 2.5rem;
 }
 
 .about-text p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--earth-brown);
+    color: var(--color-brown-deep);
+    font-size: var(--font-lg);
+    line-height: var(--line-loose);
 }
 
 .about-image {
@@ -35,33 +38,53 @@
 
 .floating-img {
     width: 100%;
-    border-radius: 20px;
-    box-shadow: 20px 20px 0px var(--primary-green);
-    transition: transform 0.3s ease;
+    border-radius: var(--radius-xl);
+    box-shadow: 20px 20px 0px var(--color-green-soft);
+    transition: transform var(--transition-base);
 }
 
 .floating-img:hover {
     transform: translate(-10px, -10px);
 }
 
+/* ============================================================================
+ * "Future vision" callout
+ * ============================================================================ */
+
 .future-vision {
-    background: var(--primary-green);
-    padding: 4rem;
-    border-radius: 30px;
-    margin: 4rem 0;
+    margin: var(--space-16) 0;
+    padding: var(--space-16);
+    background: var(--color-green-soft);
+    border-radius: var(--radius-xl);
     text-align: center;
 }
 
 .vision-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    gap: var(--space-8);
+    margin-top: var(--space-8);
 }
 
 .vision-card {
-    background: var(--white);
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    padding: var(--space-8);
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================================
+ * Responsive
+ * ============================================================================ */
+
+@media (max-width: 768px) {
+    .about-section.split,
+    .about-section.split.reverse {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .future-vision {
+        padding: var(--space-8) var(--space-4);
+    }
 }

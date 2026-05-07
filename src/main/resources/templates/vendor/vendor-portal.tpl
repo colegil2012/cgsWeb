@@ -17,24 +17,30 @@ layout 'layout.tpl',
         content: {
 
             div(class: 'hero') {
-                h1("${vendorDetail.name}'s Portal")
-                p('Manage your Vendor Profile and list items for sale at Celtech General Store.')
+                div(class: 'hero-content') {
+                    div(class: 'hero-vendor-logo') {
+                        img(src: ImageUrlUtil.resolve(vendorDetail?.logoUrl, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
+                                alt: vendorDetail?.name)
+                    }
+                    h1(class: 'hero-vendor-name', "Vendor Portal")
+                }
             }
 
             div(class: 'vendor-portal-container') {
-                // Alerts Section
+
+                // ---- Alerts ------------------------------------------------
                 if (message || error) {
                     div(class: 'alert-wrapper') {
                         if (message) {
                             div(class: 'alert alert-success') {
-                                ul(style: 'margin:0; padding-left: 20px;') {
+                                ul {
                                     message.each { msg -> li(msg) }
                                 }
                             }
                         }
                         if (error) {
                             div(class: 'alert alert-error') {
-                                ul(style: 'margin:0; padding-left: 20px;') {
+                                ul {
                                     error.each { msg -> li(msg) }
                                 }
                             }
@@ -42,105 +48,92 @@ layout 'layout.tpl',
                     }
                 }
 
-                // Navigation Tab
-                nav(class: 'vendor-tabs-nav') {
-                    ul(class: 'vendor-tabs-list') {
-                        li(class: activeTab == 'profile' ? 'vendor-tab active' : 'vendor-tab') {
+                // ---- Tab nav -----------------------------------------------
+                nav(class: 'vendor-portal-tabs') {
+                    ul {
+                        li(class: activeTab == 'profile' ? 'vendor-portal-tab active' : 'vendor-portal-tab') {
                             a(href: '/vendor/portal?tab=profile', 'Profile')
                         }
-                        li(class: activeTab == 'addresses' ? 'vendor-tab active' : 'vendor-tab') {
+                        li(class: activeTab == 'addresses' ? 'vendor-portal-tab active' : 'vendor-portal-tab') {
                             a(href: '/vendor/portal?tab=addresses', 'Addresses')
                         }
-                        li(class: activeTab == 'inventory' ? 'vendor-tab active' : 'vendor-tab') {
+                        li(class: activeTab == 'inventory' ? 'vendor-portal-tab active' : 'vendor-portal-tab') {
                             a(href: '/vendor/portal?tab=inventory', 'Inventory')
                         }
-                        li(class: activeTab == 'orders' ? 'vendor-tab active' : 'vendor-tab') {
+                        li(class: activeTab == 'orders' ? 'vendor-portal-tab active' : 'vendor-portal-tab') {
                             a(href: '/vendor/portal?tab=orders', 'Orders')
                         }
                     }
                 }
 
-                div(class: 'vendor-tabs-panel') {
+                // ---- Tab content panel -------------------------------------
+                div(class: 'vendor-portal-panel') {
 
-                    // ════════ PROFILE TAB ════════
+                    // ════════ PROFILE TAB ════════════════════════════════
                     if (activeTab == 'profile') {
-                        div(class: 'vendor-tab-content') {
 
-                            // Logo Section
-                            div(class: 'vendor-logo-section') {
-                                div(class: 'vendor-section-header') {
-                                    h2('Update Logo')
+                        div(class: 'vendor-portal-section') {
+                            div(class: 'vendor-portal-section-header') {
+                                h2('Profile')
+                            }
+
+                            div(class: 'vendor-portal-profile-row') {
+
+                                // ---- Left half: logo + change button ----
+                                div(class: 'vendor-portal-profile-logo') {
+                                    div(class: 'vendor-logo-preview-wrapper') {
+                                        img(id: 'vendorLogoPreview',
+                                                class: 'vendor-logo-preview',
+                                                src: ImageUrlUtil.resolve(vendorDetail?.logoUrl, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
+                                                alt: 'Logo Preview')
+                                    }
+                                    button(type: 'button', class: 'btn btn-small', id: 'changeLogoBtn', 'Change Logo')
                                 }
 
-                                img(id: 'vendorLogoPreview',
-                                        src: ImageUrlUtil.resolve(vendorDetail?.logoUrl, imagesBaseUrl) ?: '/images/site-images/default-vendor.png',
-                                        alt: 'Logo Preview')
-
-                                button(type: 'button', class: 'btn-small', id: 'changeLogoBtn', 'Change Logo')
-
-                                form(id: 'vendorLogoForm',
-                                        action: '/vendor/portal/update-logo',
-                                        method: 'post',
-                                        enctype: 'multipart/form-data') {
-                                    input(
-                                            type: 'hidden',
-                                            name: (csrfParamName ?: '_csrf'),
-                                            value: (csrfToken ?: '')
-                                    )
-                                    input(type: 'hidden', id: 'vendorId', name: 'vendorId', value: vendorDetail?.id)
-                                    input(type: 'file', id: 'vendorLogoUpload', name: 'vendorLogo', style: 'display:none;', accept: 'image/*')
+                                // ---- Right half: read-only status ----
+                                div(class: 'vendor-portal-profile-status') {
+                                    def isActive = vendorDetail?.active
+                                    div(class: 'vendor-status-row') {
+                                        span(class: 'label', 'Listing:')
+                                        if (isActive) {
+                                            span(class: 'vendor-status-pill is-active', 'Active')
+                                        } else {
+                                            span(class: 'vendor-status-pill is-inactive', 'Inactive')
+                                        }
+                                    }
+                                    p(class: 'vendor-status-help',
+                                            'Status is managed by Celtech. Reach out if you need this changed.')
                                 }
                             }
-                            // Settings Section
-                            div(class: 'vendor-settings-section') {
-                                div(class: 'vendor-section-header') {
-                                    h2('Settings')
-                                }
-                                div(class: 'padding-container') {
 
-                                    form(id: 'vendorSettingsForm', action: '/vendor/portal/update-settings', method: 'post') {
-                                        input(
-                                                type: 'hidden',
-                                                name: (csrfParamName ?: '_csrf'),
-                                                value: (csrfToken ?: '')
-                                        )
-                                        input(type: 'hidden', name: 'vendorId', value: vendorDetail?.id)
-
-                                        div(class: 'vendor-settings', 'data-setting': 'lead_time') {
-                                            label('Order Processing Time (Days)')
-                                            span(class: 'readonly-box vendor-setting-display', 'data-setting-display': 'lead_time', vendorDetail?.lead_time)
-                                            input(type: 'number', name: 'leadTime', min: '0', step: '1', value: vendorDetail?.lead_time, class: 'vendor-setting-input', 'data-setting-input': 'lead_time', style: 'display:none;', disabled: 'disabled')
-                                        }
-
-                                        div(class: 'vendor-settings', 'data-setting': 'active') {
-                                            label('Active')
-                                            span(class: 'readonly-checkbox vendor-setting-display', 'data-setting-display': 'active', vendorDetail?.active)
-                                            input(type: 'checkbox', name: 'active', value: vendorDetail?.active, class: 'vendor-setting-input', 'data-setting-input': 'active', style: 'display:none;', disabled: 'disabled')
-                                        }
-                                    }
-
-                                    div(class: 'vendor-settings-actions') {
-                                        button(type: 'button', class: 'btn-small', id: 'editVendorSettingsBtn', 'Edit')
-                                        button(type: 'button', class: 'btn-small', id: 'cancelVendorSettingsBtn', style: 'display:none;', 'Cancel')
-                                        button(type: 'submit', class: 'btn-small', id: 'saveVendorSettingsBtn', form: 'vendorSettingsForm', style: 'display:none;', 'Save')
-                                    }
-                                }
+                            // Hidden file input form, paired with #changeLogoBtn via vendor.js.
+                            // Position in markup is irrelevant since it's display:none.
+                            form(id: 'vendorLogoForm',
+                                    action: '/vendor/portal/update-logo',
+                                    method: 'post',
+                                    enctype: 'multipart/form-data') {
+                                input(type: 'hidden',
+                                        name: (csrfParamName ?: '_csrf'),
+                                        value: (csrfToken ?: ''))
+                                input(type: 'hidden', id: 'vendorId', name: 'vendorId', value: vendorDetail?.id)
+                                input(type: 'file', id: 'vendorLogoUpload', name: 'vendorLogo',
+                                        accept: 'image/*',
+                                        class: 'is-hidden')
                             }
                         }
                     }
 
-                    // ════════ ADDRESSES TAB ════════
+                    // ════════ ADDRESSES TAB ══════════════════════════════
                     if (activeTab == 'addresses') {
-                        div(class: 'vendor-tab-content') {
 
-                            div(class: 'vendor-address-section') {
+                        div(class: 'vendor-portal-section') {
+                            div(class: 'vendor-portal-section-header') {
+                                h2('Vendor Addresses')
+                            }
 
-                                div(class: 'vendor-section-header') {
-                                    h2('Vendor Addresses')
-                                }
-
-                                div(class: 'padding-container') {
-                                    if (vendorDetail?.addresses && !vendorDetail.addresses.isEmpty()) {
+                            div(class: 'vendor-portal-address-block') {
+                                if (vendorDetail?.addresses && !vendorDetail.addresses.isEmpty()) {
+                                    div(class: 'vendor-address-list') {
                                         vendorDetail.addresses.each { addr ->
                                             div(class: 'address-card') {
                                                 div(class: 'address-title') {
@@ -153,171 +146,41 @@ layout 'layout.tpl',
                                                 }
                                             }
                                         }
-                                    } else {
-                                        p('No addresses saved yet.')
                                     }
-
-                                    div(style: 'display:flex; gap: 12px; align-items:center; margin-top: 14px;') {
-                                        button(type: 'button', class: 'btn-small', id: 'openUpdateAddress', 'Edit Addresses')
-                                    }
-                                }
-                            }
-
-                            include template: 'partials/vendor-address-modal.tpl'
-                        }
-                    }
-
-                    // ════════ INVENTORY TAB ════════
-                    if (activeTab == 'inventory') {
-                        div(class: 'vendor-tab-content') {
-                            div(class: 'vendor-section-header') {
-                                h2('Inventory')
-                            }
-
-                            div(class: 'padding-container') {
-
-                                if (products && !products.isEmpty()) {
-
-                                    products.each { prod ->
-                                        def formId = "productForm_${prod.id}"
-
-                                        div(class: 'inventory-item-card', id: "item_${prod.id}") {
-
-                                            // ── Read-Only View ──
-                                            div(class: 'inventory-item-view', id: "view_${prod.id}") {
-                                                div(class: 'inventory-item-header') {
-                                                    div(class: 'inventory-item-title') {
-                                                        strong(prod.name ?: 'Unnamed Product')
-                                                        if (prod.active) {
-                                                            span(class: 'badge badge-active', 'Active')
-                                                        } else {
-                                                            span(class: 'badge badge-inactive', 'Inactive')
-                                                        }
-                                                    }
-                                                    button(type: 'button', class: 'btn-small',
-                                                            onclick: "toggleEditProduct('${prod.id}')", 'Edit')
-                                                }
-
-                                                div(class: 'inventory-item-details') {
-                                                    div(class: 'inventory-detail-group') {
-                                                        label('SKU')
-                                                        span(class: 'readonly-box', prod.sku ?: 'N/A')
-                                                    }
-                                                    div(class: 'inventory-detail-group') {
-                                                        label('Price')
-                                                        span(class: 'readonly-box', prod.price != null ? "\$${prod.price}" : 'N/A')
-                                                    }
-                                                    div(class: 'inventory-detail-group') {
-                                                        label('Sale Price')
-                                                        span(class: 'readonly-box', prod.salePrice != null ? "\$${prod.salePrice}" : '—')
-                                                    }
-                                                    div(class: 'inventory-detail-group') {
-                                                        label('Stock')
-                                                        def stockClass = (prod.stock != null && prod.lowStockThreshold != null && prod.stock <= prod.lowStockThreshold) ? 'readonly-box low-stock' : 'readonly-box'
-                                                        span(class: stockClass, prod.stock != null ? "${prod.stock}" : '0')
-                                                    }
-                                                    div(class: 'inventory-detail-group') {
-                                                        label('Low Stock Threshold')
-                                                        span(class: 'readonly-box', prod.lowStockThreshold != null ? "${prod.lowStockThreshold}" : '0')
-                                                    }
-                                                    div(class: 'inventory-detail-group') {
-                                                        label('Category')
-                                                        span(class: 'readonly-box', categories?.get(prod.categoryId) ?: 'Uncategorized')
-                                                    }
-
-                                                    if (prod.description) {
-                                                        div(class: 'inventory-detail-group full-width') {
-                                                            label('Description')
-                                                            span(class: 'readonly-box', prod.description)
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            // ── Edit Form (hidden by default) ──
-                                            div(class: 'inventory-item-edit', id: "edit_${prod.id}", style: 'display:none;') {
-                                                form(id: formId, action: '/vendor/portal/update-product', method: 'post') {
-                                                    input(
-                                                            type: 'hidden',
-                                                            name: (csrfParamName ?: '_csrf'),
-                                                            value: (csrfToken ?: '')
-                                                    )
-                                                    input(type: 'hidden', name: 'productId', value: prod.id)
-
-                                                    div(class: 'inventory-edit-grid') {
-                                                        div(class: 'inventory-edit-group full-width') {
-                                                            label(for: "name_${prod.id}", 'Product Name')
-                                                            input(type: 'text', id: "name_${prod.id}", name: 'name', value: prod.name ?: '', required: 'required')
-                                                        }
-
-                                                        div(class: 'inventory-edit-group') {
-                                                            label(for: "price_${prod.id}", 'Price')
-                                                            input(type: 'number', id: "price_${prod.id}", name: 'price', value: prod.price ?: '', step: '0.01', min: '0', required: 'required')
-                                                        }
-
-                                                        div(class: 'inventory-edit-group') {
-                                                            label(for: "salePrice_${prod.id}", 'Sale Price')
-                                                            input(type: 'number', id: "salePrice_${prod.id}", name: 'salePrice', value: prod.salePrice ?: '', step: '0.01', min: '0')
-                                                        }
-
-                                                        div(class: 'inventory-edit-group') {
-                                                            label(for: "stock_${prod.id}", 'Stock')
-                                                            input(type: 'number', id: "stock_${prod.id}", name: 'stock', value: prod.stock ?: 0, min: '0', required: 'required')
-                                                        }
-
-                                                        div(class: 'inventory-edit-group') {
-                                                            label(for: "lowStock_${prod.id}", 'Low Stock Threshold')
-                                                            input(type: 'number', id: "lowStock_${prod.id}", name: 'lowStockThreshold', value: prod.lowStockThreshold ?: 0, min: '0')
-                                                        }
-
-                                                        div(class: 'inventory-edit-group full-width') {
-                                                            label(for: "desc_${prod.id}", 'Description')
-                                                            textarea(id: "desc_${prod.id}", name: 'description', rows: '3', prod.description ?: '')
-                                                        }
-
-                                                        div(class: 'inventory-edit-group') {
-                                                            label('Active')
-                                                            div(class: 'checkbox-wrapper') {
-                                                                input(type: 'checkbox', id: "active_${prod.id}", name: 'active', value: 'true', checked: prod.active ? 'checked' : null)
-                                                                label(for: "active_${prod.id}", 'Listed on store')
-                                                            }
-                                                        }
-                                                    }
-
-                                                    div(class: 'inventory-edit-actions') {
-                                                        button(type: 'button', class: 'btn-small',
-                                                                onclick: "cancelEditProduct('${prod.id}')", 'Cancel')
-                                                        button(type: 'submit', class: 'btn-small btn-save', 'Save Changes')
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
                                 } else {
-                                    p('No products found. Add products to get started.')
+                                    p('No addresses saved yet.')
+                                }
+
+                                div(class: 'vendor-address-actions') {
+                                    button(type: 'button', class: 'btn btn-small', id: 'openUpdateAddress', 'Edit Addresses')
                                 }
                             }
                         }
+
+                        include template: 'partials/vendor-address-modal.tpl'
                     }
 
-                    // ════════ ORDERS TAB ════════
+                    // ════════ INVENTORY TAB (placeholder) ════════════════
+                    if (activeTab == 'inventory') {
+                        div(class: 'vendor-portal-empty-state') {
+                            h3('Inventory is managed for you')
+                            p("We're currently handling inventory and stock for partner vendors at the store level.")
+                            p('If we open this up to vendor-managed listings or supplementary stock in the future, you\'ll see them here.')
+                        }
+                    }
+
+                    // ════════ ORDERS TAB (placeholder) ═══════════════════
                     if (activeTab == 'orders') {
-                        div(class: 'vendor-tab-content') {
-                            h2('Orders')
-                            p('Order management coming soon.')
+                        div(class: 'vendor-portal-empty-state') {
+                            h3('Order management coming soon')
+                            p("There's nothing to show here yet \u2014 orders fulfilled by Celtech don't surface to vendors today.")
+                            p('When we add direct-to-vendor or supplementary-stock workflows, your orders will appear here.')
                         }
                     }
                 }
             }
+
             script(src: '/scripts/address/address-update.js') {}
             script(src: '/scripts/vendor/vendor.js') {}
         }
-
-
-
-
-
-
-
 

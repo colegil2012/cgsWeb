@@ -14,7 +14,7 @@
  *       .summary-value      — the numeric value cell (right-aligned, tabular)
  *   .cart-actions-block     — wrapper around the action area below totals
  *                             (used on cart for ship-to + checkout button)
- *   .checkout-footer        — bottom logo strip (CGS + Square)
+ *   .checkout-footer        — bottom logo strip (CGS)
  *
  * Layout helpers:
  *   .ship-to-row, .ship-to-controls — used on cart only; live here because

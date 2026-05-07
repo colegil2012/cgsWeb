@@ -165,7 +165,7 @@
 }
 
 /* ============================================================================
- * Responsive — keep shop's responsive rules with shop, not in mobile.css
+ * Responsive — keep shop's responsive rules with shop
  * ============================================================================ */
 
 @media (max-width: 768px) {

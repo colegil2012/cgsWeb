@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Configuration;
         SpacesS3Properties.class,
         SecurityProperties.class,
         TaxProperties.class,
-        MailProperties.class
+        MailProperties.class,
+        RouteProperties.class
 })
 
 public class AppPropertiesConfig {}

@@ -56,7 +56,7 @@ const celtechResult = db.vendors.insertOne({
 			isDefault: true
 		}
 	],
-    logoUrl: '/images/vendors/1776540877177_Celtech Logo.jpg',
+    logoUrl: '/images/vendors/Celtech Logo.jpg',
     active: true,
     createdAt: new Date()
 });

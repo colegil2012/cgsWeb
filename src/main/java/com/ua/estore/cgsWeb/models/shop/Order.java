@@ -69,6 +69,7 @@ public class Order {
     private LocalDateTime updatedAt;
     private LocalDateTime cancelledAt;   // null unless status == CANCELLED
     private LocalDateTime refundedAt;    // null unless status == REFUNDED
+    private LocalDateTime deliveredAt;
 
     /* ============================================================================
      * Embedded snapshot types

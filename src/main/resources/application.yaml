@@ -4,7 +4,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/cgsweb}
-      auto-index-creation: true
+      auto-index-creation: false
   servlet:
     multipart:
       max-file-size: 10MB
@@ -52,6 +52,20 @@ app:
     from-name: ${MAIL_FROM_NAME:Celtech General Store}
     reply-to: ${MAIL_REPLY_TO:cole@celtechgs.com}
     public-base-url: ${MAIL_PUBLIC_BASE_URL:http://localhost:8080}
+
+celtech:
+  driver:
+    token: ${CELTECH_DRIVER_TOKEN:}
+  route:
+    optimizer: ors
+    home-base:
+      latitude: ${ROUTE_HOME_BASE_LAT:38.00317456212482}
+      longitude: ${ROUTE_HOME_BASE_LNG:-85.71534984109215}
+    ors:
+      apiKey: ${ORS_API_KEY:}
+      baseUrl: ${ORS_BASE_URL:https://api.openrouteservice.org}
+      profile: ${ORS_PROFILE:driving-car}
+      timeoutSeconds: ${ORS_TIMEOUT_SECONDS:30}
 
 google:
   maps:

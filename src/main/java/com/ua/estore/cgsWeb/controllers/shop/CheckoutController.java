@@ -42,7 +42,7 @@ public class CheckoutController {
     private final VendorService vendorService;
     private final ShippingRateService shippingRateService;
     private final ShippingEstimateService shippingEstimateService;
-    private final OrderConfirmationMailer orderConfirmationMailer;
+    //private final OrderConfirmationMailer orderConfirmationMailer; Commented for testing
 
 
     /*****************************************************
@@ -167,9 +167,10 @@ public class CheckoutController {
             cartService.clearCart(user.getId());
             Order saved = orderService.getOrderById(orderId);  // re-read so we have orderNumber
 
+            /* Commenting out Mailer for Testing
             if(saved != null) {
                 orderConfirmationMailer.sendFor(saved);
-            }
+            }*/
 
             Map<String, Object> body = new LinkedHashMap<>();
             body.put("orderId", orderId);

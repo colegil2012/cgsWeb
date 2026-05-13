@@ -8,6 +8,9 @@ layout 'layout.tpl',
         csrfToken: (csrfToken ?: ''),
         csrfParamName: (csrfParamName ?: '_csrf'),
         csrfHeaderName: (csrfHeaderName ?: 'X-CSRF-TOKEN'),
+        headContent: {
+          link(rel: 'stylesheet', href: 'css/pages/login.css')
+        },
         content: {
             div(class: 'hero') {
                 div(class: 'hero-content') {
@@ -34,9 +37,9 @@ layout 'layout.tpl',
                         label(for: 'password', 'Password')
                         input(type: 'password', name: 'password', id: 'password', required: 'required', autocomplete: 'current-password')
                     }
-                    div(class: 'form-control rememberme') {
+                    div(class: 'form-control login-remember') {
                         input(type: 'checkbox', name: 'remember-me', id: 'remember-me', value: 'true')
-                        label(for: 'remember-me', style: 'margin:0; font-weight:500;', 'Keep me signed in')
+                        label(for: 'remember-me', 'Keep me signed in')
                     }
                     div(class: 'auth-actions-grid') {
                         a(href: '/signup', class: 'btn', 'Sign Up')

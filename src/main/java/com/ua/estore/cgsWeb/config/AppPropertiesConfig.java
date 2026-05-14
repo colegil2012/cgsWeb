@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Configuration;
         SecurityProperties.class,
         TaxProperties.class,
         MailProperties.class,
-        RouteProperties.class
+        RouteProperties.class,
+        TokenProperties.class
 })
 
 public class AppPropertiesConfig {}

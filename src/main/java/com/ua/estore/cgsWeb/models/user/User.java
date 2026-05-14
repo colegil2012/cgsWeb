@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +18,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "users")
-public class User {
+public class User implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     private String id;
     private String username;
     private String password;
     private String email;
     private List<String> roles;
+    private boolean enabled;
+    private boolean emailVerified;
 
     @Field(targetType = FieldType.OBJECT_ID)
     private String vendorId;
@@ -31,7 +39,11 @@ public class User {
     private List<Address> addresses = new ArrayList<>();
 
     @Data
-    public static class UserProfile {
+    public static class UserProfile implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         private String firstName;
         private String middleInit;
         private String lastName;

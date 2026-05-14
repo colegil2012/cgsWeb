@@ -25,12 +25,15 @@ public class CustomUserDetails implements UserDetails {
     private final String vendorId;
     private final List<String> rawRoles;
 
+    private final boolean enabled;
+
     public CustomUserDetails(User user) {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.vendorId = user.getVendorId();
         this.rawRoles = Optional.ofNullable(user.getRoles()).orElse(List.of());
+        this.enabled = user.isEnabled();
     }
 
     @Override
@@ -47,5 +50,5 @@ public class CustomUserDetails implements UserDetails {
     @Override public boolean isAccountNonExpired()     { return true; }
     @Override public boolean isAccountNonLocked()      { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled()               { return true; }
+    @Override public boolean isEnabled()               { return enabled; }
 }

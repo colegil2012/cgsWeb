@@ -1,5 +1,6 @@
 package com.ua.estore.cgsWeb.controllers.shop;
 
+import com.ua.estore.cgsWeb.config.props.MailProperties;
 import com.ua.estore.cgsWeb.models.address.Address;
 import com.ua.estore.cgsWeb.models.dto.product.ProductDTO;
 import com.ua.estore.cgsWeb.models.dto.shop.OrderDTO;
@@ -42,7 +43,8 @@ public class CheckoutController {
     private final VendorService vendorService;
     private final ShippingRateService shippingRateService;
     private final ShippingEstimateService shippingEstimateService;
-    //private final OrderConfirmationMailer orderConfirmationMailer; Commented for testing
+    private final OrderConfirmationMailer orderConfirmationMailer;
+    private final MailProperties mailProps;
 
 
     /*****************************************************
@@ -167,10 +169,11 @@ public class CheckoutController {
             cartService.clearCart(user.getId());
             Order saved = orderService.getOrderById(orderId);  // re-read so we have orderNumber
 
-            /* Commenting out Mailer for Testing
-            if(saved != null) {
+
+            //Only send confirmation email if order is saved and email is enabled
+            if(saved != null && mailProps.enabled()) {
                 orderConfirmationMailer.sendFor(saved);
-            }*/
+            }
 
             Map<String, Object> body = new LinkedHashMap<>();
             body.put("orderId", orderId);

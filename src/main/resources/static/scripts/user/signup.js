@@ -1,7 +1,18 @@
 // src/main/resources/static/scripts/signup.js
+//
+// CHANGES (email-required update):
+//   - Email is now REQUIRED. Previously updateFeedback() treated all fields
+//     as optional (early-return on empty) and the submit gate ignored email
+//     entirely. Now:
+//       * a dedicated validateEmail() flags an empty email as invalid
+//       * email is part of recomputeSubmitEnabled() — submit stays disabled
+//         until email is present and well-formed
+//   - Phone REMAINS optional — its logic is untouched.
+//   - Username availability + password match logic unchanged.
 (function () {
   function updateFeedback(input, feedbackEl, message) {
-    // Optional fields: don't show errors when empty
+    // Optional fields: don't show errors when empty.
+    // (Still used for the optional phone field.)
     if (!input.value) {
       feedbackEl.textContent = '';
       input.classList.remove('invalid');
@@ -83,16 +94,61 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    // Optional email/phone validation wiring
+    // ---- Email (REQUIRED) + phone (optional) validation wiring ----
     const email = document.getElementById('email');
     const phone = document.getElementById('phone');
     const emailFeedback = document.getElementById('emailFeedback');
     const phoneFeedback = document.getElementById('phoneFeedback');
 
-    if (email && emailFeedback) {
-      email.addEventListener('input', () =>
-          updateFeedback(email, emailFeedback, 'Please enter a valid email (e.g., name@example.com).')
-      );
+    // Email is required. Unlike updateFeedback(), an EMPTY email is invalid
+    // here — that's the whole behavior change. Returns true when the email
+    // is present and well-formed.
+    function validateEmail() {
+      if (!email) return true; // not on this page — don't gate on it
+
+      const value = email.value.trim();
+
+      // Empty → invalid, and SAY so (don't silently clear like optional fields).
+      if (!value) {
+        if (emailFeedback) {
+          emailFeedback.textContent = 'Email is required.';
+          emailFeedback.style.color = '#d1242f';
+        }
+        email.classList.add('invalid');
+        // Make the browser block native form submit too.
+        email.setCustomValidity('Email is required.');
+        return false;
+      }
+
+      // Non-empty → defer to the input's own validity (type=email + any pattern).
+      if (email.checkValidity()) {
+        if (emailFeedback) {
+          emailFeedback.textContent = '';
+        }
+        email.classList.remove('invalid');
+        email.setCustomValidity('');
+        return true;
+      } else {
+        if (emailFeedback) {
+          emailFeedback.textContent =
+              'Please enter a valid email (e.g., name@example.com).';
+          emailFeedback.style.color = '#d1242f';
+        }
+        email.classList.add('invalid');
+        email.setCustomValidity('');  // let native type=email message stand
+        return false;
+      }
+    }
+
+    if (email) {
+      email.addEventListener('input', () => {
+        validateEmail();
+        recomputeSubmitEnabled();
+      });
+      email.addEventListener('blur', () => {
+        validateEmail();
+        recomputeSubmitEnabled();
+      });
     }
 
     function formatPhoneToParenDash(value) {
@@ -237,10 +293,12 @@
     let lastConfirmedAvailableValue = '';
 
     function recomputeSubmitEnabled() {
-      // If password fields exist on the page, require a match. Otherwise only gate on username.
+      // Gate on: username confirmed available, passwords match (if present),
+      // AND email present + valid (the email-required change).
       const passwordOk = (password && confirmPassword) ? validatePasswords() : true;
       const usernameOk = username.value.trim() && username.value.trim() === lastConfirmedAvailableValue;
-      setSubmitEnabled(Boolean(usernameOk && passwordOk));
+      const emailOk = validateEmail();
+      setSubmitEnabled(Boolean(usernameOk && passwordOk && emailOk));
     }
 
     // Start disabled until username is confirmed available
@@ -305,7 +363,9 @@
         if (available) {
           lastConfirmedAvailableValue = trimmed;
           setUsernameStatus(usernameStatus, usernameFeedback, 'available');
-          setSubmitEnabled(true);
+          // Username is available — but submit still depends on email +
+          // passwords. Recompute rather than blindly enabling.
+          recomputeSubmitEnabled();
         } else {
           lastConfirmedAvailableValue = '';
           setUsernameStatus(usernameStatus, usernameFeedback, 'unavailable');

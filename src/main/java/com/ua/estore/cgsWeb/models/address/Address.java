@@ -7,11 +7,17 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
+public class Address implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Field(targetType = FieldType.OBJECT_ID)
     private String addressId;

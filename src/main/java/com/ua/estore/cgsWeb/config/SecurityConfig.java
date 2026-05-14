@@ -4,6 +4,7 @@ import com.ua.estore.cgsWeb.config.props.SecurityProperties;
 import com.ua.estore.cgsWeb.security.AuthSuccessHandler;
 import com.ua.estore.cgsWeb.security.CustomUserDetailsService;
 import com.ua.estore.cgsWeb.security.GuestCookieCleanupFilter;
+import com.ua.estore.cgsWeb.security.UnverifiedAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -105,6 +106,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            AuthSuccessHandler successHandler,
+                                           UnverifiedAuthenticationFailureHandler failureHandler,
                                            PersistentTokenBasedRememberMeServices rememberMeServices,
                                            GuestCookieCleanupFilter guestCookieCleanupFilter) throws Exception {
 
@@ -124,6 +126,18 @@ public class SecurityConfig {
                                 "/", "/about",
                                 "/login", "/logout",
                                 "/signup/**"
+                        ).permitAll()
+                        // Public account-recovery pages. These MUST be reachable
+                        // while logged OUT — someone verifying their email or
+                        // resetting a password is by definition not authenticated.
+                        // Listed as specific paths, NOT /account/**, because the
+                        // rest of /account (dashboard, security tab, order
+                        // history) still requires auth.
+                        .requestMatchers(
+                                "/account/verify",
+                                "/account/forgot-password",
+                                "/account/request-reset",
+                                "/account/reset-password"
                         ).permitAll()
                         // Guest-friendly: browsing the catalog and using a cart does NOT require auth
                         .requestMatchers(
@@ -145,7 +159,12 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .successHandler(successHandler)
-                        .failureUrl("/login?error")
+                        // Was: .failureUrl("/login?error")
+                        // Now a handler so DisabledException (unverified account)
+                        // can redirect to /login?error=unverified with a useful
+                        // message, while all other failures keep the generic
+                        // /login?error behavior.
+                        .failureHandler(failureHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout

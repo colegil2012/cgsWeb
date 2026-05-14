@@ -47,7 +47,7 @@ app:
     access-key: ${SPACES_ACCESS_KEY:}
     secret-key: ${SPACES_SECRET_KEY:}
   mail:
-    enabled: ${MAIL_ENABLED:true}
+    enabled: ${MAIL_ENABLED:false}
     from: ${MAIL_FROM:support@celtechgs.com}
     from-name: ${MAIL_FROM_NAME:Celtech General Store}
     reply-to: ${MAIL_REPLY_TO:cole@celtechgs.com}

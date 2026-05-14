@@ -30,6 +30,11 @@ html {
         link(rel: 'stylesheet', href: '/css/components/pagination.css')
         link(rel: 'stylesheet', href: '/css/components/spinning-leaves.css')
 
+        link(rel: 'apple-touch-icon', sizes: '180x180', href: ImageUrlUtil.resolve('/images/site-images/apple-touch-icon.png', imagesBaseUrl))
+        link(rel: 'icon', sizes: '32x32', href: ImageUrlUtil.resolve('/images/site-images/favicon-32x32.png', imagesBaseUrl))
+        link(rel: 'icon', sizes: '16x16', href: ImageUrlUtil.resolve('/images/site-images/favicon-16x16.png', imagesBaseUrl))
+        link(rel: 'manifest', href: '/site.webmanifest')
+
         if(headContent != null) {
             headContent()
         }

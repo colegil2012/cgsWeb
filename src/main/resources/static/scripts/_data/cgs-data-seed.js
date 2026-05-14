@@ -424,6 +424,8 @@ db.users.insertMany([
         username: "cole",
         password: "$2a$10$kZRhUYzWt3mFwrM1G23yb.RTZg8V7.6nfGgJwTmRpYAhLNEsT8GSm",
 		email: "colegil2012@gmail.com",
+        enabled: true,
+        emailVerified: true,
         roles: [ "VENDOR", "USER", "ADMIN" ],
 		vendorId: celtechId,
         profile: {
@@ -451,6 +453,8 @@ db.users.insertMany([
         username: "daria",
         password: "$2a$10$E0FbX/so9PA6HV6GtUtuMuqenNSVeWAyxNqOne6uG8mBOr1PcYxVa",
 		email: "dariaerin@yahoo.com",
+        enabled: true,
+        emailVerified: true,
         roles: [ "VENDOR", "USER" ],
 		vendorId: newAgeId,
         profile: {
@@ -478,6 +482,8 @@ db.users.insertMany([
         username: "carter",
         password: "$2a$10$sDZZipX8t3zxt3UgU5mfv.2e0dPUgb0Bdhfu7.zN4YAOVLM8XPKTW",
 		email: "carterlee@gmail.com",
+        enabled: true,
+        emailVerified: true,
         roles: [ "VENDOR", "USER" ],
 		vendorId: nattyId,
         profile: {
@@ -505,6 +511,8 @@ db.users.insertMany([
         username: "brynlee",
         password: "$2a$10$BPqLTQ36zuBpjLn6cLD.1./tjJOE7wa3uUGAf9SDYhDgOxjE6K6Wm",
 		email: "brynleeliz@gmail.com",
+        enabled: true,
+        emailVerified: true,
         roles: [ "VENDOR", "USER" ],
 		vendorId: organicId,
         profile: {
@@ -532,6 +540,8 @@ db.users.insertMany([
         username: "test_user",
         password: "$2a$10$Jsgmn6I2iZwM5TvR9L4ShO3Btu6J7mw2.QoblXR91JTZW3S72xU56",
 		email: "test@gmail.com",
+        enabled: true,
+        emailVerified: true,
         roles: [ "USER" ],
         profile: {
             firstName: "Test",

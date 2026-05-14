@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,10 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "carts")
-public class Cart {
+public class Cart implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
@@ -129,7 +134,10 @@ public class Cart {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Item {
+    public static class Item implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1L;
 
         @Field(targetType = FieldType.OBJECT_ID)
         private String productId;

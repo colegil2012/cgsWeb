@@ -13,9 +13,6 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Create the external-images directory in the container
-RUN mkdir -p /app/external-images
-
 # Copy the jar from the build stage
 COPY --from=build /app/target/cgsWeb-0.0.1-SNAPSHOT.jar app.jar
 

@@ -84,8 +84,9 @@ public class OrderService {
         Order order = new Order();
         order.setUserId(user.getId());
         order.setIdempotencyKey(resolveIdempotencyKey(dto));
-        order.setStatus(Order.OrderStatus.PENDING);
-        order.setPaymentStatus(Order.PaymentStatus.NOT_ATTEMPTED);
+        //order.setStatus(Order.OrderStatus.PENDING);
+        //order.setPaymentStatus(Order.PaymentStatus.NOT_ATTEMPTED);
+        order.setStatus(Order.OrderStatus.PAID);
 
         order.setCustomer(snapshotCustomer(user));
         order.setShipTo(snapshotAddress(ship));

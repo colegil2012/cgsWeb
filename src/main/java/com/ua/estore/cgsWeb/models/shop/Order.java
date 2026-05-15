@@ -51,7 +51,7 @@ public class Order {
     private String idempotencyKey;
 
     private OrderStatus   status;        // PENDING, PAID, CANCELLED, REFUNDED
-    private PaymentStatus paymentStatus; // NOT_ATTEMPTED, AUTHORIZED, CAPTURED, FAILED
+    //private PaymentStatus paymentStatus; // NOT_ATTEMPTED, AUTHORIZED, CAPTURED, FAILED
 
     private CustomerSnapshot customer;   // name+email+phone copied at checkout
     private AddressSnapshot  shipTo;     // full address copy + coords

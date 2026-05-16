@@ -11,12 +11,25 @@ db.categories.drop();
 db.orders.drop();
 db.carts.drop();
 
+db.routes.drop();
+db.deliveries.drop();
+db.session.drop();
+db.tokens.drop();
+db.warehouses.drop();
+db.persistent_logins.drop();
+
 db.createCollection("users");
 db.createCollection("vendors");
 db.createCollection("products");
 db.createCollection("categories");
 db.createCollection("orders");
 db.createCollection("carts");
+db.createCollection("routes");
+db.createCollection("deliveries");
+db.createCollection("sessions");
+db.createCollection("tokens");
+db.createCollection("warehouses");
+db.createCollection("persistent_logins");
 
 // 2. Seed Categories (Enables better filtering/navigation)
 const categories = [ 

@@ -36,11 +36,20 @@ public class MongoPersistentTokenRepository implements PersistentTokenRepository
 
     @Override
     public void updateToken(String series, String tokenValue, Date lastUsed) {
-        mongoTemplate.updateFirst(
+        com.mongodb.client.result.UpdateResult result = mongoTemplate.updateFirst(
                 Query.query(Criteria.where("_id").is(series)),
                 new Update().set("token", tokenValue).set("lastUsed", lastUsed),
                 PersistentLogin.class
         );
+        // If the series row vanished (dev DB wipe, manual cleanup, TTL purge),
+        // re-create it so the cookie the client just received still resolves
+        // on the next request. Without this, the next request would 404 the
+        // series and silently drop the user to anonymous — confusing, but at
+        // least it doesn't throw CookieTheftException.
+        if (result.getMatchedCount() == 0) {
+            PersistentLogin doc = new PersistentLogin(series, null, tokenValue, lastUsed);
+            mongoTemplate.save(doc);
+        }
     }
 
     @Override

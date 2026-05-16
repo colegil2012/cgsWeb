@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,4 +22,13 @@ public class Vendor {
     private List<Address> addresses = new ArrayList<>();
     private String logoUrl;
     private boolean active;
+
+    /**
+     * Audit timestamps. Added in admin Round 1B. Existing vendor documents
+     * won't have these until next saved — the admin service sets updatedAt
+     * on every save and createdAt only when null, so old records get a
+     * createdAt the first time they're edited.
+     */
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

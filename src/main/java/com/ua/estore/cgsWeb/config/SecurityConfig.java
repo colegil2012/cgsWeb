@@ -5,7 +5,11 @@ import com.ua.estore.cgsWeb.security.AuthSuccessHandler;
 import com.ua.estore.cgsWeb.security.CustomUserDetailsService;
 import com.ua.estore.cgsWeb.security.GuestCookieCleanupFilter;
 import com.ua.estore.cgsWeb.security.UnverifiedAuthenticationFailureHandler;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -16,16 +20,17 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.rememberme.*;
 import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,11 +86,52 @@ public class SecurityConfig {
         return new MongoPersistentTokenRepository(mongoTemplate);
     }
 
+    /**
+     * Wraps {@link PersistentTokenBasedRememberMeServices} so that any failure
+     * during auto-login — including {@link CookieTheftException} caused by a
+     * benign client-side race (parallel requests rotating the token), a wiped
+     * dev DB, or an in-flight cookie that the browser hasn't yet caught up to
+     * — results in the remember-me cookie being CLEARED rather than the
+     * exception propagating out of the filter chain.
+     *
+     * <p>End user experience: they get bounced to anonymous and re-prompted to
+     * log in, instead of seeing a 500 page or having every subsequent request
+     * trip the same alarm.</p>
+     */
+    static class ResilientPersistentTokenBasedRememberMeServices
+            extends PersistentTokenBasedRememberMeServices {
+
+        ResilientPersistentTokenBasedRememberMeServices(String key,
+                                                        org.springframework.security.core.userdetails.UserDetailsService uds,
+                                                        PersistentTokenRepository repo) {
+            super(key, uds, repo);
+        }
+
+        @Override
+        protected UserDetails processAutoLoginCookie(String[] cookieTokens,
+                                                     HttpServletRequest request,
+                                                     HttpServletResponse response) {
+            try {
+                return super.processAutoLoginCookie(cookieTokens, request, response);
+            } catch (CookieTheftException ex) {
+                // Don't propagate — the parent class has ALREADY invalidated the
+                // series in the repository. Just clear the client-side cookie
+                // and treat this request as anonymous.
+                cancelCookie(request, response);
+                throw new RememberMeAuthenticationException(
+                        "Remember-me cookie was rotated by a concurrent request; cleared.", ex);
+            } catch (InvalidCookieException ex) {
+                cancelCookie(request, response);
+                throw ex;
+            }
+        }
+    }
+
     @Bean
     public PersistentTokenBasedRememberMeServices rememberMeServices(PersistentTokenRepository repo,
                                                                      CustomUserDetailsService uds) {
         PersistentTokenBasedRememberMeServices services =
-                new PersistentTokenBasedRememberMeServices(
+                new ResilientPersistentTokenBasedRememberMeServices(
                         securityProperties.rememberMe().key(), uds, repo);
         services.setTokenValiditySeconds(securityProperties.rememberMe().validitySeconds());
         services.setParameter("remember-me");

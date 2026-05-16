@@ -1,0 +1,1102 @@
+/* ============================================================================
+ *
+ *  Celtech Admin Portal Stylesheet
+ *
+ *  Loaded by every admin page via the layout's headContent. Components like
+ *  the data table live in /css/components/admin-table.css (loaded by the
+ *  pages that need it).
+ *
+ *  Visual rhythm:
+ *    - Storefront uses creams, soft browns, leaf greens — warm and
+ *      market-y. Admin uses the same family but tighter and more utilitarian
+ *      so it reads as a different mode of operation.
+ *    - Gold accents (--admin-gold) thread through to signal "privileged
+ *      action" — primary buttons, the admin badge, focus rings, active
+ *      sidebar item.
+ *
+ *  Tokens live at :root scoped under .admin-shell so they don't leak into
+ *  the storefront. (Scoping is via the selector, not via @scope, for
+ *  Chromium 100+ compat without modern @scope syntax.)
+ *
+ * ============================================================================ */
+
+/* ============================================================================
+ * 1. Tokens
+ * ============================================================================ */
+
+.admin-shell {
+    /* Color: surfaces */
+    --admin-bg:         #fdfaf6;           /* page surface — warm off-white */
+    --admin-surface:    #ffffff;           /* card bg */
+    --admin-surface-alt:#f5f0e8;           /* sidebar bg, panel headers */
+    --admin-border:     #e0d4c2;           /* card borders, dividers */
+    --admin-border-soft:#eee4d4;           /* subtler dividers */
+
+    /* Color: text */
+    --admin-text:       #2c2418;           /* primary text — deep brown */
+    --admin-text-soft:  #5a4a36;           /* secondary text */
+    --admin-text-muted: #8d7a5f;           /* hints, captions */
+
+    /* Color: brand greens (lifted from storefront palette) */
+    --admin-green:      #5a8a3a;           /* primary action */
+    --admin-green-hover:#4a7530;
+    --admin-green-soft: #e8efd9;           /* tint backgrounds */
+
+    /* Color: gold accents (the new tokens for this round) */
+    --admin-gold:       #c9a962;
+    --admin-gold-soft:  #e6d6a8;
+    --admin-gold-tint:  #f5edd6;           /* low-emphasis fill */
+    --admin-gold-deep:  #9a7f3f;
+
+    /* Color: danger */
+    --admin-danger:     #b03030;
+    --admin-danger-soft:#f4d4d4;
+
+    /* Color: neutrals for status */
+    --admin-info:       #4a6a8a;
+    --admin-info-soft:  #dde6ef;
+
+    /* Spacing scale */
+    --admin-sp-1: 4px;
+    --admin-sp-2: 8px;
+    --admin-sp-3: 12px;
+    --admin-sp-4: 16px;
+    --admin-sp-5: 24px;
+    --admin-sp-6: 32px;
+    --admin-sp-7: 48px;
+
+    /* Sizing */
+    --admin-radius-sm: 4px;
+    --admin-radius:    6px;
+    --admin-radius-lg: 10px;
+    --admin-sidebar-width: 220px;
+
+    /* Typography */
+    --admin-font-xs:   12px;
+    --admin-font-sm:   13px;
+    --admin-font-base: 14px;
+    --admin-font-lg:   16px;
+    --admin-font-xl:   20px;
+    --admin-font-2xl:  26px;
+    --admin-weight-medium: 500;
+    --admin-weight-semibold: 600;
+    --admin-weight-bold: 700;
+
+    /* Effects */
+    --admin-shadow-card: 0 1px 3px rgba(44, 36, 24, 0.08),
+    0 1px 2px rgba(44, 36, 24, 0.04);
+    --admin-shadow-lift: 0 2px 8px rgba(44, 36, 24, 0.12);
+}
+
+
+/* ============================================================================
+ * 2. Layout shell
+ * ============================================================================ */
+
+.admin-shell {
+    display: grid;
+    grid-template-columns: var(--admin-sidebar-width) 1fr;
+    gap: 0;
+    min-height: calc(100vh - 160px);   /* roughly: viewport minus header + footer */
+    background: var(--admin-bg);
+    color: var(--admin-text);
+    font-size: var(--admin-font-base);
+    margin: var(--admin-sp-5) auto;
+    max-width: 1400px;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--admin-shadow-card);
+}
+
+
+/* ============================================================================
+ * 3. Sidebar
+ * ============================================================================ */
+
+.admin-sidebar {
+    background: var(--admin-surface-alt);
+    border-right: 1px solid var(--admin-border);
+    padding: var(--admin-sp-5) 0;
+}
+
+.admin-sidebar-header {
+    padding: 0 var(--admin-sp-5) var(--admin-sp-5);
+    border-bottom: 1px solid var(--admin-border);
+    margin-bottom: var(--admin-sp-3);
+}
+
+.admin-sidebar-badge {
+    display: inline-block;
+    padding: 2px var(--admin-sp-2);
+    background: var(--admin-gold);
+    color: #fff;
+    font-size: var(--admin-font-xs);
+    font-weight: var(--admin-weight-bold);
+    letter-spacing: 1px;
+    border-radius: var(--admin-radius-sm);
+    margin-bottom: var(--admin-sp-2);
+}
+
+.admin-sidebar-title {
+    margin: 0;
+    font-size: var(--admin-font-xl);
+    color: var(--admin-text);
+    font-weight: var(--admin-weight-semibold);
+}
+
+.admin-sidebar-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-sidebar-nav ul li {
+    text-align: left;
+}
+
+.admin-sidebar-link {
+    text-align: left;
+    justify-content: flex-start;
+    display: block;
+    padding: var(--admin-sp-3) var(--admin-sp-5);
+    color: var(--admin-text-soft);
+    text-decoration: none;
+    font-weight: var(--admin-weight-medium);
+    border-left: 3px solid transparent;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-sidebar-link:hover {
+    background: var(--admin-gold-tint);
+    color: var(--admin-text);
+}
+
+.admin-sidebar-link.active {
+    background: var(--admin-gold-tint);
+    border-left-color: var(--admin-gold);
+    color: var(--admin-text);
+    font-weight: var(--admin-weight-semibold);
+}
+
+
+/* ============================================================================
+ * 4. Content area
+ * ============================================================================ */
+
+.admin-content {
+    padding: var(--admin-sp-6);
+    min-width: 0;                       /* lets the grid column shrink */
+}
+
+.admin-page-header {
+    margin-bottom: var(--admin-sp-5);
+    padding-bottom: var(--admin-sp-4);
+    border-bottom: 1px solid var(--admin-border-soft);
+}
+
+.admin-page-title {
+    margin: 0 0 var(--admin-sp-1);
+    font-size: var(--admin-font-2xl);
+    font-weight: var(--admin-weight-semibold);
+    color: var(--admin-text);
+}
+
+.admin-page-subtitle {
+    margin: 0;
+    color: var(--admin-text-muted);
+    font-size: var(--admin-font-sm);
+}
+
+.admin-breadcrumb {
+    margin-bottom: var(--admin-sp-2);
+    font-size: var(--admin-font-sm);
+}
+
+.admin-breadcrumb a {
+    color: var(--admin-text-muted);
+    text-decoration: none;
+}
+
+.admin-breadcrumb a:hover {
+    color: var(--admin-gold-deep);
+    text-decoration: underline;
+}
+
+.admin-self-notice {
+    color: var(--admin-gold-deep);
+    font-style: italic;
+}
+
+
+/* ============================================================================
+ * 5. Dashboard tiles
+ * ============================================================================ */
+
+.admin-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--admin-sp-4);
+}
+
+.admin-dashboard-tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--admin-sp-2);
+    padding: var(--admin-sp-5);
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-dashboard-tile:hover {
+    transform: translateY(-1px);
+    border-color: var(--admin-gold);
+    box-shadow: var(--admin-shadow-lift);
+}
+
+.admin-dashboard-tile-pending {
+    opacity: 0.75;
+    background: var(--admin-surface-alt);
+}
+
+.admin-dashboard-tile-pending:hover {
+    opacity: 1;
+}
+
+.admin-dashboard-tile-label {
+    font-size: var(--admin-font-lg);
+    font-weight: var(--admin-weight-semibold);
+    color: var(--admin-text);
+}
+
+.admin-dashboard-tile-desc {
+    margin: 0;
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text-soft);
+    line-height: 1.5;
+    flex: 1;
+}
+
+.admin-dashboard-tile-cta {
+    font-size: var(--admin-font-sm);
+    color: var(--admin-gold-deep);
+    font-weight: var(--admin-weight-medium);
+    margin-top: var(--admin-sp-2);
+}
+
+
+/* ============================================================================
+ * 6. Coming-soon block
+ * ============================================================================ */
+
+.admin-coming-soon {
+    background: var(--admin-surface);
+    border: 1px dashed var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+    padding: var(--admin-sp-7);
+    text-align: center;
+}
+
+.admin-coming-soon-badge {
+    display: inline-block;
+    padding: var(--admin-sp-1) var(--admin-sp-3);
+    background: var(--admin-gold);
+    color: #fff;
+    font-size: var(--admin-font-xs);
+    letter-spacing: 1px;
+    font-weight: var(--admin-weight-bold);
+    text-transform: uppercase;
+    border-radius: var(--admin-radius-sm);
+    margin-bottom: var(--admin-sp-4);
+}
+
+.admin-coming-soon-desc {
+    color: var(--admin-text-soft);
+    margin: 0 0 var(--admin-sp-5);
+    line-height: 1.6;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* ============================================================================
+ * 7. Cards (forms, action panels)
+ * ============================================================================ */
+
+.admin-card {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: var(--admin-sp-5);
+    margin-bottom: var(--admin-sp-4);
+}
+
+.admin-card-title {
+    margin: 0 0 var(--admin-sp-4);
+    font-size: var(--admin-font-lg);
+    font-weight: var(--admin-weight-semibold);
+    color: var(--admin-text);
+    padding-bottom: var(--admin-sp-2);
+    border-bottom: 1px solid var(--admin-border-soft);
+}
+
+.admin-card-body {
+    margin: 0 0 var(--admin-sp-3);
+    color: var(--admin-text-soft);
+    line-height: 1.5;
+}
+
+.admin-card-hint {
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text-muted);
+    font-style: italic;
+    margin-top: var(--admin-sp-2);
+}
+
+
+/* ============================================================================
+ * 8. Edit grid (two columns: form + actions sidebar)
+ * ============================================================================ */
+
+.admin-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--admin-sp-5);
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .admin-edit-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-actions-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ============================================================================
+ * 9. Forms
+ * ============================================================================ */
+
+.admin-fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0 0 var(--admin-sp-5);
+}
+
+.admin-fieldset legend {
+    font-size: var(--admin-font-sm);
+    font-weight: var(--admin-weight-semibold);
+    color: var(--admin-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--admin-sp-3);
+    padding: 0;
+}
+
+.admin-form-row {
+    display: grid;
+    gap: var(--admin-sp-3);
+    margin-bottom: var(--admin-sp-3);
+}
+
+.admin-form-row-3 {
+    grid-template-columns: 1fr 60px 1fr;
+}
+
+@media (max-width: 600px) {
+    .admin-form-row-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--admin-sp-1);
+    margin-bottom: var(--admin-sp-3);
+}
+
+.admin-form-field-narrow {
+    max-width: 80px;
+}
+
+.admin-form-field label {
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text-soft);
+    font-weight: var(--admin-weight-medium);
+}
+
+.admin-form-field input[type="text"],
+.admin-form-field input[type="email"],
+.admin-form-field input[type="tel"] {
+    padding: var(--admin-sp-2) var(--admin-sp-3);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    font: inherit;
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-form-field input:focus,
+.admin-form-field input:focus-visible {
+    outline: none;
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 3px var(--admin-gold-tint);
+}
+
+.admin-form-hint {
+    font-size: var(--admin-font-xs);
+    color: var(--admin-text-muted);
+    margin: var(--admin-sp-1) 0 0;
+}
+
+.admin-form-actions {
+    display: flex;
+    gap: var(--admin-sp-3);
+    margin-top: var(--admin-sp-5);
+    padding-top: var(--admin-sp-4);
+    border-top: 1px solid var(--admin-border-soft);
+}
+
+.admin-inline-form {
+    margin: 0;
+}
+
+
+/* ============================================================================
+ * 10. Role checkboxes
+ * ============================================================================ */
+
+.admin-role-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--admin-sp-3);
+}
+
+.admin-role-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--admin-sp-3);
+    padding: var(--admin-sp-3);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.admin-role-checkbox:hover {
+    border-color: var(--admin-gold);
+    background: var(--admin-gold-tint);
+}
+
+.admin-role-checkbox-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--admin-surface-alt);
+}
+
+.admin-role-checkbox-disabled:hover {
+    border-color: var(--admin-border);
+    background: var(--admin-surface-alt);
+}
+
+.admin-role-checkbox input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--admin-gold);
+}
+
+.admin-role-desc {
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text-soft);
+    flex: 1;
+}
+
+
+/* ============================================================================
+ * 11. Buttons
+ * ============================================================================ */
+
+.admin-btn {
+    display: inline-block;
+    padding: var(--admin-sp-2) var(--admin-sp-4);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    font: inherit;
+    font-size: var(--admin-font-sm);
+    font-weight: var(--admin-weight-medium);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.admin-btn:hover {
+    border-color: var(--admin-gold);
+}
+
+.admin-btn-primary {
+    background: var(--admin-green);
+    color: #fff;
+    border-color: var(--admin-green);
+}
+
+.admin-btn-primary:hover {
+    background: var(--admin-green-hover);
+    border-color: var(--admin-green-hover);
+    color: #fff;
+}
+
+.admin-btn-secondary {
+    background: var(--admin-surface);
+    color: var(--admin-text);
+}
+
+.admin-btn-danger {
+    background: var(--admin-danger);
+    color: #fff;
+    border-color: var(--admin-danger);
+}
+
+.admin-btn-danger:hover {
+    background: #8c2626;
+    border-color: #8c2626;
+    color: #fff;
+}
+
+.admin-btn-sm {
+    padding: 4px var(--admin-sp-3);
+    font-size: var(--admin-font-xs);
+}
+
+.admin-btn-block {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.admin-btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
+/* ============================================================================
+ * 12. Alerts
+ * ============================================================================ */
+
+.admin-alert {
+    padding: var(--admin-sp-3) var(--admin-sp-4);
+    border-radius: var(--admin-radius);
+    border: 1px solid;
+    margin-bottom: var(--admin-sp-4);
+    font-size: var(--admin-font-sm);
+}
+
+.admin-alert-success {
+    background: var(--admin-green-soft);
+    border-color: var(--admin-green);
+    color: var(--admin-green-hover);
+}
+
+.admin-alert-error {
+    background: var(--admin-danger-soft);
+    border-color: var(--admin-danger);
+    color: var(--admin-danger);
+}
+
+
+/* ============================================================================
+ * 13. Role pills (small labels)
+ * ============================================================================ */
+
+.admin-role-pill {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: var(--admin-radius-sm);
+    font-size: 10px;
+    font-weight: var(--admin-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: var(--admin-sp-1);
+}
+
+.admin-role-pill-admin {
+    background: var(--admin-gold);
+    color: #fff;
+}
+
+.admin-role-pill-vendor {
+    background: var(--admin-info);
+    color: #fff;
+}
+
+.admin-role-pill-user {
+    background: var(--admin-border-soft);
+    color: var(--admin-text-soft);
+}
+
+
+/* ============================================================================
+ * 14. Status pills (account state)
+ * ============================================================================ */
+
+.admin-status-pill {
+    display: inline-block;
+    padding: 2px var(--admin-sp-2);
+    border-radius: var(--admin-radius-sm);
+    font-size: var(--admin-font-xs);
+    font-weight: var(--admin-weight-medium);
+}
+
+.admin-status-pill-active {
+    background: var(--admin-green-soft);
+    color: var(--admin-green-hover);
+}
+
+.admin-status-pill-disabled {
+    background: var(--admin-danger-soft);
+    color: var(--admin-danger);
+}
+
+.admin-status-pill-unverified {
+    background: var(--admin-gold-tint);
+    color: var(--admin-gold-deep);
+}
+
+
+/* ============================================================================
+ * 15. Misc utilities
+ * ============================================================================ */
+
+.admin-mono {
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.92em;
+}
+
+.admin-self-marker {
+    font-size: var(--admin-font-xs);
+    color: var(--admin-gold-deep);
+    font-style: italic;
+    margin-left: var(--admin-sp-1);
+}
+
+.admin-empty-state {
+    padding: var(--admin-sp-7);
+    text-align: center;
+    color: var(--admin-text-muted);
+    font-style: italic;
+    background: var(--admin-surface);
+    border: 1px dashed var(--admin-border);
+    border-radius: var(--admin-radius);
+}
+
+.admin-dl {
+    margin: 0;
+}
+
+.admin-dl dt {
+    font-size: var(--admin-font-xs);
+    color: var(--admin-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: var(--admin-sp-3);
+}
+
+.admin-dl dt:first-child {
+    margin-top: 0;
+}
+
+.admin-dl dd {
+    margin: 2px 0 0;
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text);
+    word-break: break-all;
+}
+
+
+/* ============================================================================
+ * 16. Filter bar + pagination
+ * ============================================================================ */
+
+.admin-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--admin-sp-3);
+    padding: var(--admin-sp-3);
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    margin-bottom: var(--admin-sp-4);
+}
+
+.admin-filter-label {
+    font-size: var(--admin-font-sm);
+    font-weight: var(--admin-weight-medium);
+    color: var(--admin-text-soft);
+}
+
+.admin-filter-select {
+    padding: var(--admin-sp-1) var(--admin-sp-2);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    font: inherit;
+    font-size: var(--admin-font-sm);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    cursor: pointer;
+}
+
+.admin-filter-select:focus {
+    outline: none;
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 3px var(--admin-gold-tint);
+}
+
+.admin-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--admin-sp-3);
+    margin-top: var(--admin-sp-5);
+    padding-top: var(--admin-sp-4);
+    border-top: 1px solid var(--admin-border-soft);
+}
+
+.admin-pagination-info {
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text-soft);
+}
+
+/* ============================================================================
+ *
+ *  ADMIN CSS — ROUND 1B ADDITIONS
+ *
+ *  Append this block to the END of /css/pages/admin.css. It relies on the
+ *  token block (:root scoped under .admin-shell) already defined there.
+ *
+ *  Covers: header-with-action layout, the second form-row variant,
+ *  checkbox labels, link styles, the assign-user modal, the assigned-user
+ *  list, and the inline set-stock form.
+ *
+ * ============================================================================ */
+
+/* ---- Page header with a right-aligned action button ---- */
+
+.admin-page-header-withaction {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--admin-sp-4);
+}
+
+
+/* ---- Two-column form row ---- */
+
+.admin-form-row-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 600px) {
+    .admin-form-row-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ---- Checkbox field ---- */
+
+.admin-form-field-check {
+    margin-top: var(--admin-sp-2);
+}
+
+.admin-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--admin-sp-2);
+    cursor: pointer;
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text);
+    font-weight: var(--admin-weight-medium);
+}
+
+.admin-checkbox-label input[type="checkbox"] {
+    accent-color: var(--admin-gold);
+    width: 16px;
+    height: 16px;
+}
+
+
+/* ---- textarea + select share the input look ---- */
+
+.admin-form-field textarea,
+.admin-form-field select {
+    padding: var(--admin-sp-2) var(--admin-sp-3);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    font: inherit;
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-form-field textarea:focus,
+.admin-form-field select:focus,
+.admin-form-field textarea:focus-visible,
+.admin-form-field select:focus-visible {
+    outline: none;
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 3px var(--admin-gold-tint);
+}
+
+.admin-form-field textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+
+/* ---- Form actions, flush variant (no top border/padding) ---- */
+
+.admin-form-actions-flush {
+    margin-top: var(--admin-sp-3);
+    padding-top: 0;
+    border-top: 0;
+}
+
+
+/* ---- Links ---- */
+
+.admin-link {
+    color: var(--admin-gold-deep);
+    text-decoration: none;
+}
+
+.admin-link:hover {
+    text-decoration: underline;
+}
+
+.admin-link-strong {
+    color: var(--admin-text);
+    text-decoration: none;
+    font-weight: var(--admin-weight-semibold);
+}
+
+.admin-link-strong:hover {
+    color: var(--admin-gold-deep);
+    text-decoration: underline;
+}
+
+
+/* ============================================================================
+ * Assigned-user list (vendor detail "Managed By" panel)
+ * ============================================================================ */
+
+.admin-assigned-list {
+    list-style: none;
+    margin: 0 0 var(--admin-sp-4);
+    padding: 0;
+}
+
+.admin-assigned-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--admin-sp-3);
+    padding: var(--admin-sp-3);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    margin-bottom: var(--admin-sp-2);
+}
+
+.admin-assigned-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.admin-assigned-name {
+    font-weight: var(--admin-weight-semibold);
+    color: var(--admin-text);
+    font-size: var(--admin-font-sm);
+}
+
+.admin-assigned-email {
+    font-size: var(--admin-font-xs);
+    color: var(--admin-text-muted);
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    word-break: break-all;
+}
+
+
+/* ============================================================================
+ * Inline set-stock form (product list)
+ * ============================================================================ */
+
+.admin-stock-form {
+    display: flex;
+    align-items: center;
+    gap: var(--admin-sp-2);
+    margin: 0;
+}
+
+.admin-stock-input {
+    width: 64px;
+    padding: 4px var(--admin-sp-2);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    font: inherit;
+    font-size: var(--admin-font-sm);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+}
+
+.admin-stock-input:focus,
+.admin-stock-input:focus-visible {
+    outline: none;
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 2px var(--admin-gold-tint);
+}
+
+
+/* ============================================================================
+ * Assign-user modal
+ * ============================================================================ */
+
+.admin-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(44, 36, 24, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--admin-sp-5);
+    z-index: 1000;
+}
+
+/* The [hidden] attribute must beat display:flex — same pattern as the kiosk. */
+.admin-modal-backdrop[hidden] {
+    display: none;
+}
+
+.admin-modal {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+    padding: var(--admin-sp-5);
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 12px 40px rgba(44, 36, 24, 0.3);
+}
+
+.admin-modal-title {
+    margin: 0 0 var(--admin-sp-2);
+    font-size: var(--admin-font-lg);
+    font-weight: var(--admin-weight-semibold);
+    color: var(--admin-text);
+}
+
+.admin-modal-desc {
+    margin: 0 0 var(--admin-sp-4);
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text-soft);
+    line-height: 1.5;
+}
+
+.admin-modal-search {
+    margin-bottom: var(--admin-sp-3);
+}
+
+.admin-modal-search-input {
+    width: 100%;
+    padding: var(--admin-sp-2) var(--admin-sp-3);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    font: inherit;
+    background: var(--admin-surface);
+    color: var(--admin-text);
+}
+
+.admin-modal-search-input:focus,
+.admin-modal-search-input:focus-visible {
+    outline: none;
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 3px var(--admin-gold-tint);
+}
+
+.admin-modal-results {
+    max-height: 280px;
+    overflow-y: auto;
+    border: 1px solid var(--admin-border-soft);
+    border-radius: var(--admin-radius-sm);
+    margin-bottom: var(--admin-sp-4);
+}
+
+.admin-modal-hint {
+    padding: var(--admin-sp-4);
+    margin: 0;
+    text-align: center;
+    color: var(--admin-text-muted);
+    font-size: var(--admin-font-sm);
+    font-style: italic;
+}
+
+.admin-modal-result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--admin-sp-3);
+    padding: var(--admin-sp-3);
+    border-bottom: 1px solid var(--admin-border-soft);
+}
+
+.admin-modal-result:last-child {
+    border-bottom: 0;
+}
+
+.admin-modal-result-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.admin-modal-result-name {
+    font-weight: var(--admin-weight-semibold);
+    font-size: var(--admin-font-sm);
+    color: var(--admin-text);
+}
+
+.admin-modal-result-meta {
+    font-size: var(--admin-font-xs);
+    color: var(--admin-text-muted);
+    word-break: break-all;
+}
+
+.admin-modal-result-disabled {
+    opacity: 0.6;
+}
+
+.admin-modal-result-note {
+    font-size: var(--admin-font-xs);
+    color: var(--admin-text-muted);
+    font-style: italic;
+    flex-shrink: 0;
+}
+
+.admin-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--admin-sp-3);
+}

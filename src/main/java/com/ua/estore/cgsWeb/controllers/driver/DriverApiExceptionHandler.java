@@ -3,6 +3,9 @@ package com.ua.estore.cgsWeb.controllers.driver;
 import com.ua.estore.cgsWeb.exceptions.driver.OrderNotFoundException;
 import com.ua.estore.cgsWeb.exceptions.driver.OrderNotPayableException;
 import com.ua.estore.cgsWeb.exceptions.driver.RouteCapacityExceededException;
+import com.ua.estore.cgsWeb.exceptions.driver.route.InvalidRouteTransitionException;
+import com.ua.estore.cgsWeb.exceptions.driver.route.RouteAlreadyActiveException;
+import com.ua.estore.cgsWeb.exceptions.driver.route.RouteNotFoundException;
 import com.ua.estore.cgsWeb.exceptions.driver.route.RouteOptimizationException;
 import com.ua.estore.cgsWeb.models.dto.driver.DriverErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +22,7 @@ import java.util.Map;
  * error responses.
  *
  * <p>Scoped to {@code controllers.driver} so storefront controllers aren't
- * affected — their own exception handling stays whatever it was. The advice's
- * {@code basePackages} matcher prevents accidental cross-contamination.</p>
+ * affected — their own exception handling stays whatever it was.</p>
  *
  * <p>Each handler emits a {@link DriverErrorResponse} with a stable {@code error}
  * code the kiosk can switch on, a human-readable {@code message}, and
@@ -69,9 +71,7 @@ public class DriverApiExceptionHandler {
 
     @ExceptionHandler(RouteOptimizationException.class)
     public ResponseEntity<DriverErrorResponse> handleOptimizationFailure(RouteOptimizationException e) {
-        // 502 — we couldn't reach or got bad data from the optimization provider.
-        // Distinct from 500 (our bug) so the kiosk can show a "service unavailable"
-        // message instead of "something broke."
+        // 502 — couldn't reach or got bad data from the optimization provider.
         log.error("RouteOptimization failed", e);
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(
                 DriverErrorResponse.of(
@@ -82,16 +82,72 @@ public class DriverApiExceptionHandler {
     }
 
     /* ============================================================================
+     * Route lifecycle / active-route guards
+     * ============================================================================ */
+
+    /**
+     * 409 — a route is already active. The {@code activeRouteId} in the
+     * details payload lets the kiosk navigate the driver to the existing
+     * route instead of dead-ending them on a failed generate.
+     */
+    @ExceptionHandler(RouteAlreadyActiveException.class)
+    public ResponseEntity<DriverErrorResponse> handleRouteAlreadyActive(RouteAlreadyActiveException e) {
+        log.info("RouteAlreadyActive: activeRouteId={}", e.getActiveRouteId());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                DriverErrorResponse.of(
+                        "RouteAlreadyActive",
+                        e.getMessage(),
+                        Map.of("activeRouteId", e.getActiveRouteId())
+                ));
+    }
+
+    /**
+     * 404 — a route-id-by-path endpoint (start/complete/cancel) couldn't find
+     * the route. The plain GET endpoints handle their own "not found" with
+     * an empty 404; this handler covers the writes.
+     */
+    @ExceptionHandler(RouteNotFoundException.class)
+    public ResponseEntity<DriverErrorResponse> handleRouteNotFound(RouteNotFoundException e) {
+        log.info("RouteNotFound: id={}", e.getRouteId());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                DriverErrorResponse.of(
+                        "RouteNotFound",
+                        e.getMessage(),
+                        Map.of("routeId", e.getRouteId() == null ? "" : e.getRouteId())
+                ));
+    }
+
+    /**
+     * 409 — the state machine refused the requested transition (e.g.
+     * complete on PLANNED, start on COMPLETED). The details carry enough
+     * context for the kiosk to show a useful message and disable the
+     * buttons that wouldn't work for the current status.
+     */
+    @ExceptionHandler(InvalidRouteTransitionException.class)
+    public ResponseEntity<DriverErrorResponse> handleInvalidTransition(InvalidRouteTransitionException e) {
+        log.info("InvalidRouteTransition: currentStatus={} attempted={} allowed={}",
+                e.getCurrentStatus(), e.getAttemptedTransition(), e.getAllowedFromStatuses());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                DriverErrorResponse.of(
+                        "InvalidRouteTransition",
+                        e.getMessage(),
+                        Map.of(
+                                "currentStatus", e.getCurrentStatus().name(),
+                                "attempted", e.getAttemptedTransition(),
+                                "allowedFrom", e.getAllowedFromStatuses().stream()
+                                        .map(Enum::name)
+                                        .toList()
+                        )
+                ));
+    }
+
+    /* ============================================================================
      * Framework exceptions
      * ============================================================================ */
 
-    /** Bad JSON, missing required fields, bad enum values, type mismatches in the request body. */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<DriverErrorResponse> handleBadJson(HttpMessageNotReadableException e) {
         log.info("Bad request body: {}", e.getMessage());
-        // Don't echo the full stack message back — could leak internal types.
-        // Give a generic message; if the kiosk needs to know what's wrong, it
-        // should validate before sending.
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 DriverErrorResponse.of(
                         "InvalidRequest",
@@ -100,7 +156,6 @@ public class DriverApiExceptionHandler {
                 ));
     }
 
-    /** Service-layer guard violations (e.g. RouteGenerationService.validateRequest). */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<DriverErrorResponse> handleIllegalArgument(IllegalArgumentException e) {
         log.info("Bad argument: {}", e.getMessage());
@@ -109,7 +164,6 @@ public class DriverApiExceptionHandler {
         );
     }
 
-    /** Catch-all. Anything that reaches here is our bug; log loudly. */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<DriverErrorResponse> handleUncaught(Exception e) {
         log.error("Unhandled exception in driver API", e);

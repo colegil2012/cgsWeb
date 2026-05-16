@@ -103,7 +103,7 @@ public class OrderService {
         order.setUpdatedAt(TimeUtil.getCurrentDateTime());
 
         Order saved = orderRepository.save(order);
-        log.info("Saved PENDING order id={} number={} userId={} subtotal={} shipping={} tax={} total={}",
+        log.info("Saved PAID order order id={} number={} userId={} subtotal={} shipping={} tax={} total={}",
                 saved.getId(), saved.getOrderNumber(), saved.getUserId(),
                 saved.getTotals().getSubtotal(), saved.getTotals().getShipping(),
                 saved.getTotals().getTax(), saved.getTotals().getTotal());
@@ -135,6 +135,23 @@ public class OrderService {
 
         Order saved = orderRepository.save(order);
         log.info("Cancelled order id={} number={} userId={}", saved.getId(), saved.getOrderNumber(), userId);
+        return saved;
+    }
+
+    /**************************************************************
+     * Complete Delivery - Actual Delivery status lives on deliveries
+     * Mark order as delivered in order collection for tracking
+     *************************************************************/
+
+    public Order completeDelivery(String orderId, String userId) {
+        Order order = getOrderForUser(orderId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        order.setStatus(Order.OrderStatus.DELIVERED);
+        order.setDeliveredAt(TimeUtil.getCurrentDateTime());
+
+        Order saved = orderRepository.save(order);
+        log.info("Completed order id={} number={} userId={}", saved.getId(), saved.getOrderNumber(), userId);
         return saved;
     }
 

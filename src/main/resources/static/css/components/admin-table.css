@@ -1,0 +1,83 @@
+/* ============================================================================
+ *
+ *  Admin data table component
+ *
+ *  Used by the Users list (and future Routes / Orders / etc). The tokens
+ *  come from /css/pages/admin.css's :root block scoped under .admin-shell.
+ *  Loading order: admin.css before admin-table.css, both in the page head.
+ *
+ *  Hierarchy:
+ *    .admin-table-wrapper    — scrolls horizontally on narrow viewports
+ *    .admin-table            — the table element itself
+ *      .admin-table-row-disabled   — dimmed row for disabled accounts
+ *      .admin-table-email          — monospace, long-line tolerant
+ *      .admin-table-actions-col    — fixed-width header for action column
+ *      .admin-table-actions        — right-aligned action cell
+ *
+ * ============================================================================ */
+
+.admin-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    background: var(--admin-surface);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--admin-font-sm);
+}
+
+.admin-table thead {
+    background: var(--admin-surface-alt);
+}
+
+.admin-table th {
+    text-align: left;
+    padding: var(--admin-sp-3) var(--admin-sp-3);
+    font-weight: var(--admin-weight-semibold);
+    font-size: var(--admin-font-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--admin-text-soft);
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table td {
+    padding: var(--admin-sp-3) var(--admin-sp-3);
+    border-bottom: 1px solid var(--admin-border-soft);
+    color: var(--admin-text);
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-table tbody tr:hover {
+    background: var(--admin-gold-tint);
+}
+
+.admin-table-row-disabled {
+    opacity: 0.65;
+}
+
+.admin-table-row-disabled:hover {
+    background: var(--admin-surface-alt);
+}
+
+.admin-table-email {
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: var(--admin-font-xs);
+    color: var(--admin-text-soft);
+    word-break: break-all;
+}
+
+.admin-table-actions-col {
+    width: 100px;
+}
+
+.admin-table-actions {
+    text-align: right;
+}

@@ -3,7 +3,9 @@ package com.ua.estore.cgsWeb.controllers.driver.delivery;
 import com.ua.estore.cgsWeb.models.driver.delivery.Delivery;
 import com.ua.estore.cgsWeb.models.driver.delivery.DeliveryOutcome;
 import com.ua.estore.cgsWeb.models.dto.driver.delivery.DeliveryStatusUpdateRequest;
+import com.ua.estore.cgsWeb.models.shop.Order;
 import com.ua.estore.cgsWeb.services.driver.delivery.DeliveryService;
+import com.ua.estore.cgsWeb.services.shop.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ import java.time.LocalDateTime;
 public class DriverDeliveryController {
 
     private final DeliveryService deliveryService;
+    private final OrderService orderService;
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<DeliveryStatusResponse> updateStatus(
@@ -61,8 +64,13 @@ public class DriverDeliveryController {
                 null /* driverId */
         );
 
+        Order updatedOrder = orderService.completeDelivery(
+                updated.getOrderId(), updated.getCustomer().getUserId());
+
         log.info("Delivery {} updated: outcome={} status={}",
                 updated.getId(), outcome, updated.getStatus());
+
+        log.info("Order {} updated: deliveredAt={}", updatedOrder.getId(), updatedOrder.getDeliveredAt());
 
         DeliveryStatusResponse response = new DeliveryStatusResponse(
                 updated.getId(),

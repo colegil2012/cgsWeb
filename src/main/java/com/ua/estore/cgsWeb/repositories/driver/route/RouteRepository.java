@@ -20,4 +20,18 @@ public interface RouteRepository extends MongoRepository<Route, String> {
 
     /** "Show me all currently-active routes" — drives the multi-driver dispatcher view later. */
     List<Route> findByStatus(RouteStatus status);
+
+    /**
+     * Find the most recent route in any of the given statuses, or empty if
+     * none exist. Used by the "active route" concept — pass
+     * {@code [PLANNED, IN_PROGRESS]} to find a route that's either ready to
+     * start or currently in progress.
+     *
+     * <p>Sorting by {@code createdAt} descending means the most recently
+     * generated route wins if multiple are somehow active. Under the
+     * "at most one active route" invariant enforced by
+     * {@code RouteGenerationService}, the list should never have more than
+     * one — but the ordering makes the read deterministic in case of drift.</p>
+     */
+    Optional<Route> findFirstByStatusInOrderByCreatedAtDesc(List<RouteStatus> statuses);
 }

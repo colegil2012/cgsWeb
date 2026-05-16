@@ -5,6 +5,7 @@ import com.ua.estore.cgsWeb.driver.route.*;
 import com.ua.estore.cgsWeb.exceptions.driver.OrderNotFoundException;
 import com.ua.estore.cgsWeb.exceptions.driver.OrderNotPayableException;
 import com.ua.estore.cgsWeb.exceptions.driver.RouteCapacityExceededException;
+import com.ua.estore.cgsWeb.exceptions.driver.route.RouteAlreadyActiveException;
 import com.ua.estore.cgsWeb.models.driver.delivery.Delivery;
 import com.ua.estore.cgsWeb.models.driver.route.*;
 import com.ua.estore.cgsWeb.models.dto.driver.route.GenerateRouteRequest;
@@ -37,6 +38,12 @@ import java.util.Set;
  * created a new Route" from "I matched an existing one via idempotency key" —
  * the controller layer translates that into 201 vs 200 responses.</p>
  *
+ * <p><b>Active-route invariant:</b> at most one route may be in
+ * {@code PLANNED} or {@code IN_PROGRESS} status at any time. Attempts to
+ * generate a new route while one is active throw
+ * {@link RouteAlreadyActiveException} (→ 409). The kiosk handles the 409 by
+ * navigating the driver to the existing active route.</p>
+ *
  * <p>See class Javadoc on prior versions for the full eventual-consistency
  * and idempotency story.</p>
  */
@@ -44,6 +51,10 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class RouteGenerationService {
+
+    /** Statuses that count as "active" — at most one route may be in any of these at a time. */
+    private static final List<RouteStatus> ACTIVE_STATUSES =
+            List.of(RouteStatus.PLANNED, RouteStatus.IN_PROGRESS);
 
     private final OrderRepository orderRepository;
     private final RouteRepository routeRepository;
@@ -55,6 +66,12 @@ public class RouteGenerationService {
         validateRequest(request);
 
         // Step 1: idempotency check.
+        //
+        // Runs BEFORE the active-route guard. Otherwise a slow network plus a
+        // user retry (same idempotency key) would see its own first attempt as
+        // "the active route" and 409 itself out. The intended semantic of a
+        // repeated POST is "give me the same result as last time," not "fail
+        // because that result still exists."
         if (request.getIdempotencyKey() != null && !request.getIdempotencyKey().isBlank()) {
             Route existing = routeRepository.findByIdempotencyKey(request.getIdempotencyKey()).orElse(null);
             if (existing != null) {
@@ -64,21 +81,36 @@ public class RouteGenerationService {
             }
         }
 
-        // Step 2: load + validate orders
+        // Step 2: active-route guard.
+        //
+        // At most one route may be in PLANNED or IN_PROGRESS status. The driver
+        // must explicitly complete or cancel an active route before planning
+        // another. Surfaces as 409 Conflict on the wire; the kiosk renders a
+        // modal that navigates to the active route.
+        Route active = routeRepository
+                .findFirstByStatusInOrderByCreatedAtDesc(ACTIVE_STATUSES)
+                .orElse(null);
+        if (active != null) {
+            log.info("Rejecting generate request — active route already exists: id={} status={}",
+                    active.getId(), active.getStatus());
+            throw new RouteAlreadyActiveException(active.getId());
+        }
+
+        // Step 3: load + validate orders
         List<Order> orders = loadAndValidateOrders(request.getOrderIds());
 
-        // Step 3: preflight capacity
+        // Step 4: preflight capacity
         if (orders.size() > optimizer.getMaxWaypoints()) {
             throw new RouteCapacityExceededException(orders.size(), optimizer.getMaxWaypoints());
         }
 
-        // Step 4: ensure Deliveries exist
+        // Step 5: ensure Deliveries exist
         Map<String, Delivery> deliveriesByOrderId = deliveryService.ensureForOrders(orders);
 
-        // Step 5: build waypoints from Delivery snapshots
+        // Step 6: build waypoints from Delivery snapshots
         List<RouteWaypoint> waypoints = buildWaypoints(orders, deliveriesByOrderId);
 
-        // Step 6: optimize
+        // Step 7: optimize
         RoutePoint origin = resolveOrigin(request);
         long optStart = System.currentTimeMillis();
         OptimizedRoute optimized = optimizer.optimize(origin, waypoints, true);
@@ -89,11 +121,11 @@ public class RouteGenerationService {
                 optimized.totalDistanceMeters(),
                 optimized.totalDurationSeconds());
 
-        // Step 7: assemble + persist
+        // Step 8: assemble + persist
         Route route = assembleRoute(request, origin, optimized);
         Route saved = routeRepository.save(route);
 
-        // Step 8: assign deliveries
+        // Step 9: assign deliveries
         try {
             List<String> deliveryIds = saved.getStops().stream()
                     .map(RouteStop::getDeliveryId)

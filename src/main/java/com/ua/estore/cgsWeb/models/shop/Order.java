@@ -160,7 +160,7 @@ public class Order {
     }
 
     /** Financial state machine. */
-    public enum OrderStatus { PENDING, PAID, CANCELLED, REFUNDED }
+    public enum OrderStatus { PENDING, PAID, CANCELLED, REFUNDED, DELIVERED }
 
     /** Where the actual money is in the Square pipeline. */
     public enum PaymentStatus { NOT_ATTEMPTED, AUTHORIZED, CAPTURED, FAILED }

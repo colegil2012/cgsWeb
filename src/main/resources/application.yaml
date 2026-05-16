@@ -74,12 +74,9 @@ google:
 service-area:
   origin-lat: ${SVC_AREA_LAT:38.00317456212482}
   origin-lng: ${SVC_AREA_LONG:-85.71534984109215}
-  radius-miles: ${SVC_AREA_RADIUS:50}
+  radius-miles: ${SVC_AREA_RADIUS:20}
 
 logging:
   level:
     root: INFO
     org.springframework: INFO
-    com.cgs.web: DEBUG
-    org.springframework.security: DEBUG
-    com.ua.estore.cgsWeb.security: DEBUG

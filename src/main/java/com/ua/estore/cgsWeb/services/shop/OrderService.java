@@ -34,6 +34,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final TaxProperties taxProperties;
 
+    /**
+     * Used for inventory side-effects: an order becoming PAID decrements
+     * stock; a paid order being cancelled returns it. ProductService does
+     * not depend on OrderService, so this is not a circular reference.
+     */
+    private final ProductService productService;
+
     public BigDecimal getTaxRate() {
         return taxProperties.rate();
     }
@@ -108,6 +115,23 @@ public class OrderService {
                 saved.getTotals().getSubtotal(), saved.getTotals().getShipping(),
                 saved.getTotals().getTax(), saved.getTotals().getTotal());
 
+        /* --- Inventory decrement -----------------------------------------
+         * The order is PAID at this point, so its stock is consumed now.
+         *
+         * TEMPORARY CALL SITE: today the order is created already-PAID
+         * because there's no payment provider. When Stripe is integrated
+         * and the PENDING -> PAID transition becomes a real step (webhook),
+         * MOVE THIS CALL to that transition handler — an order that is
+         * merely PENDING (payment not yet captured) must NOT decrement
+         * stock. The decrement logic itself lives in ProductService and
+         * does not need to change; only this call site moves.
+         *
+         * decrementStockForOrder is fault-tolerant — it never throws, so a
+         * stock bookkeeping problem cannot fail an order that is otherwise
+         * saved successfully.
+         * ----------------------------------------------------------------- */
+        productService.decrementStockForOrder(saved);
+
         return saved.getId();
     }
 
@@ -119,7 +143,13 @@ public class OrderService {
         Order order = getOrderForUser(orderId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        if(order.getStatus() != Order.OrderStatus.PENDING) {
+        /*
+         * Orders are created already-PAID (no payment provider yet), so the
+         * cancellable state is PAID, not PENDING. If/when Stripe splits
+         * PENDING and PAID, a true PENDING order should also be cancellable
+         * — widen this check to accept both at that point.
+         */
+        if (order.getStatus() != Order.OrderStatus.PAID) {
             throw new IllegalArgumentException("This order can no longer be cancelled.");
         }
 
@@ -135,6 +165,21 @@ public class OrderService {
 
         Order saved = orderRepository.save(order);
         log.info("Cancelled order id={} number={} userId={}", saved.getId(), saved.getOrderNumber(), userId);
+
+        /* --- Inventory restock -------------------------------------------
+         * This order was PAID (guard above guarantees it), so its stock was
+         * decremented at placement. Cancelling returns that stock.
+         *
+         * Gated on "was PAID" rather than run unconditionally so that when
+         * the Stripe split lands, cancelling a true PENDING order — whose
+         * stock was never decremented — does NOT wrongly inflate inventory.
+         * Today the guard already guarantees PAID, so this always applies;
+         * the explicit framing keeps it correct after the split too.
+         *
+         * Like the decrement, restock is fault-tolerant and never throws.
+         * ----------------------------------------------------------------- */
+        productService.restockForOrder(saved);
+
         return saved;
     }
 

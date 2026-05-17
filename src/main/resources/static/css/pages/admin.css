@@ -234,7 +234,7 @@
     margin-bottom: var(--admin-sp-5);
     padding-bottom: var(--admin-sp-4);
     box-shadow: none;
-    position: relative;
+    position: unset;
 }
 
 /*

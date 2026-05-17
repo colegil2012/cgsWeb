@@ -85,9 +85,9 @@ layout 'layout.tpl',
                                             option(value: '', 'Select a vendor…')
                                         }
                                         allVendors.each { v ->
-                                            option(value: v.id,
-                                                    (currentVendor == v.id ? [selected: 'selected'] : [:]),
-                                                    v.name ?: v.id)
+                                            Map vAttrs = [value: v.id]
+                                            if (currentVendor == v.id) vAttrs['selected'] = 'selected'
+                                            option(vAttrs, v.name ?: v.id)
                                         }
                                     }
                                 }

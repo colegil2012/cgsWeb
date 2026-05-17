@@ -1,19 +1,23 @@
 package templates.partials
 
+import com.ua.estore.cgsWeb.util.ImageUrlUtil
+
 /*
  * Admin sidebar navigation.
  *
  * Each admin page sets `activeSection` on the model to one of:
  *   dashboard | users | vendors | products | routes | orders
  *
- * Round 1B: Users, Vendors, Products are functional. Routes/Orders link
- * to the coming-soon placeholder served by AdminController.
+ * Round 2: every section is functional. No coming-soon placeholders left.
  */
 
 aside(class: 'admin-sidebar') {
     div(class: 'admin-sidebar-header') {
+        img(src: ImageUrlUtil.resolve('/images/site-images/Celtech Transparent.png', imagesBaseUrl),
+                alt: 'Celtech General Store',
+                class: 'admin-sidebar-logo'
+        )
         span(class: 'admin-sidebar-badge', 'ADMIN')
-        h2(class: 'admin-sidebar-title', 'Portal')
     }
     nav(class: 'admin-sidebar-nav') {
         ul {

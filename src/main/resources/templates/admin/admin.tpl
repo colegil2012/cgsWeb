@@ -48,23 +48,23 @@ layout 'layout.tpl',
                                                         'View and edit accounts, manage roles, send password resets.')
                                                 span(class: 'admin-dashboard-tile-cta', 'Manage Users →')
                                         }
-                                        a(href: '/admin/vendors', class: 'admin-dashboard-tile admin-dashboard-tile-pending') {
+                                        a(href: '/admin/vendors', class: 'admin-dashboard-tile admin-dashboard-tile') {
                                                 span(class: 'admin-dashboard-tile-label', 'Vendors')
                                                 p(class: 'admin-dashboard-tile-desc',
                                                         'Add vendors, assign user accounts, manage product catalogs and inventory.')
-                                                span(class: 'admin-dashboard-tile-cta', 'Coming Soon')
+                                                span(class: 'admin-dashboard-tile-cta', 'Manage Vendors →')
                                         }
-                                        a(href: '/admin/routes', class: 'admin-dashboard-tile admin-dashboard-tile-pending') {
+                                        a(href: '/admin/routes', class: 'admin-dashboard-tile admin-dashboard-tile') {
                                                 span(class: 'admin-dashboard-tile-label', 'Routes')
                                                 p(class: 'admin-dashboard-tile-desc',
                                                         'Browse planned, in-progress, and completed delivery routes.')
-                                                span(class: 'admin-dashboard-tile-cta', 'Coming Soon')
+                                                span(class: 'admin-dashboard-tile-cta', 'Manage Routes →')
                                         }
-                                        a(href: '/admin/orders', class: 'admin-dashboard-tile admin-dashboard-tile-pending') {
+                                        a(href: '/admin/orders', class: 'admin-dashboard-tile admin-dashboard-tile') {
                                                 span(class: 'admin-dashboard-tile-label', 'Orders')
                                                 p(class: 'admin-dashboard-tile-desc',
                                                         'Filter orders by status, drill into line item detail.')
-                                                span(class: 'admin-dashboard-tile-cta', 'Coming Soon')
+                                                span(class: 'admin-dashboard-tile-cta', 'Manage Orders →')
                                         }
                                 }
                         }

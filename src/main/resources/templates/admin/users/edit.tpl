@@ -109,8 +109,9 @@ layout 'layout.tpl',
                                         // a USER baseline when no other role is set.
                                         boolean hasUser = targetUser.roles?.contains('USER')
                                         label(class: 'admin-role-checkbox') {
-                                            input(type: 'checkbox', name: 'roles', value: 'USER',
-                                                    (hasUser ? [checked: 'checked'] : [:]))
+                                            Map userAttrs = [type: 'checkbox', name: 'roles', value: 'USER']
+                                            if (hasUser) userAttrs['checked'] = 'checked'
+                                            input(userAttrs)
                                             span(class: 'admin-role-pill admin-role-pill-user', 'USER')
                                             span(class: 'admin-role-desc', 'Standard customer account.')
                                         }

@@ -48,18 +48,23 @@ layout 'layout.tpl',
                         label(for: 'role-filter', class: 'admin-filter-label', 'Filter by role:')
                         select(name: 'role', id: 'role-filter', class: 'admin-filter-select',
                                 onchange: 'this.form.submit()') {
-                            option(value: '',
-                                    (roleFilter == null ? [selected: 'selected'] : [:]),
-                                    'All roles')
-                            option(value: 'ADMIN',
-                                    (roleFilter == 'ADMIN' ? [selected: 'selected'] : [:]),
-                                    'Admins')
-                            option(value: 'VENDOR',
-                                    (roleFilter == 'VENDOR' ? [selected: 'selected'] : [:]),
-                                    'Vendors')
-                            option(value: 'USER',
-                                    (roleFilter == 'USER' ? [selected: 'selected'] : [:]),
-                                    'Regular users')
+                            // One attribute map per option — see the note in
+                            // products/list.tpl. Two separate maps don't merge.
+                            Map allAttrs = [value: '']
+                            if (roleFilter == null) allAttrs['selected'] = 'selected'
+                            option(allAttrs, 'All roles')
+
+                            Map adminAttrs = [value: 'ADMIN']
+                            if (roleFilter == 'ADMIN') adminAttrs['selected'] = 'selected'
+                            option(adminAttrs, 'Admins')
+
+                            Map vendorAttrs = [value: 'VENDOR']
+                            if (roleFilter == 'VENDOR') vendorAttrs['selected'] = 'selected'
+                            option(vendorAttrs, 'Vendors')
+
+                            Map userAttrs = [value: 'USER']
+                            if (roleFilter == 'USER') userAttrs['selected'] = 'selected'
+                            option(userAttrs, 'Regular users')
                         }
                         // Reset page when filter changes — no `page` param means page=0
                         noscript {

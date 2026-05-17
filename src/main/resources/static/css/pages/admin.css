@@ -105,8 +105,15 @@
     max-width: 1400px;
     border: 1px solid var(--admin-border);
     border-radius: var(--admin-radius-lg);
-    overflow: hidden;
     box-shadow: var(--admin-shadow-card);
+    /*
+     * No `overflow: hidden` here. It was clipping the storefront's Manage
+     * dropdown when it opened over the admin area, and — more importantly —
+     * it made .admin-shell a clipping context that broke `position: sticky`
+     * on the sidebar. The sidebar rounds its own left corners (see
+     * .admin-sidebar) so the shell's rounded corners still look clean
+     * without the shell needing to clip.
+     */
 }
 
 
@@ -118,24 +125,38 @@
     background: var(--admin-surface-alt);
     border-right: 1px solid var(--admin-border);
     padding: var(--admin-sp-5) 0;
+    border-top-left-radius: var(--admin-radius-lg);
+    border-bottom-left-radius: var(--admin-radius-lg);
 }
 
 .admin-sidebar-header {
     padding: 0 var(--admin-sp-5) var(--admin-sp-5);
     border-bottom: 1px solid var(--admin-border);
     margin-bottom: var(--admin-sp-3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.admin-sidebar-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin: 0 auto;
 }
 
 .admin-sidebar-badge {
     display: inline-block;
-    padding: 2px var(--admin-sp-2);
+    padding: 2px var(--admin-sp-4);
     background: var(--admin-gold);
     color: #fff;
-    font-size: var(--admin-font-xs);
+    font-size: var(--admin-font-sm);
     font-weight: var(--admin-weight-bold);
     letter-spacing: 1px;
     border-radius: var(--admin-radius-sm);
     margin-bottom: var(--admin-sp-2);
+    margin-top: -25px;
 }
 
 .admin-sidebar-title {
@@ -145,25 +166,43 @@
     font-weight: var(--admin-weight-semibold);
 }
 
+/*
+ * The admin sidebar uses bare <nav><ul><li><a> markup, which means the
+ * storefront's GLOBAL nav styling (the top-nav is almost certainly
+ * `nav ul { display: flex }` or `nav li { display: inline-block }`)
+ * cascades straight in and lays these links out horizontally.
+ *
+ * These rules defensively force vertical block layout. The selectors are
+ * deliberately specific (.admin-sidebar-nav ul/li) so they outrank a
+ * generic `nav ul` / `nav li` from the storefront stylesheet regardless
+ * of load order.
+ */
 .admin-sidebar-nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: block;          /* not flex — beat a global `nav ul { display:flex }` */
 }
 
 .admin-sidebar-nav ul li {
+    display: block;          /* not inline-block — beat a global `nav li` rule */
+    float: none;             /* in case the storefront floats its nav items */
+    margin: 0;
+    padding: 0;
+    width: 100%;
     text-align: left;
 }
 
 .admin-sidebar-link {
-    text-align: left;
-    justify-content: flex-start;
     display: block;
+    width: 100%;
     padding: var(--admin-sp-3) var(--admin-sp-5);
     color: var(--admin-text-soft);
     text-decoration: none;
     font-weight: var(--admin-weight-medium);
+    text-align: left;        /* explicit — beat any inherited center alignment */
     border-left: 3px solid transparent;
+    box-sizing: border-box;
     transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
@@ -185,24 +224,36 @@
  * ============================================================================ */
 
 .admin-content {
+    background: var(--admin-green-soft);
     padding: var(--admin-sp-6);
     min-width: 0;                       /* lets the grid column shrink */
 }
 
 .admin-page-header {
+    background: var(--admin-green-soft);
     margin-bottom: var(--admin-sp-5);
     padding-bottom: var(--admin-sp-4);
-    border-bottom: 1px solid var(--admin-border-soft);
+    box-shadow: none;
+    position: relative;
 }
 
-.admin-page-title {
+/*
+ * Scoped under .admin-content to raise specificity above the storefront's
+ * h1 styling. .admin-page-title is an <h1>, so a storefront rule like
+ * `main h1 { color: #fff }` (0,1,2) would otherwise tie or beat a bare
+ * `.admin-page-title` (0,1,0). `.admin-content .admin-page-title` is
+ * (0,2,0) and wins. Color/size/weight all set explicitly so nothing
+ * leaks in from the storefront h1.
+ */
+.admin-content .admin-page-title {
     margin: 0 0 var(--admin-sp-1);
     font-size: var(--admin-font-2xl);
     font-weight: var(--admin-weight-semibold);
     color: var(--admin-text);
+    line-height: 1.2;
 }
 
-.admin-page-subtitle {
+.admin-content .admin-page-subtitle {
     margin: 0;
     color: var(--admin-text-muted);
     font-size: var(--admin-font-sm);
@@ -801,6 +852,13 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--admin-sp-4);
+    flex-wrap: wrap;          /* wrap rather than cramp on narrow viewports */
+}
+
+/* The action button (the direct flex child that isn't the title block)
+ * shouldn't shrink — keep it at its natural size. */
+.admin-page-header-withaction > .admin-btn {
+    flex: 0 0 auto;
 }
 
 
@@ -1099,4 +1157,159 @@
     display: flex;
     justify-content: flex-end;
     gap: var(--admin-sp-3);
+}
+
+/* ============================================================================
+ *
+ *  ADMIN CSS — ROUND 2 ADDITIONS
+ *
+ *  Append to the END of /css/pages/admin.css (after the Round 1B block).
+ *  Relies on the token block already defined at the top of admin.css.
+ *
+ *  Covers: status pills for the three status enums (order / route /
+ *  delivery), the filter-bar search input, and a couple of text utilities.
+ *
+ * ============================================================================ */
+
+/* ---- Filter-bar search input ---- */
+
+.admin-filter-search {
+    padding: var(--admin-sp-1) var(--admin-sp-3);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    font: inherit;
+    font-size: var(--admin-font-sm);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    min-width: 220px;
+}
+
+.admin-filter-search:focus,
+.admin-filter-search:focus-visible {
+    outline: none;
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 3px var(--admin-gold-tint);
+}
+
+
+/* ---- Text utilities ---- */
+
+.admin-text-tiny {
+    font-size: var(--admin-font-xs);
+    color: var(--admin-text-muted);
+}
+
+.admin-text-muted {
+    color: var(--admin-text-muted);
+    font-style: italic;
+}
+
+/* dl rendered as label/value rows (totals block) */
+.admin-dl-row dt {
+    display: inline-block;
+    width: 90px;
+}
+
+.admin-dl-row dd {
+    display: inline;
+    margin: 0;
+}
+
+.admin-dl-row dd::after {
+    content: "";
+    display: block;
+    margin-bottom: var(--admin-sp-1);
+}
+
+
+/* ============================================================================
+ * Order status pills  (Order.OrderStatus)
+ *   PENDING · PAID · CANCELLED · REFUNDED · DELIVERED
+ * ============================================================================ */
+
+.admin-order-status-pending {
+    background: var(--admin-gold-tint);
+    color: var(--admin-gold-deep);
+}
+
+.admin-order-status-paid {
+    background: var(--admin-green-soft);
+    color: var(--admin-green-hover);
+}
+
+.admin-order-status-delivered {
+    background: var(--admin-green-soft);
+    color: var(--admin-green-hover);
+}
+
+.admin-order-status-cancelled {
+    background: var(--admin-danger-soft);
+    color: var(--admin-danger);
+}
+
+.admin-order-status-refunded {
+    background: var(--admin-info-soft);
+    color: var(--admin-info);
+}
+
+
+/* ============================================================================
+ * Route status pills  (RouteStatus)
+ *   PLANNED · IN_PROGRESS · COMPLETED · CANCELLED
+ * ============================================================================ */
+
+.admin-route-status-planned {
+    background: var(--admin-gold-tint);
+    color: var(--admin-gold-deep);
+}
+
+.admin-route-status-in_progress {
+    background: var(--admin-info-soft);
+    color: var(--admin-info);
+}
+
+.admin-route-status-completed {
+    background: var(--admin-green-soft);
+    color: var(--admin-green-hover);
+}
+
+.admin-route-status-cancelled {
+    background: var(--admin-danger-soft);
+    color: var(--admin-danger);
+}
+
+
+/* ============================================================================
+ * Delivery status pills  (DeliveryStatus)
+ *   PENDING · ASSIGNED · OUT_FOR_DELIVERY · DELIVERED · FAILED · SKIPPED
+ * ============================================================================ */
+
+.admin-delivery-status-pending {
+    background: var(--admin-surface-alt);
+    color: var(--admin-text-soft);
+}
+
+.admin-delivery-status-assigned {
+    background: var(--admin-gold-tint);
+    color: var(--admin-gold-deep);
+}
+
+.admin-delivery-status-out_for_delivery {
+    background: var(--admin-info-soft);
+    color: var(--admin-info);
+}
+
+.admin-delivery-status-delivered {
+    background: var(--admin-green-soft);
+    color: var(--admin-green-hover);
+}
+
+.admin-delivery-status-failed {
+    background: var(--admin-danger-soft);
+    color: var(--admin-danger);
+}
+
+.admin-delivery-status-skipped {
+    background: var(--admin-danger-soft);
+    color: var(--admin-danger);
 }

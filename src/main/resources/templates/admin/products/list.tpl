@@ -58,13 +58,19 @@ layout 'layout.tpl',
                         label(for: 'vendor-filter', class: 'admin-filter-label', 'Filter by vendor:')
                         select(name: 'vendor', id: 'vendor-filter', class: 'admin-filter-select',
                                 onchange: 'this.form.submit()') {
-                            option(value: '',
-                                    (vendorFilter == null ? [selected: 'selected'] : [:]),
-                                    'All vendors')
+                            // Build ONE attribute map per option. Passing two
+                            // separate maps (value:... , then a conditional
+                            // [selected:...] map) does NOT merge into the
+                            // element's attributes in MarkupTemplateEngine —
+                            // it mis-binds and the value attribute is lost.
+                            Map allAttrs = [value: '']
+                            if (vendorFilter == null) allAttrs['selected'] = 'selected'
+                            option(allAttrs, 'All vendors')
+
                             allVendors.each { v ->
-                                option(value: v.id,
-                                        (vendorFilter == v.id ? [selected: 'selected'] : [:]),
-                                        v.name ?: v.id)
+                                Map vAttrs = [value: v.id]
+                                if (vendorFilter == v.id) vAttrs['selected'] = 'selected'
+                                option(vAttrs, v.name ?: v.id)
                             }
                         }
                         noscript {

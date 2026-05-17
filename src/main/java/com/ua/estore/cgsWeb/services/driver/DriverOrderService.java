@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -42,6 +43,21 @@ public class DriverOrderService {
         // not have placedAt populated; without it those would crash the sort.
         List<Order> orders = orderRepository.findAll(
                 Sort.by(Sort.Order.desc("placedAt").nullsLast())
+        );
+
+        return orders.stream()
+                .map(DriverOrderDTO::from)
+                .toList();
+    }
+
+    /**
+     * Returns every paid order in the collection as a {@link DriverOrderDTO}, sorted
+     * by {@code placedAt} descending, within the specified time range.
+     */
+
+    public List<DriverOrderDTO> listPaidOrdersByTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
+        List<Order> orders = orderRepository.findByStatusAndPlacedAtBetween(
+                Order.OrderStatus.PAID, startTime, endTime
         );
 
         return orders.stream()

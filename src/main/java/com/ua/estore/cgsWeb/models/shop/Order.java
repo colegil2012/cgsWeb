@@ -51,7 +51,7 @@ public class Order {
     private String idempotencyKey;
 
     private OrderStatus   status;        // PENDING, PAID, CANCELLED, REFUNDED
-    private PaymentStatus paymentStatus; // NOT_ATTEMPTED, AUTHORIZED, CAPTURED, FAILED
+    //private PaymentStatus paymentStatus; // NOT_ATTEMPTED, AUTHORIZED, CAPTURED, FAILED
 
     private CustomerSnapshot customer;   // name+email+phone copied at checkout
     private AddressSnapshot  shipTo;     // full address copy + coords
@@ -160,7 +160,7 @@ public class Order {
     }
 
     /** Financial state machine. */
-    public enum OrderStatus { PENDING, PAID, CANCELLED, REFUNDED }
+    public enum OrderStatus { PENDING, PAID, CANCELLED, REFUNDED, DELIVERED }
 
     /** Where the actual money is in the Square pipeline. */
     public enum PaymentStatus { NOT_ATTEMPTED, AUTHORIZED, CAPTURED, FAILED }

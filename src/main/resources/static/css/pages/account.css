@@ -331,15 +331,15 @@
 }
 
 .order-status-pending {
-    background: rgba(255, 193, 7, 0.18);
-    color: #b45309;
-    border: 1px solid rgba(180, 83, 9, 0.30);
+    background: var(--color-bg);
+    color: var(--color-blue-mid);
+    border: 1px solid var(--color-blue-mid);
 }
 
 .order-status-paid {
-    background: var(--color-green-soft);
-    color: var(--color-green-deep);
-    border: 1px solid var(--color-green-bright);
+    background: var(--color-blue-soft);
+    color: var(--color-blue-mid);
+    border: 1px solid var(--color-blue-mid);
 }
 
 .order-status-cancelled {
@@ -352,6 +352,12 @@
     background: var(--color-warn-soft);
     color: var(--color-error);
     border: 1px solid var(--color-warn);
+}
+
+.order-status-delivered {
+    background: var(--color-green-soft);
+    color: var(--color-green-deep);
+    border: 1px solid var(--color-green-bright);
 }
 
 /* ============================================================================

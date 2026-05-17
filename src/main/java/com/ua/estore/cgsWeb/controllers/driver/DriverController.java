@@ -6,9 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Driver;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -47,6 +50,19 @@ public class DriverController {
     public ResponseEntity<List<DriverOrderDTO>> listOrders() {
         List<DriverOrderDTO> orders = driverOrderService.listAllOrders();
         log.info("Driver orders fetched: {} order(s)", orders.size());
+        return ResponseEntity.ok(orders);
+    }
+
+    /**
+     * List all paid orders placed between the specified start and end dates, as {@link DriverOrderDTO}.
+     *
+     * <p>Start and end dates are inclusive.</p>
+     */
+
+    @GetMapping("/orders/{start}/{end}")
+    public ResponseEntity<List<DriverOrderDTO>> listOrdersPlacedBetween(@PathVariable LocalDateTime start, @PathVariable LocalDateTime end) {
+        List<DriverOrderDTO> orders = driverOrderService.listPaidOrdersByTimeRange(start, end);
+        log.info("Driver paid orders fetched between {} and {}: {} order(s)", start, end, orders.size());
         return ResponseEntity.ok(orders);
     }
 }
